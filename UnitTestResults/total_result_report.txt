@@ -1,0 +1,3 @@
+| function_name   | total | passed | failed | ignored | linesCvrg | branchesCvrg | Date and time  | Tester  |
+|-----------------|-------|--------|--------|---------|-----------|--------------|----------------|---------|
+| VoltMon_Init_u8 | 5     | 5      | 0      | 0       | 100.0%    | 100.0%       | 30/01/26 10:59 | MOA2OFO |

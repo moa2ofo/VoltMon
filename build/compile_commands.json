@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/workspace/build",
+  "command": "/usr/bin/cc  -I/workspace/pltf -I/workspace/cfg -O3 -DNDEBUG -Wall -Wextra -Wpedantic -o CMakeFiles/new.dir/cfg/VoltMon_cfg.c.o -c /workspace/cfg/VoltMon_cfg.c",
+  "file": "/workspace/cfg/VoltMon_cfg.c",
+  "output": "CMakeFiles/new.dir/cfg/VoltMon_cfg.c.o"
+},
+{
+  "directory": "/workspace/build",
+  "command": "/usr/bin/cc  -I/workspace/pltf -I/workspace/cfg -O3 -DNDEBUG -Wall -Wextra -Wpedantic -o CMakeFiles/new.dir/pltf/VoltMon.c.o -c /workspace/pltf/VoltMon.c",
+  "file": "/workspace/pltf/VoltMon.c",
+  "output": "CMakeFiles/new.dir/pltf/VoltMon.c.o"
+}
+]

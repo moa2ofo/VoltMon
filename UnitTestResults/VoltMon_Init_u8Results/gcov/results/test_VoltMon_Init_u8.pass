@@ -1,0 +1,35 @@
+---
+:source:
+  :file: utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c
+  :dirname: utExecutionAndResults/utUnderTest/test
+  :basename: test_VoltMon_Init_u8.c
+:successes:
+- :test: testVariablesAsset
+  :line: 16
+  :message: ''
+  :unity_test_time: 0
+- :test: testVariableReset
+  :line: 31
+  :message: ''
+  :unity_test_time: 0
+- :test: test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_cfg_is_NULL
+  :line: 70
+  :message: ''
+  :unity_test_time: 0
+- :test: test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_rawMax_is_0
+  :line: 90
+  :message: ''
+  :unity_test_time: 0
+- :test: test_VoltMon_Init_u8_should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid
+  :line: 120
+  :message: ''
+  :unity_test_time: 0
+:failures: []
+:ignores: []
+:counts:
+  :total: 5
+  :passed: 5
+  :failed: 0
+  :ignored: 0
+:stdout: []
+:time: 0.01851653299991085

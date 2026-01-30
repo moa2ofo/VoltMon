@@ -1,0 +1,14 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+
+permissions:
+  contents: write
+
+jobs:
+  call-shared:
+    uses: moa2ofo/GitActionMain/.github/workflows/GitAction.yml@main
+
+
