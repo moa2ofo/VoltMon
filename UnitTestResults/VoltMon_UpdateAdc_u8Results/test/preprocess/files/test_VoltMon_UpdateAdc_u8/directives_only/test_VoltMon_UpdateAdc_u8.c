@@ -1,4 +1,4 @@
-# 0 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
+# 0 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
 # 0 "<built-in>"
 #define __STDC__ 1
 # 0 "<built-in>"
@@ -823,12 +823,14 @@
 #define __STDC_ISO_10646__ 201706L
 
 # 0 "<command-line>" 2
-# 1 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
-/*==================[testVoltMon_Init_u8.c]==================================*/
-/**
- * @file    testVoltMon_Init_u8.c
- * @brief   Unit tests for VoltMon_Init_u8()
- */
+# 1 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+/*==================[test_VoltMon_UpdateAdc_u8.c]============================*
+ * Unit tests for VoltMon_UpdateAdc_u8 (Ceedling + Unity + CMock)
+ *
+ * Assumption (per your update):
+ * - ComputeVoltage_u16() is NOT static anymore, so it can be mocked via CMock
+ *   by including mock_VoltMon_priv.h.
+ *==========================================================================*/
 
 # 1 "utExecutionAndResults/utUnderTest/build/vendor/unity/src/unity.h" 1
 /* =========================================================================
@@ -10130,36 +10132,7 @@ void verifyTest(void);
 
 
 
-# 8 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 2
-
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h" 1
-
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon.h" 1
-/*==================[VoltMon.h]==============================================*/
-/**
- * @file    VoltMon.h
- * @brief   Public interface for the VoltMon (Voltage Monitoring) module.
- * @author  -
- * @date    2026-01-30
- *
- * @defgroup VoltMon Voltage Monitoring Module
- * @{
- *
- * @details
- * The VoltMon module monitors an input voltage value provided by the platform
- * (e.g., ADC raw counts) and evaluates it against configurable thresholds.
- * The module is split into:
- * - Platform/logic: VoltMon.c/.h (stand-alone)
- * - Configuration: VoltMon_cfg.c/.h (project-dependent)
- */
-
-
-#define VOLTMON_H 
-
-
-
-
-
+# 10 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
 
 # 1 "/usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h" 1 3 4
 /* Copyright (C) 1998-2022 Free Software Foundation, Inc.
@@ -10213,7 +10186,36 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 /* Signal that all the definitions are present.  */
 #define __bool_true_false_are_defined 1
 
-# 28 "utExecutionAndResults/utUnderTest/src/VoltMon.h" 2
+# 12 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon.h" 1
+/*==================[VoltMon.h]==============================================*/
+/**
+ * @file    VoltMon.h
+ * @brief   Public interface for the VoltMon (Voltage Monitoring) module.
+ * @author  -
+ * @date    2026-01-30
+ *
+ * @defgroup VoltMon Voltage Monitoring Module
+ * @{
+ *
+ * @details
+ * The VoltMon module monitors an input voltage value provided by the platform
+ * (e.g., ADC raw counts) and evaluates it against configurable thresholds.
+ * The module is split into:
+ * - Platform/logic: VoltMon.c/.h (stand-alone)
+ * - Configuration: VoltMon_cfg.c/.h (project-dependent)
+ */
+
+
+#define VOLTMON_H 
+
+
+
+
+
+
+
 
 /*==================[macros]=================================================*/
 
@@ -10253,7 +10255,51 @@ typedef enum
 
 /*==================[public function prototypes]=============================*/
 
-
+/**
+ * @brief Initialize the VoltMon module.
+ *
+ * @details
+ * **Goal of the function**
+ *
+ * Bring the module into a known and safe state:
+ * - Load basic defaults.
+ * - Clear flags.
+ * - Set initial mode to IDLE.
+ * - Validate configuration availability.
+ *
+ * The function is intended to be called once at startup.
+ *
+ * @par Activity diagram
+ * @code
+ * start
+ * :l_cfg_pcs = VoltMon_CfgGet_pcfg();
+ * if ((l_cfg_pcs == 0) || (l_cfg_pcs->rawMax_u16 == 0)) then (invalid cfg)
+ *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+ *   :return 1;
+ * else (ok)
+ *   :StatusFlg_u32 = VOLTMON_STATUS_INIT_U32;
+ *   :Mode_e = VoltMon_modeIdle_e;
+ *   :LastRawAdc_u16 = 0; LastVoltage_mV_u16 = 0;
+ *   :UvActive_b = false; OvActive_b = false;
+ *   :StatusFlg_u32 &= ~(VOLTMON_STATUS_UV_U32 | VOLTMON_STATUS_OV_U32 | VOLTMON_STATUS_INVAL_U32);
+ *   :return 0;
+ * endif
+ * stop
+ * @endcode
+ *
+ * @par Interface summary
+ *
+ * | Interface         | In | Out | Type / Signature           | Param | Factor | Offset | Size | Range | Unit |
+ * |------------------|----|-----|----------------------------|-------|--------|--------|------|-------|------|
+ * | VoltMon_Init_u8  |    |  X  | uint8_t (void)             |  -    |   1    |   0    |  1   | 0..3  | [-]  |
+ * | StatusFlg_u32    |    |  X  | uint32_t (static)          |  -    |   1    |   0    |  1   | [0,UINT32_MAX] | [-]  |
+ * | Mode_e           |    |  X  | VoltMon_mode_e (static)    |  -    |   1    |   0    |  1   | -     | [0,2]  |
+ *
+ * @return uint8_t
+ * @retval 0 Module initialized successfully.
+ * @retval 1 Configuration missing/invalid.
+ */
+uint8_t VoltMon_Init_u8(void);
 
 /**
  * @brief De-initialize the VoltMon module.
@@ -10344,56 +10390,7 @@ uint8_t VoltMon_DeInit_u8(void);
  */
 uint8_t VoltMon_SetMode_u8(VoltMon_mode_e mode);
 
-/**
- * @brief Provide a new ADC raw sample to VoltMon.
- *
- * @details
- * **Goal of the function**
- *
- * Update the internal raw sample and compute the corresponding voltage in mV
- * using the configuration scaling:
- * - Compute mV = raw * factor + offset
- * - Store last computed voltage
- * - Validate input range (raw <= rawMax)
- *
- * The function does not directly set UV/OV flags; evaluation is done in
- * VoltMon_Process() to keep timing deterministic.
- *
- * @par Activity diagram
- * @code
- * start
- * :l_cfg_pcs = VoltMon_CfgGet_pcfg();
- * if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0) then (not init)
- *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
- *   :return 1;
- * elseif ((l_cfg_pcs == 0) || (rawAdc_u16 > l_cfg_pcs->rawMax_u16)) then (invalid input)
- *   :StatusFlg_u32 |= (VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32);
- *   :return 2;
- * else (valid)
- *   :LastRawAdc_u16 = rawAdc_u16;
- *   :LastVoltage_mV_u16 = ComputeVoltage_u16(rawAdc_u16, l_cfg_pcs);
- *   :StatusFlg_u32 &= ~VOLTMON_STATUS_INVAL_U32;
- *   :return 0;
- * endif
- * stop
- * @endcode
- *
- * @par Interface summary
- *
- * | Interface                 | In | Out | Type / Signature   | Param  | Factor | Offset | Size | Range | Unit |
- * |--------------------------|----|-----|---------------------|--------|--------|--------|------|-------|------|
- * | rawAdc                   | X  |  X  | uint16_t            | rawAdc |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
- * | LastRawAdc_u16           |    |  X  | uint16_t (static)   |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
- * | LastVoltage_mV_u16       |    |  X  | uint16_t (static)   |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
- * | returned value           | X  |  X  | uint16_t            | - |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
- *
- * @param rawAdc_u16 ADC raw counts.
- * @return uint8_t
- * @retval 0 Updated.
- * @retval 1 Not initialized.
- * @retval 2 Input invalid/out of configured range.
- */
-uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16);
+
 
 /**
  * @brief Run one deterministic processing step of the VoltMon module.
@@ -10512,32 +10509,7 @@ uint32_t VoltMon_GetStatus_u32(void);
 
 /** @} */ /* end of defgroup VoltMon */
 
-# 3 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h" 2
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 1
-/*==================[VoltMon_priv.h]=========================================*/
-/**
- * @file    VoltMon_priv.h
- * @brief   Private declarations for VoltMon (static functions in VoltMon.c).
- * @author  -
- * @date    2026-01-30
- *
- * @defgroup VoltMonPriv VoltMon Private Interface
- * @{
- *
- * @details
- * This header declares the internal (cfile-static) functions implemented in
- * VoltMon.c. It is included only by VoltMon.c.
- */
-
-
-#define VOLTMON_PRIV_H 
-
-
-
-
-
-
-
+# 14 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
 # 1 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h" 1
 /*==================[VoltMon_cfg.h]==========================================*/
 /**
@@ -10615,6 +10587,48 @@ const VoltMon_cfg_s * VoltMon_CfgGet_pcfg(void);
 
 /** @} */ /* end of defgroup VoltMonCfg */
 
+# 15 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 1
+/*==================[VoltMon_priv.h]=========================================*/
+/**
+ * @file    VoltMon_priv.h
+ * @brief   Private declarations for VoltMon (static functions in VoltMon.c).
+ * @author  -
+ * @date    2026-01-30
+ *
+ * @defgroup VoltMonPriv VoltMon Private Interface
+ * @{
+ *
+ * @details
+ * This header declares the internal (cfile-static) functions implemented in
+ * VoltMon.c. It is included only by VoltMon.c.
+ */
+
+
+#define VOLTMON_PRIV_H 
+
+
+
+
+
+
+
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h" 1
+/*==================[VoltMon_cfg.h]==========================================*/
+/**
+ * @file    VoltMon_cfg.h
+ * @brief   Configuration interface for the VoltMon module.
+ * @author  -
+ * @date    2026-01-30
+ *
+ * @defgroup VoltMonCfg VoltMon Configuration
+ * @{
+ *
+ * @details
+ * This file contains the configuration types and the configuration getter.
+ * The actual configuration instance is defined in VoltMon_cfg.c.
+ */
+
 # 26 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 2
 
 /**
@@ -10638,7 +10652,7 @@ const VoltMon_cfg_s * VoltMon_CfgGet_pcfg(void);
  * @param cfg_pcs Pointer to configuration.
  * @return uint16_t Voltage [mV] clamped to uint16_t.
  */
-static uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s * cfg_pcs);
+uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s * cfg_pcs);
 
 /**
  * @brief Check thresholds and compute new UV/OV state.
@@ -10664,7 +10678,7 @@ static uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s * cf
  * @param ovActive_pb Pointer to OV state (in/out).
  * @return uint8_t 0 on success, 1 if cfg invalid.
  */
-static uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16,
+uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16,
                                   const VoltMon_cfg_s * cfg_pcs,
                                   bool * uvActive_pb,
                                   bool * ovActive_pb);
@@ -10692,7 +10706,7 @@ static uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16,
  * @param errSticky_b If true, keep ERR flag sticky once set.
  * @return void
  */
-static void UpdateStatusFlags_v(bool uvActive_b, bool ovActive_b, bool errSticky_b);
+void UpdateStatusFlags_v(bool uvActive_b, bool ovActive_b, bool errSticky_b);
 
 
 
@@ -10700,7 +10714,46 @@ static void UpdateStatusFlags_v(bool uvActive_b, bool ovActive_b, bool errSticky
 
 /** @} */ /* end of defgroup VoltMonPriv */
 
-# 4 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h" 2
+# 16 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 1
+
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon.h" 1
+/*==================[VoltMon.h]==============================================*/
+/**
+ * @file    VoltMon.h
+ * @brief   Public interface for the VoltMon (Voltage Monitoring) module.
+ * @author  -
+ * @date    2026-01-30
+ *
+ * @defgroup VoltMon Voltage Monitoring Module
+ * @{
+ *
+ * @details
+ * The VoltMon module monitors an input voltage value provided by the platform
+ * (e.g., ADC raw counts) and evaluates it against configurable thresholds.
+ * The module is split into:
+ * - Platform/logic: VoltMon.c/.h (stand-alone)
+ * - Configuration: VoltMon_cfg.c/.h (project-dependent)
+ */
+
+# 3 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 2
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 1
+/*==================[VoltMon_priv.h]=========================================*/
+/**
+ * @file    VoltMon_priv.h
+ * @brief   Private declarations for VoltMon (static functions in VoltMon.c).
+ * @author  -
+ * @date    2026-01-30
+ *
+ * @defgroup VoltMonPriv VoltMon Private Interface
+ * @{
+ *
+ * @details
+ * This header declares the internal (cfile-static) functions implemented in
+ * VoltMon.c. It is included only by VoltMon.c.
+ */
+
+# 4 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 2
 
 
 
@@ -10729,56 +10782,65 @@ void VoltMon_SetOvActive_b(bool value);
 
 
 /**
- * @brief Initialize the VoltMon module.
+ * @brief Provide a new ADC raw sample to VoltMon.
  *
  * @details
  * **Goal of the function**
  *
- * Bring the module into a known and safe state:
- * - Load basic defaults.
- * - Clear flags.
- * - Set initial mode to IDLE.
- * - Validate configuration availability.
+ * Update the internal raw sample and compute the corresponding voltage in mV
+ * using the configuration scaling:
+ * - Compute mV = raw * factor + offset
+ * - Store last computed voltage
+ * - Validate input range (raw <= rawMax)
  *
- * The function is intended to be called once at startup.
+ * The function does not directly set UV/OV flags; evaluation is done in
+ * VoltMon_Process() to keep timing deterministic.
+ *
+ * @par Activity diagram
+ * @code
+ * start
+ * :l_cfg_pcs = VoltMon_CfgGet_pcfg();
+ * if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0) then (not init)
+ *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+ *   :return 1;
+ * elseif ((l_cfg_pcs == 0) || (rawAdc_u16 > l_cfg_pcs->rawMax_u16)) then (invalid input)
+ *   :StatusFlg_u32 |= (VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32);
+ *   :return 2;
+ * else (valid)
+ *   :LastRawAdc_u16 = rawAdc_u16;
+ *   :LastVoltage_mV_u16 = ComputeVoltage_u16(rawAdc_u16, l_cfg_pcs);
+ *   :StatusFlg_u32 &= ~VOLTMON_STATUS_INVAL_U32;
+ *   :return 0;
+ * endif
+ * stop
+ * @endcode
  *
  * @par Interface summary
  *
- * | Interface         | In | Out | Type / Signature           | Param | Factor | Offset | Size | Range | Unit |
- * |------------------|----|-----|----------------------------|-------|--------|--------|------|-------|------|
- * | VoltMon_Init_u8  |    |  X  | uint8_t (void)             |  -    |   1    |   0    |  1   | 0..3  | [-]  |
- * | StatusFlg_u32    |    |  X  | uint32_t (static)          |  -    |   1    |   0    |  1   | -     | [-]  |
- * | Mode_e           |    |  X  | VoltMon_mode_e (static)    |  -    |   1    |   0    |  1   | -     | [-]  |
+ * | Interface                 | In | Out | Type / Signature   | Param  | Factor | Offset | Size | Range | Unit |
+ * |--------------------------|----|-----|---------------------|--------|--------|--------|------|-------|------|
+ * | rawAdc                   | X  |  X  | uint16_t            | rawAdc |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
+ * | LastRawAdc_u16           |    |  X  | uint16_t (static)   |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
+ * | LastVoltage_mV_u16       |    |  X  | uint16_t (static)   |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
+ * | returned value           | X  |  X  | uint16_t            | - |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
  *
+ * @param rawAdc_u16 ADC raw counts.
  * @return uint8_t
- * @retval 0 Module initialized successfully.
- * @retval 1 Configuration missing/invalid.
+ * @retval 0 Updated.
+ * @retval 1 Not initialized.
+ * @retval 2 Input invalid/out of configured range.
  */
-uint8_t VoltMon_Init_u8(void);
-# 10 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 2
-# 1 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_Init_u8/mock_VoltMon_cfg.h" 1
+uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16);
+# 17 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+
+/* Mocks */
+# 1 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_UpdateAdc_u8/mock_VoltMon_cfg.h" 1
 /* AUTOGENERATED FILE. DO NOT EDIT. */
 
 #define _MOCK_VOLTMON_CFG_H 
 
 
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h" 1
-/*==================[VoltMon_cfg.h]==========================================*/
-/**
- * @file    VoltMon_cfg.h
- * @brief   Configuration interface for the VoltMon module.
- * @author  -
- * @date    2026-01-30
- *
- * @defgroup VoltMonCfg VoltMon Configuration
- * @{
- *
- * @details
- * This file contains the configuration types and the configuration getter.
- * The actual configuration instance is defined in VoltMon_cfg.c.
- */
 
-# 7 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_Init_u8/mock_VoltMon_cfg.h" 2
 
 /* Ignore the following warnings, since we are copying code */
 
@@ -10826,150 +10888,414 @@ void VoltMon_CfgGet_pcfg_Stub(CMOCK_VoltMon_CfgGet_pcfg_CALLBACK Callback);
 
 
 
-# 11 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 2
+# 20 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+# 1 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_UpdateAdc_u8/mock_VoltMon_priv.h" 1
+/* AUTOGENERATED FILE. DO NOT EDIT. */
 
-/*============================================================================*/
-/* Test helper functions required by project rules                             */
-/*============================================================================*/
+#define _MOCK_VOLTMON_PRIV_H 
 
-void testVariablesAsset(uint32_t expStatusFlg_u32,
-                        VoltMon_mode_e expMode_e,
-                        uint16_t expLastRawAdc_u16,
-                        uint16_t expLastVoltage_mV_u16,
-                        bool expUvActive_b,
-                        bool expOvActive_b)
+
+
+
+/* Ignore the following warnings, since we are copying code */
+
+
+#pragma GCC diagnostic push
+
+
+#pragma GCC diagnostic ignored "-Wpragmas"
+
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wduplicate-decl-specifier"
+
+
+
+
+
+
+void mock_VoltMon_priv_Init(void);
+void mock_VoltMon_priv_Destroy(void);
+void mock_VoltMon_priv_Verify(void);
+
+
+
+
+#define ComputeVoltage_u16_Ignore() TEST_FAIL_MESSAGE("ComputeVoltage_u16 requires _IgnoreAndReturn");
+#define ComputeVoltage_u16_IgnoreAndReturn(cmock_retval) ComputeVoltage_u16_CMockIgnoreAndReturn(__LINE__, cmock_retval)
+void ComputeVoltage_u16_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return);
+#define ComputeVoltage_u16_StopIgnore() ComputeVoltage_u16_CMockStopIgnore()
+void ComputeVoltage_u16_CMockStopIgnore(void);
+#define ComputeVoltage_u16_ExpectAnyArgs() TEST_FAIL_MESSAGE("ComputeVoltage_u16 requires _ExpectAnyArgsAndReturn");
+#define ComputeVoltage_u16_ExpectAnyArgsAndReturn(cmock_retval) ComputeVoltage_u16_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void ComputeVoltage_u16_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t cmock_to_return);
+#define ComputeVoltage_u16_Expect(rawAdc_u16,cfg_pcs) TEST_FAIL_MESSAGE("ComputeVoltage_u16 requires _ExpectAndReturn");
+#define ComputeVoltage_u16_ExpectAndReturn(rawAdc_u16,cfg_pcs,cmock_retval) ComputeVoltage_u16_CMockExpectAndReturn(__LINE__, rawAdc_u16, cfg_pcs, cmock_retval)
+void ComputeVoltage_u16_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t rawAdc_u16, const VoltMon_cfg_s* cfg_pcs, uint16_t cmock_to_return);
+typedef uint16_t (* CMOCK_ComputeVoltage_u16_CALLBACK)(uint16_t rawAdc_u16, const VoltMon_cfg_s* cfg_pcs, int cmock_num_calls);
+void ComputeVoltage_u16_AddCallback(CMOCK_ComputeVoltage_u16_CALLBACK Callback);
+void ComputeVoltage_u16_Stub(CMOCK_ComputeVoltage_u16_CALLBACK Callback);
+#define ComputeVoltage_u16_StubWithCallback ComputeVoltage_u16_Stub
+#define ComputeVoltage_u16_ExpectWithArray(rawAdc_u16,cfg_pcs,cfg_pcs_Depth) TEST_FAIL_MESSAGE("ComputeVoltage_u16 requires _ExpectWithArrayAndReturn");
+#define ComputeVoltage_u16_ExpectWithArrayAndReturn(rawAdc_u16,cfg_pcs,cfg_pcs_Depth,cmock_retval) ComputeVoltage_u16_CMockExpectWithArrayAndReturn(__LINE__, rawAdc_u16, cfg_pcs, (cfg_pcs_Depth), cmock_retval)
+void ComputeVoltage_u16_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t rawAdc_u16, const VoltMon_cfg_s* cfg_pcs, int cfg_pcs_Depth, uint16_t cmock_to_return);
+#define ComputeVoltage_u16_IgnoreArg_rawAdc_u16() ComputeVoltage_u16_CMockIgnoreArg_rawAdc_u16(__LINE__)
+void ComputeVoltage_u16_CMockIgnoreArg_rawAdc_u16(UNITY_LINE_TYPE cmock_line);
+#define ComputeVoltage_u16_IgnoreArg_cfg_pcs() ComputeVoltage_u16_CMockIgnoreArg_cfg_pcs(__LINE__)
+void ComputeVoltage_u16_CMockIgnoreArg_cfg_pcs(UNITY_LINE_TYPE cmock_line);
+#define CheckThresholds_u8_Ignore() TEST_FAIL_MESSAGE("CheckThresholds_u8 requires _IgnoreAndReturn");
+#define CheckThresholds_u8_IgnoreAndReturn(cmock_retval) CheckThresholds_u8_CMockIgnoreAndReturn(__LINE__, cmock_retval)
+void CheckThresholds_u8_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t cmock_to_return);
+#define CheckThresholds_u8_StopIgnore() CheckThresholds_u8_CMockStopIgnore()
+void CheckThresholds_u8_CMockStopIgnore(void);
+#define CheckThresholds_u8_ExpectAnyArgs() TEST_FAIL_MESSAGE("CheckThresholds_u8 requires _ExpectAnyArgsAndReturn");
+#define CheckThresholds_u8_ExpectAnyArgsAndReturn(cmock_retval) CheckThresholds_u8_CMockExpectAnyArgsAndReturn(__LINE__, cmock_retval)
+void CheckThresholds_u8_CMockExpectAnyArgsAndReturn(UNITY_LINE_TYPE cmock_line, uint8_t cmock_to_return);
+#define CheckThresholds_u8_Expect(voltage_mV_u16,cfg_pcs,uvActive_pb,ovActive_pb) TEST_FAIL_MESSAGE("CheckThresholds_u8 requires _ExpectAndReturn");
+#define CheckThresholds_u8_ExpectAndReturn(voltage_mV_u16,cfg_pcs,uvActive_pb,ovActive_pb,cmock_retval) CheckThresholds_u8_CMockExpectAndReturn(__LINE__, voltage_mV_u16, cfg_pcs, uvActive_pb, ovActive_pb, cmock_retval)
+void CheckThresholds_u8_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t voltage_mV_u16, const VoltMon_cfg_s* cfg_pcs, _Bool* uvActive_pb, _Bool* ovActive_pb, uint8_t cmock_to_return);
+typedef uint8_t (* CMOCK_CheckThresholds_u8_CALLBACK)(uint16_t voltage_mV_u16, const VoltMon_cfg_s* cfg_pcs, _Bool* uvActive_pb, _Bool* ovActive_pb, int cmock_num_calls);
+void CheckThresholds_u8_AddCallback(CMOCK_CheckThresholds_u8_CALLBACK Callback);
+void CheckThresholds_u8_Stub(CMOCK_CheckThresholds_u8_CALLBACK Callback);
+#define CheckThresholds_u8_StubWithCallback CheckThresholds_u8_Stub
+#define CheckThresholds_u8_ExpectWithArray(voltage_mV_u16,cfg_pcs,cfg_pcs_Depth,uvActive_pb,uvActive_pb_Depth,ovActive_pb,ovActive_pb_Depth) TEST_FAIL_MESSAGE("CheckThresholds_u8 requires _ExpectWithArrayAndReturn");
+#define CheckThresholds_u8_ExpectWithArrayAndReturn(voltage_mV_u16,cfg_pcs,cfg_pcs_Depth,uvActive_pb,uvActive_pb_Depth,ovActive_pb,ovActive_pb_Depth,cmock_retval) CheckThresholds_u8_CMockExpectWithArrayAndReturn(__LINE__, voltage_mV_u16, cfg_pcs, (cfg_pcs_Depth), uvActive_pb, (uvActive_pb_Depth), ovActive_pb, (ovActive_pb_Depth), cmock_retval)
+void CheckThresholds_u8_CMockExpectWithArrayAndReturn(UNITY_LINE_TYPE cmock_line, uint16_t voltage_mV_u16, const VoltMon_cfg_s* cfg_pcs, int cfg_pcs_Depth, _Bool* uvActive_pb, int uvActive_pb_Depth, _Bool* ovActive_pb, int ovActive_pb_Depth, uint8_t cmock_to_return);
+#define CheckThresholds_u8_ReturnThruPtr_uvActive_pb(uvActive_pb) CheckThresholds_u8_CMockReturnMemThruPtr_uvActive_pb(__LINE__, uvActive_pb, sizeof(_Bool))
+#define CheckThresholds_u8_ReturnArrayThruPtr_uvActive_pb(uvActive_pb,cmock_len) CheckThresholds_u8_CMockReturnMemThruPtr_uvActive_pb(__LINE__, uvActive_pb, (cmock_len * sizeof(*uvActive_pb)))
+#define CheckThresholds_u8_ReturnMemThruPtr_uvActive_pb(uvActive_pb,cmock_size) CheckThresholds_u8_CMockReturnMemThruPtr_uvActive_pb(__LINE__, uvActive_pb, (cmock_size))
+void CheckThresholds_u8_CMockReturnMemThruPtr_uvActive_pb(UNITY_LINE_TYPE cmock_line, _Bool const* uvActive_pb, size_t cmock_size);
+#define CheckThresholds_u8_ReturnThruPtr_ovActive_pb(ovActive_pb) CheckThresholds_u8_CMockReturnMemThruPtr_ovActive_pb(__LINE__, ovActive_pb, sizeof(_Bool))
+#define CheckThresholds_u8_ReturnArrayThruPtr_ovActive_pb(ovActive_pb,cmock_len) CheckThresholds_u8_CMockReturnMemThruPtr_ovActive_pb(__LINE__, ovActive_pb, (cmock_len * sizeof(*ovActive_pb)))
+#define CheckThresholds_u8_ReturnMemThruPtr_ovActive_pb(ovActive_pb,cmock_size) CheckThresholds_u8_CMockReturnMemThruPtr_ovActive_pb(__LINE__, ovActive_pb, (cmock_size))
+void CheckThresholds_u8_CMockReturnMemThruPtr_ovActive_pb(UNITY_LINE_TYPE cmock_line, _Bool const* ovActive_pb, size_t cmock_size);
+#define CheckThresholds_u8_IgnoreArg_voltage_mV_u16() CheckThresholds_u8_CMockIgnoreArg_voltage_mV_u16(__LINE__)
+void CheckThresholds_u8_CMockIgnoreArg_voltage_mV_u16(UNITY_LINE_TYPE cmock_line);
+#define CheckThresholds_u8_IgnoreArg_cfg_pcs() CheckThresholds_u8_CMockIgnoreArg_cfg_pcs(__LINE__)
+void CheckThresholds_u8_CMockIgnoreArg_cfg_pcs(UNITY_LINE_TYPE cmock_line);
+#define CheckThresholds_u8_IgnoreArg_uvActive_pb() CheckThresholds_u8_CMockIgnoreArg_uvActive_pb(__LINE__)
+void CheckThresholds_u8_CMockIgnoreArg_uvActive_pb(UNITY_LINE_TYPE cmock_line);
+#define CheckThresholds_u8_IgnoreArg_ovActive_pb() CheckThresholds_u8_CMockIgnoreArg_ovActive_pb(__LINE__)
+void CheckThresholds_u8_CMockIgnoreArg_ovActive_pb(UNITY_LINE_TYPE cmock_line);
+#define UpdateStatusFlags_v_IgnoreAndReturn(cmock_retval) TEST_FAIL_MESSAGE("UpdateStatusFlags_v requires _Ignore (not AndReturn)");
+#define UpdateStatusFlags_v_Ignore() UpdateStatusFlags_v_CMockIgnore()
+void UpdateStatusFlags_v_CMockIgnore(void);
+#define UpdateStatusFlags_v_StopIgnore() UpdateStatusFlags_v_CMockStopIgnore()
+void UpdateStatusFlags_v_CMockStopIgnore(void);
+#define UpdateStatusFlags_v_ExpectAnyArgsAndReturn(cmock_retval) TEST_FAIL_MESSAGE("UpdateStatusFlags_v requires _ExpectAnyArgs (not AndReturn)");
+#define UpdateStatusFlags_v_ExpectAnyArgs() UpdateStatusFlags_v_CMockExpectAnyArgs(__LINE__)
+void UpdateStatusFlags_v_CMockExpectAnyArgs(UNITY_LINE_TYPE cmock_line);
+#define UpdateStatusFlags_v_ExpectAndReturn(uvActive_b,ovActive_b,errSticky_b,cmock_retval) TEST_FAIL_MESSAGE("UpdateStatusFlags_v requires _Expect (not AndReturn)");
+#define UpdateStatusFlags_v_Expect(uvActive_b,ovActive_b,errSticky_b) UpdateStatusFlags_v_CMockExpect(__LINE__, uvActive_b, ovActive_b, errSticky_b)
+void UpdateStatusFlags_v_CMockExpect(UNITY_LINE_TYPE cmock_line, _Bool uvActive_b, _Bool ovActive_b, _Bool errSticky_b);
+typedef void (* CMOCK_UpdateStatusFlags_v_CALLBACK)(_Bool uvActive_b, _Bool ovActive_b, _Bool errSticky_b, int cmock_num_calls);
+void UpdateStatusFlags_v_AddCallback(CMOCK_UpdateStatusFlags_v_CALLBACK Callback);
+void UpdateStatusFlags_v_Stub(CMOCK_UpdateStatusFlags_v_CALLBACK Callback);
+#define UpdateStatusFlags_v_StubWithCallback UpdateStatusFlags_v_Stub
+#define UpdateStatusFlags_v_IgnoreArg_uvActive_b() UpdateStatusFlags_v_CMockIgnoreArg_uvActive_b(__LINE__)
+void UpdateStatusFlags_v_CMockIgnoreArg_uvActive_b(UNITY_LINE_TYPE cmock_line);
+#define UpdateStatusFlags_v_IgnoreArg_ovActive_b() UpdateStatusFlags_v_CMockIgnoreArg_ovActive_b(__LINE__)
+void UpdateStatusFlags_v_CMockIgnoreArg_ovActive_b(UNITY_LINE_TYPE cmock_line);
+#define UpdateStatusFlags_v_IgnoreArg_errSticky_b() UpdateStatusFlags_v_CMockIgnoreArg_errSticky_b(__LINE__)
+void UpdateStatusFlags_v_CMockIgnoreArg_errSticky_b(UNITY_LINE_TYPE cmock_line);
+
+
+
+
+
+
+
+#pragma GCC diagnostic pop
+
+
+
+# 21 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+
+/*==================[Helpers required by rules]==============================*/
+
+static void testVariablesAssert(uint32_t       expStatus_u32,
+                                VoltMon_mode_e expMode_e,
+                                uint16_t       expLastRaw_u16,
+                                uint16_t       expLastVoltage_u16,
+                                bool           expUvActive_b,
+                                bool           expOvActive_b)
 {
-  TEST_ASSERT_EQUAL_UINT32(expStatusFlg_u32, VoltMon_GetStatusFlg_u32());
+  TEST_ASSERT_EQUAL_UINT32(expStatus_u32, VoltMon_GetStatusFlg_u32());
   TEST_ASSERT_EQUAL_INT((int)expMode_e, (int)VoltMon_GetMode_e());
-  TEST_ASSERT_EQUAL_UINT16(expLastRawAdc_u16, VoltMon_GetLastRawAdc_u16());
-  TEST_ASSERT_EQUAL_UINT16(expLastVoltage_mV_u16, VoltMon_GetLastVoltage_mV_u16());
-  TEST_ASSERT_EQUAL(expUvActive_b, VoltMon_GetUvActive_b());
-  TEST_ASSERT_EQUAL(expOvActive_b, VoltMon_GetOvActive_b());
+  TEST_ASSERT_EQUAL_UINT16(expLastRaw_u16, VoltMon_GetLastRawAdc_u16());
+  TEST_ASSERT_EQUAL_UINT16(expLastVoltage_u16, VoltMon_GetLastVoltage_mV_u16());
+  TEST_ASSERT_EQUAL_UINT8((uint8_t)expUvActive_b, (uint8_t)VoltMon_GetUvActive_b());
+  TEST_ASSERT_EQUAL_UINT8((uint8_t)expOvActive_b, (uint8_t)VoltMon_GetOvActive_b());
 }
 
-void testVariableReset(uint32_t statusFlg_u32,
-                       VoltMon_mode_e mode_e,
-                       uint16_t lastRawAdc_u16,
-                       uint16_t lastVoltage_mV_u16,
-                       bool uvActive_b,
-                       bool ovActive_b)
+static void testVariablesReset(uint32_t       status_u32,
+                               VoltMon_mode_e mode_e,
+                               uint16_t       lastRaw_u16,
+                               uint16_t       lastVoltage_u16,
+                               bool           uvActive_b,
+                               bool           ovActive_b)
 {
-  VoltMon_SetStatusFlg_u32(statusFlg_u32);
+  VoltMon_SetStatusFlg_u32(status_u32);
   VoltMon_SetMode_e(mode_e);
-  VoltMon_SetLastRawAdc_u16(lastRawAdc_u16);
-  VoltMon_SetLastVoltage_mV_u16(lastVoltage_mV_u16);
+  VoltMon_SetLastRawAdc_u16(lastRaw_u16);
+  VoltMon_SetLastVoltage_mV_u16(lastVoltage_u16);
   VoltMon_SetUvActive_b(uvActive_b);
   VoltMon_SetOvActive_b(ovActive_b);
 }
 
-/*============================================================================*/
-/* Unity hooks                                                                 */
-/*============================================================================*/
+/*==================[Ceedling fixtures]=====================================*/
 
 void setUp(void)
 {
-  /* Reset all module state to guarantee test isolation */
-  testVariableReset(0u,
-                    VoltMon_modeIdle_e,
-                    0u,
-                    0u,
-                    false,
-                    false);
+  testVariablesReset(0u, VoltMon_modeIdle_e, 0u, 0u, false, false);
 }
 
 void tearDown(void)
 {
-  /* nothing */
 }
 
-/*============================================================================*/
-/* Tests                                                                       */
-/*============================================================================*/
+/*==================[Tests]==================================================*/
 
-void test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_cfg_is_NULL(void)
+void test_VoltMon_UpdateAdc_u8_should_return_1_and_set_ERR_when_not_initialized(void)
 {
-  /* Arrange */
-  VoltMon_CfgGet_pcfg_ExpectAndReturn(NULL);
+  VoltMon_cfg_s cfg_s;
+  cfg_s.rawMax_u16  = 1000u;
+  cfg_s.factor_u16  = 1u;
+  cfg_s.offset_s16  = 0;
+  cfg_s.uvTh_mV_u16 = 0u;
+  cfg_s.ovTh_mV_u16 = 0u;
+  cfg_s.hyst_mV_u16 = 0u;
 
-  /* Act */
-  uint8_t ret_u8 = VoltMon_Init_u8();
-
-  /* Assert */
-  TEST_ASSERT_EQUAL_UINT8(1u, ret_u8);
-  TEST_ASSERT_TRUE((VoltMon_GetStatusFlg_u32() & VOLTMON_STATUS_ERR_U32) != 0u);
-
-  /* The function must still bring module into a deterministic safe base state */
-  TEST_ASSERT_EQUAL_INT((int)VoltMon_modeIdle_e, (int)VoltMon_GetMode_e());
-  TEST_ASSERT_EQUAL_UINT16(0u, VoltMon_GetLastRawAdc_u16());
-  TEST_ASSERT_EQUAL_UINT16(0u, VoltMon_GetLastVoltage_mV_u16());
-  TEST_ASSERT_FALSE(VoltMon_GetUvActive_b());
-  TEST_ASSERT_FALSE(VoltMon_GetOvActive_b());
-}
-
-void test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_rawMax_is_0(void)
-{
-  /* Arrange */
-  static const VoltMon_cfg_s cfg_s =
-  {
-    .rawMax_u16     = 0u,
-    .factor_u16     = 1u,
-    .offset_s16     = 0,
-    .uvTh_mV_u16    = 1000u,
-    .ovTh_mV_u16    = 5000u,
-    .hyst_mV_u16    = 100u,
-  };
+  testVariablesReset(0u, VoltMon_modeIdle_e, 11u, 22u, false, false);
 
   VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
 
-  /* Act */
-  uint8_t ret_u8 = VoltMon_Init_u8();
+  TEST_ASSERT_EQUAL_UINT8(1u, VoltMon_UpdateAdc_u8(10u));
 
-  /* Assert */
-  TEST_ASSERT_EQUAL_UINT8(1u, ret_u8);
-  TEST_ASSERT_TRUE((VoltMon_GetStatusFlg_u32() & VOLTMON_STATUS_ERR_U32) != 0u);
-
-  /* Deterministic safe base state */
-  TEST_ASSERT_EQUAL_INT((int)VoltMon_modeIdle_e, (int)VoltMon_GetMode_e());
-  TEST_ASSERT_EQUAL_UINT16(0u, VoltMon_GetLastRawAdc_u16());
-  TEST_ASSERT_EQUAL_UINT16(0u, VoltMon_GetLastVoltage_mV_u16());
-  TEST_ASSERT_FALSE(VoltMon_GetUvActive_b());
-  TEST_ASSERT_FALSE(VoltMon_GetOvActive_b());
+  testVariablesAssert(VOLTMON_STATUS_ERR_U32,
+                      VoltMon_modeIdle_e,
+                      11u,
+                      22u,
+                      false,
+                      false);
 }
 
-void test_VoltMon_Init_u8_should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid(void)
+void test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_cfg_is_NULL(void)
 {
-  /* Arrange */
-  static const VoltMon_cfg_s cfg_s =
-  {
-    .rawMax_u16     = 4095u,
-    .factor_u16     = 1u,
-    .offset_s16     = 0,
-    .uvTh_mV_u16    = 1000u,
-    .ovTh_mV_u16    = 5000u,
-    .hyst_mV_u16    = 100u,
-  };
+  testVariablesReset(VOLTMON_STATUS_INIT_U32, VoltMon_modeIdle_e, 7u, 8u, false, false);
 
-  /* Pre-load garbage state to verify the function really resets everything */
-  testVariableReset(0xFFFFFFFFu,
-                    VoltMon_modeDiag_e,
-                    1234u,
-                    4321u,
-                    true,
-                    true);
+  VoltMon_CfgGet_pcfg_ExpectAndReturn((const VoltMon_cfg_s *)0);
 
-  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
+  TEST_ASSERT_EQUAL_UINT8(2u, VoltMon_UpdateAdc_u8(0u));
 
-  /* Act */
-  uint8_t ret_u8 = VoltMon_Init_u8();
+  testVariablesAssert(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32,
+                      VoltMon_modeIdle_e,
+                      7u,
+                      8u,
+                      false,
+                      false);
+}
 
-  /* Assert */
-  TEST_ASSERT_EQUAL_UINT8(0u, ret_u8);
+/* ---- Range / boundary tests from implementation rule: valid if raw <= rawMax ---- */
 
-  /* Expected clean initialized state */
-  testVariablesAsset(VOLTMON_STATUS_INIT_U32,
+void test_VoltMon_UpdateAdc_u8_should_accept_raw_min_0_when_rawMax_allows_it(void)
+{
+  VoltMon_cfg_s cfg_s;
+  cfg_s.rawMax_u16  = 100u;
+  cfg_s.factor_u16  = 1u;
+  cfg_s.offset_s16  = 0;
+  cfg_s.uvTh_mV_u16 = 0u;
+  cfg_s.ovTh_mV_u16 = 0u;
+  cfg_s.hyst_mV_u16 = 0u;
+
+  testVariablesReset(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_INVAL_U32,
                      VoltMon_modeIdle_e,
-                     0u,
-                     0u,
+                     9u,
+                     99u,
                      false,
                      false);
+
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
+
+  ComputeVoltage_u16_ExpectAndReturn(0u, (const VoltMon_cfg_s *)0, 111u);
+  ComputeVoltage_u16_IgnoreArg_cfg_pcs();
+
+  TEST_ASSERT_EQUAL_UINT8(0u, VoltMon_UpdateAdc_u8(0u));
+
+  testVariablesAssert(VOLTMON_STATUS_INIT_U32,
+                      VoltMon_modeIdle_e,
+                      0u,
+                      111u,
+                      false,
+                      false);
+}
+
+void test_VoltMon_UpdateAdc_u8_should_accept_raw_equal_to_rawMax_as_valid_boundary(void)
+{
+  VoltMon_cfg_s cfg_s;
+  cfg_s.rawMax_u16  = 100u;
+  cfg_s.factor_u16  = 1u;
+  cfg_s.offset_s16  = 0;
+  cfg_s.uvTh_mV_u16 = 0u;
+  cfg_s.ovTh_mV_u16 = 0u;
+  cfg_s.hyst_mV_u16 = 0u;
+
+  testVariablesReset(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_INVAL_U32,
+                     VoltMon_modeIdle_e,
+                     9u,
+                     99u,
+                     false,
+                     false);
+
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
+
+  ComputeVoltage_u16_ExpectAndReturn(100u, (const VoltMon_cfg_s *)0, 4321u);
+  ComputeVoltage_u16_IgnoreArg_cfg_pcs();
+
+  TEST_ASSERT_EQUAL_UINT8(0u, VoltMon_UpdateAdc_u8(100u));
+
+  testVariablesAssert(VOLTMON_STATUS_INIT_U32,
+                      VoltMon_modeIdle_e,
+                      100u,
+                      4321u,
+                      false,
+                      false);
+}
+
+void test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_raw_is_rawMax_plus_1(void)
+{
+  VoltMon_cfg_s cfg_s;
+  cfg_s.rawMax_u16  = 100u;
+  cfg_s.factor_u16  = 2u;
+  cfg_s.offset_s16  = 0;
+  cfg_s.uvTh_mV_u16 = 0u;
+  cfg_s.ovTh_mV_u16 = 0u;
+  cfg_s.hyst_mV_u16 = 0u;
+
+  testVariablesReset(VOLTMON_STATUS_INIT_U32, VoltMon_modeIdle_e, 55u, 66u, false, false);
+
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
+
+  TEST_ASSERT_EQUAL_UINT8(2u, VoltMon_UpdateAdc_u8((uint16_t)(cfg_s.rawMax_u16 + 1u)));
+
+  testVariablesAssert(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32,
+                      VoltMon_modeIdle_e,
+                      55u,
+                      66u,
+                      false,
+                      false);
+}
+
+void test_VoltMon_UpdateAdc_u8_should_handle_corner_case_rawMax_0_only_raw_0_valid(void)
+{
+  VoltMon_cfg_s cfg_s;
+  cfg_s.rawMax_u16  = 0u;
+  cfg_s.factor_u16  = 1u;
+  cfg_s.offset_s16  = 0;
+  cfg_s.uvTh_mV_u16 = 0u;
+  cfg_s.ovTh_mV_u16 = 0u;
+  cfg_s.hyst_mV_u16 = 0u;
+
+  /* raw=0 valid */
+  testVariablesReset(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_INVAL_U32,
+                     VoltMon_modeIdle_e,
+                     77u,
+                     88u,
+                     false,
+                     false);
+
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
+  ComputeVoltage_u16_ExpectAndReturn(0u, (const VoltMon_cfg_s *)0, 5u);
+  ComputeVoltage_u16_IgnoreArg_cfg_pcs();
+
+  TEST_ASSERT_EQUAL_UINT8(0u, VoltMon_UpdateAdc_u8(0u));
+
+  testVariablesAssert(VOLTMON_STATUS_INIT_U32,
+                      VoltMon_modeIdle_e,
+                      0u,
+                      5u,
+                      false,
+                      false);
+
+  /* raw=1 invalid */
+  testVariablesReset(VOLTMON_STATUS_INIT_U32,
+                     VoltMon_modeIdle_e,
+                     10u,
+                     20u,
+                     false,
+                     false);
+
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
+
+  TEST_ASSERT_EQUAL_UINT8(2u, VoltMon_UpdateAdc_u8(1u));
+
+  testVariablesAssert(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32,
+                      VoltMon_modeIdle_e,
+                      10u,
+                      20u,
+                      false,
+                      false);
+}
+
+void test_VoltMon_UpdateAdc_u8_should_accept_raw_uint16_max_when_rawMax_uint16_max(void)
+{
+  VoltMon_cfg_s cfg_s;
+  cfg_s.rawMax_u16  = 65535u;
+  cfg_s.factor_u16  = 1u;
+  cfg_s.offset_s16  = 0;
+  cfg_s.uvTh_mV_u16 = 0u;
+  cfg_s.ovTh_mV_u16 = 0u;
+  cfg_s.hyst_mV_u16 = 0u;
+
+  testVariablesReset(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_INVAL_U32,
+                     VoltMon_modeIdle_e,
+                     1u,
+                     2u,
+                     false,
+                     false);
+
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
+
+  ComputeVoltage_u16_ExpectAndReturn(65535u, (const VoltMon_cfg_s *)0, 60000u);
+  ComputeVoltage_u16_IgnoreArg_cfg_pcs();
+
+  TEST_ASSERT_EQUAL_UINT8(0u, VoltMon_UpdateAdc_u8(65535u));
+
+  testVariablesAssert(VOLTMON_STATUS_INIT_U32,
+                      VoltMon_modeIdle_e,
+                      65535u,
+                      60000u,
+                      false,
+                      false);
+}
+
+void test_VoltMon_UpdateAdc_u8_should_update_last_values_clear_INVAL_and_keep_ERR_if_it_was_already_set(void)
+{
+  VoltMon_cfg_s cfg_s;
+  cfg_s.rawMax_u16  = 500u;
+  cfg_s.factor_u16  = 3u;
+  cfg_s.offset_s16  = 0;
+  cfg_s.uvTh_mV_u16 = 0u;
+  cfg_s.ovTh_mV_u16 = 0u;
+  cfg_s.hyst_mV_u16 = 0u;
+
+  testVariablesReset(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32,
+                     VoltMon_modeIdle_e,
+                     1u,
+                     2u,
+                     false,
+                     false);
+
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
+
+  ComputeVoltage_u16_ExpectAndReturn(50u, (const VoltMon_cfg_s *)0, 1234u);
+  ComputeVoltage_u16_IgnoreArg_cfg_pcs();
+
+  TEST_ASSERT_EQUAL_UINT8(0u, VoltMon_UpdateAdc_u8(50u));
+
+  testVariablesAssert(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32,
+                      VoltMon_modeIdle_e,
+                      50u,
+                      1234u,
+                      false,
+                      false);
 }

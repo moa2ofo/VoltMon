@@ -199,56 +199,7 @@ uint8_t VoltMon_DeInit_u8(void);
  */
 uint8_t VoltMon_SetMode_u8(VoltMon_mode_e mode);
 
-/**
- * @brief Provide a new ADC raw sample to VoltMon.
- *
- * @details
- * **Goal of the function**
- *
- * Update the internal raw sample and compute the corresponding voltage in mV
- * using the configuration scaling:
- * - Compute mV = raw * factor + offset
- * - Store last computed voltage
- * - Validate input range (raw <= rawMax)
- *
- * The function does not directly set UV/OV flags; evaluation is done in
- * VoltMon_Process() to keep timing deterministic.
- *
- * @par Activity diagram
- * @code
- * start
- * :l_cfg_pcs = VoltMon_CfgGet_pcfg();
- * if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0) then (not init)
- *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
- *   :return 1;
- * elseif ((l_cfg_pcs == 0) || (rawAdc_u16 > l_cfg_pcs->rawMax_u16)) then (invalid input)
- *   :StatusFlg_u32 |= (VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32);
- *   :return 2;
- * else (valid)
- *   :LastRawAdc_u16 = rawAdc_u16;
- *   :LastVoltage_mV_u16 = ComputeVoltage_u16(rawAdc_u16, l_cfg_pcs);
- *   :StatusFlg_u32 &= ~VOLTMON_STATUS_INVAL_U32;
- *   :return 0;
- * endif
- * stop
- * @endcode
- *
- * @par Interface summary
- *
- * | Interface                 | In | Out | Type / Signature   | Param  | Factor | Offset | Size | Range | Unit |
- * |--------------------------|----|-----|---------------------|--------|--------|--------|------|-------|------|
- * | rawAdc                   | X  |  X  | uint16_t            | rawAdc |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
- * | LastRawAdc_u16           |    |  X  | uint16_t (static)   |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
- * | LastVoltage_mV_u16       |    |  X  | uint16_t (static)   |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
- * | returned value           | X  |  X  | uint16_t            | - |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
- *
- * @param rawAdc_u16 ADC raw counts.
- * @return uint8_t
- * @retval 0 Updated.
- * @retval 1 Not initialized.
- * @retval 2 Input invalid/out of configured range.
- */
-uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16);
+
 
 /**
  * @brief Run one deterministic processing step of the VoltMon module.
@@ -290,15 +241,13 @@ uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16);
  *
  * @par Interface summary
  *
-| Interface               | In | Out | Type / Signature                                                    | Param | Factor | Offset | Size | Range              | Unit |
-|------------------------|----|-----|---------------------------------------------------------------------|-------|--------|--------|------|---------------------|------|
-| VoltMon_Process        |    |  X  | void (void)                                                         |  -    |   1    |   0    |  -   | -                   | [-]  |
-| Mode_e                 | X  |     | VoltMon_mode_e (static)                                             |  -    |   1    |   0    |  1   | [0,2]               | [-]  |
-| LastVoltage_mV_u16     | X  |     | uint16_t (static)                                                   |  -    |   1    |   0    |  2   | [0, UINT16_MAX]     | [mV] |
-| StatusFlg_u32          | X  |  X  | uint32_t (static)                                                   |  -    |   1    |   0    |  4   | [0, UINT32_MAX]     | [-]  |
-| l_CycleCnt_u32         | X  |  X  | uint32_t (static local)                                             |  -    |   1    |   0    |  4   | [0, UINT32_MAX]     | [-]  |
-| CheckThresholds_u8     | X  |  X  | uint8_t (uint16_t, const VoltMon_cfg_s*, bool*, bool*)              |  -    |   1    |   0    |  -   | [0, UINT8_MAX]     | [-]  |
-| UpdateStatusFlags_v    | X  |     | void (bool uvActive_b, bool ovActive_b, bool errSticky_b)           |  -    |   1    |   0    |  -   | -                   | [-]  |
+ * | Interface            | In | Out | Type / Signature              | Param | Factor | Offset | Size | Range | Unit |
+ * |---------------------|----|-----|-------------------------------|-------|--------|--------|------|-------|------|
+ * | VoltMon_Process     |    |  X  | void (void)                   |  -    |   1    |   0    |  -   | -     | [-]  |
+ * | Mode_e              | X  |     | VoltMon_mode_e (static)       |  -    |   1    |   0    |  1   | -     | 0,2]  |
+ * | LastVoltage_mV_u16  | X  |     | uint16_t (static)             |  -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
+ * | StatusFlg_u32       | X  |  X  | uint32_t (static)             |  -    |   1    |   0    |  4   | [0,UINT32_MAX] | [-]  |
+ * | l_CycleCnt_u32      | X  |  X  | uint32_t (static local)       |  -    |   1    |   0    |  4   | [0,UINT32_MAX] | [-]  |
  *
  * @return void
  */

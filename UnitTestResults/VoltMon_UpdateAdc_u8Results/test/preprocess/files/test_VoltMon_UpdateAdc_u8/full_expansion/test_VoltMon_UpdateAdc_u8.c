@@ -1,15 +1,10 @@
-# 0 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
+# 0 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
 # 0 "<built-in>"
 # 0 "<command-line>"
 # 1 "/usr/include/stdc-predef.h" 1 3 4
 # 0 "<command-line>" 2
-# 1 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
-
-
-
-
-
-
+# 1 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+# 9 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
 # 1 "utExecutionAndResults/utUnderTest/build/vendor/unity/src/unity.h" 1
 # 22 "utExecutionAndResults/utUnderTest/build/vendor/unity/src/unity.h"
 # 1 "utExecutionAndResults/utUnderTest/build/vendor/unity/src/unity_internals.h" 1
@@ -2160,14 +2155,12 @@ int suiteTearDown(int num_failures);
 # 53 "utExecutionAndResults/utUnderTest/build/vendor/unity/src/unity.h"
 void resetTest(void);
 void verifyTest(void);
-# 8 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 2
+# 10 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
 
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h" 1
+# 1 "/usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h" 1 3 4
+# 12 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
 
 # 1 "utExecutionAndResults/utUnderTest/src/VoltMon.h" 1
-# 27 "utExecutionAndResults/utUnderTest/src/VoltMon.h"
-# 1 "/usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h" 1 3 4
-# 28 "utExecutionAndResults/utUnderTest/src/VoltMon.h" 2
 # 47 "utExecutionAndResults/utUnderTest/src/VoltMon.h"
 typedef enum
 {
@@ -2186,21 +2179,19 @@ typedef enum
   VoltMon_retInvalidParam_e = 2,
   VoltMon_retBusyOrRejected_e = 3
 } VoltMon_ret_e;
-# 110 "utExecutionAndResults/utUnderTest/src/VoltMon.h"
+# 111 "utExecutionAndResults/utUnderTest/src/VoltMon.h"
+uint8_t VoltMon_Init_u8(void);
+# 154 "utExecutionAndResults/utUnderTest/src/VoltMon.h"
 uint8_t VoltMon_DeInit_u8(void);
-# 156 "utExecutionAndResults/utUnderTest/src/VoltMon.h"
+# 200 "utExecutionAndResults/utUnderTest/src/VoltMon.h"
 uint8_t VoltMon_SetMode_u8(VoltMon_mode_e mode);
-# 207 "utExecutionAndResults/utUnderTest/src/VoltMon.h"
-uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16);
-# 259 "utExecutionAndResults/utUnderTest/src/VoltMon.h"
+# 254 "utExecutionAndResults/utUnderTest/src/VoltMon.h"
 void VoltMon_Process(void);
-# 291 "utExecutionAndResults/utUnderTest/src/VoltMon.h"
+# 286 "utExecutionAndResults/utUnderTest/src/VoltMon.h"
 uint16_t VoltMon_GetVoltage_mV_u16(void);
-# 318 "utExecutionAndResults/utUnderTest/src/VoltMon.h"
+# 313 "utExecutionAndResults/utUnderTest/src/VoltMon.h"
 uint32_t VoltMon_GetStatus_u32(void);
-# 3 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h" 2
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 1
-# 25 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
+# 14 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
 # 1 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h" 1
 # 38 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h"
 typedef struct
@@ -2214,11 +2205,15 @@ typedef struct
 } VoltMon_cfg_s;
 # 69 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h"
 const VoltMon_cfg_s * VoltMon_CfgGet_pcfg(void);
+# 15 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 1
+# 25 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h" 1
 # 26 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 2
 # 48 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
-static uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s * cfg_pcs);
+uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s * cfg_pcs);
 # 74 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
-static uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16,
+uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16,
                                   const VoltMon_cfg_s * cfg_pcs,
                                   
 # 76 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 3 4
@@ -2231,20 +2226,26 @@ static uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16,
 # 77 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
                                       * ovActive_pb);
 # 102 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
-static void UpdateStatusFlags_v(
+void UpdateStatusFlags_v(
 # 102 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 3 4
-                               _Bool 
+                        _Bool 
 # 102 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
-                                    uvActive_b, 
+                             uvActive_b, 
 # 102 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 3 4
-                                                _Bool 
+                                         _Bool 
 # 102 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
-                                                     ovActive_b, 
+                                              ovActive_b, 
 # 102 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 3 4
-                                                                 _Bool 
+                                                          _Bool 
 # 102 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
-                                                                      errSticky_b);
-# 4 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h" 2
+                                                               errSticky_b);
+# 16 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 1
+
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon.h" 1
+# 3 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 2
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 1
+# 4 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 2
 
 
 
@@ -2263,41 +2264,33 @@ uint16_t VoltMon_GetLastVoltage_mV_u16(void);
 void VoltMon_SetLastVoltage_mV_u16(uint16_t value);
 
 
-# 21 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h" 3 4
+# 21 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 3 4
 _Bool 
-# 21 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h"
+# 21 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h"
     VoltMon_GetUvActive_b(void);
 void VoltMon_SetUvActive_b(
-# 22 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h" 3 4
+# 22 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 3 4
                           _Bool 
-# 22 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h"
+# 22 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h"
                                value);
 
 
-# 24 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h" 3 4
+# 24 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 3 4
 _Bool 
-# 24 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h"
+# 24 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h"
     VoltMon_GetOvActive_b(void);
 void VoltMon_SetOvActive_b(
-# 25 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h" 3 4
+# 25 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 3 4
                           _Bool 
-# 25 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h"
+# 25 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h"
                                value);
-# 57 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h"
-uint8_t VoltMon_Init_u8(void);
-# 10 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 2
-# 1 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_Init_u8/mock_VoltMon_cfg.h" 1
+# 80 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h"
+uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16);
+# 17 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
 
 
-
-
-
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h" 1
-# 7 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_Init_u8/mock_VoltMon_cfg.h" 2
-
-
-
-
+# 1 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_UpdateAdc_u8/mock_VoltMon_cfg.h" 1
+# 11 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_UpdateAdc_u8/mock_VoltMon_cfg.h"
 #pragma GCC diagnostic push
 
 
@@ -2329,256 +2322,632 @@ void VoltMon_CfgGet_pcfg_CMockExpectAndReturn(UNITY_UINT cmock_line, const VoltM
 typedef const VoltMon_cfg_s* (* CMOCK_VoltMon_CfgGet_pcfg_CALLBACK)(int cmock_num_calls);
 void VoltMon_CfgGet_pcfg_AddCallback(CMOCK_VoltMon_CfgGet_pcfg_CALLBACK Callback);
 void VoltMon_CfgGet_pcfg_Stub(CMOCK_VoltMon_CfgGet_pcfg_CALLBACK Callback);
-# 50 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_Init_u8/mock_VoltMon_cfg.h"
+# 50 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_UpdateAdc_u8/mock_VoltMon_cfg.h"
 #pragma GCC diagnostic pop
-# 11 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 2
+# 20 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+# 1 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_UpdateAdc_u8/mock_VoltMon_priv.h" 1
+# 11 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_UpdateAdc_u8/mock_VoltMon_priv.h"
+#pragma GCC diagnostic push
+
+
+#pragma GCC diagnostic ignored "-Wpragmas"
+
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wduplicate-decl-specifier"
 
 
 
 
 
-void testVariablesAsset(uint32_t expStatusFlg_u32,
-                        VoltMon_mode_e expMode_e,
-                        uint16_t expLastRawAdc_u16,
-                        uint16_t expLastVoltage_mV_u16,
-                        
-# 20 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
-                       _Bool 
-# 20 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
-                            expUvActive_b,
-                        
-# 21 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
-                       _Bool 
-# 21 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
-                            expOvActive_b)
+
+void mock_VoltMon_priv_Init(void);
+void mock_VoltMon_priv_Destroy(void);
+void mock_VoltMon_priv_Verify(void);
+
+
+
+
+
+
+void ComputeVoltage_u16_CMockIgnoreAndReturn(UNITY_UINT cmock_line, uint16_t cmock_to_return);
+
+void ComputeVoltage_u16_CMockStopIgnore(void);
+
+
+void ComputeVoltage_u16_CMockExpectAnyArgsAndReturn(UNITY_UINT cmock_line, uint16_t cmock_to_return);
+
+
+void ComputeVoltage_u16_CMockExpectAndReturn(UNITY_UINT cmock_line, uint16_t rawAdc_u16, const VoltMon_cfg_s* cfg_pcs, uint16_t cmock_to_return);
+typedef uint16_t (* CMOCK_ComputeVoltage_u16_CALLBACK)(uint16_t rawAdc_u16, const VoltMon_cfg_s* cfg_pcs, int cmock_num_calls);
+void ComputeVoltage_u16_AddCallback(CMOCK_ComputeVoltage_u16_CALLBACK Callback);
+void ComputeVoltage_u16_Stub(CMOCK_ComputeVoltage_u16_CALLBACK Callback);
+
+
+
+void ComputeVoltage_u16_CMockExpectWithArrayAndReturn(UNITY_UINT cmock_line, uint16_t rawAdc_u16, const VoltMon_cfg_s* cfg_pcs, int cfg_pcs_Depth, uint16_t cmock_to_return);
+
+void ComputeVoltage_u16_CMockIgnoreArg_rawAdc_u16(UNITY_UINT cmock_line);
+
+void ComputeVoltage_u16_CMockIgnoreArg_cfg_pcs(UNITY_UINT cmock_line);
+
+
+void CheckThresholds_u8_CMockIgnoreAndReturn(UNITY_UINT cmock_line, uint8_t cmock_to_return);
+
+void CheckThresholds_u8_CMockStopIgnore(void);
+
+
+void CheckThresholds_u8_CMockExpectAnyArgsAndReturn(UNITY_UINT cmock_line, uint8_t cmock_to_return);
+
+
+void CheckThresholds_u8_CMockExpectAndReturn(UNITY_UINT cmock_line, uint16_t voltage_mV_u16, const VoltMon_cfg_s* cfg_pcs, _Bool* uvActive_pb, _Bool* ovActive_pb, uint8_t cmock_to_return);
+typedef uint8_t (* CMOCK_CheckThresholds_u8_CALLBACK)(uint16_t voltage_mV_u16, const VoltMon_cfg_s* cfg_pcs, _Bool* uvActive_pb, _Bool* ovActive_pb, int cmock_num_calls);
+void CheckThresholds_u8_AddCallback(CMOCK_CheckThresholds_u8_CALLBACK Callback);
+void CheckThresholds_u8_Stub(CMOCK_CheckThresholds_u8_CALLBACK Callback);
+
+
+
+void CheckThresholds_u8_CMockExpectWithArrayAndReturn(UNITY_UINT cmock_line, uint16_t voltage_mV_u16, const VoltMon_cfg_s* cfg_pcs, int cfg_pcs_Depth, _Bool* uvActive_pb, int uvActive_pb_Depth, _Bool* ovActive_pb, int ovActive_pb_Depth, uint8_t cmock_to_return);
+
+
+
+void CheckThresholds_u8_CMockReturnMemThruPtr_uvActive_pb(UNITY_UINT cmock_line, _Bool const* uvActive_pb, size_t cmock_size);
+
+
+
+void CheckThresholds_u8_CMockReturnMemThruPtr_ovActive_pb(UNITY_UINT cmock_line, _Bool const* ovActive_pb, size_t cmock_size);
+
+void CheckThresholds_u8_CMockIgnoreArg_voltage_mV_u16(UNITY_UINT cmock_line);
+
+void CheckThresholds_u8_CMockIgnoreArg_cfg_pcs(UNITY_UINT cmock_line);
+
+void CheckThresholds_u8_CMockIgnoreArg_uvActive_pb(UNITY_UINT cmock_line);
+
+void CheckThresholds_u8_CMockIgnoreArg_ovActive_pb(UNITY_UINT cmock_line);
+
+
+void UpdateStatusFlags_v_CMockIgnore(void);
+
+void UpdateStatusFlags_v_CMockStopIgnore(void);
+
+
+void UpdateStatusFlags_v_CMockExpectAnyArgs(UNITY_UINT cmock_line);
+
+
+void UpdateStatusFlags_v_CMockExpect(UNITY_UINT cmock_line, _Bool uvActive_b, _Bool ovActive_b, _Bool errSticky_b);
+typedef void (* CMOCK_UpdateStatusFlags_v_CALLBACK)(_Bool uvActive_b, _Bool ovActive_b, _Bool errSticky_b, int cmock_num_calls);
+void UpdateStatusFlags_v_AddCallback(CMOCK_UpdateStatusFlags_v_CALLBACK Callback);
+void UpdateStatusFlags_v_Stub(CMOCK_UpdateStatusFlags_v_CALLBACK Callback);
+
+
+void UpdateStatusFlags_v_CMockIgnoreArg_uvActive_b(UNITY_UINT cmock_line);
+
+void UpdateStatusFlags_v_CMockIgnoreArg_ovActive_b(UNITY_UINT cmock_line);
+
+void UpdateStatusFlags_v_CMockIgnoreArg_errSticky_b(UNITY_UINT cmock_line);
+
+
+
+
+
+
+
+#pragma GCC diagnostic pop
+# 21 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+
+
+
+static void testVariablesAssert(uint32_t expStatus_u32,
+                                VoltMon_mode_e expMode_e,
+                                uint16_t expLastRaw_u16,
+                                uint16_t expLastVoltage_u16,
+                                
+# 28 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                               _Bool 
+# 28 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                                              expUvActive_b,
+                                
+# 29 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                               _Bool 
+# 29 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                                              expOvActive_b)
 {
-  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT32)((expStatusFlg_u32)), (UNITY_INT)(UNITY_UINT32)((VoltMon_GetStatusFlg_u32())), (
-# 23 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
+  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT32)((expStatus_u32)), (UNITY_INT)(UNITY_UINT32)((VoltMon_GetStatusFlg_u32())), (
+# 31 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
  ((void *)0)
-# 23 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- ), (UNITY_UINT)(23), UNITY_DISPLAY_STYLE_UINT32);
+# 31 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+ ), (UNITY_UINT)(31), UNITY_DISPLAY_STYLE_UINT32);
   UnityAssertEqualNumber((UNITY_INT)(((int)expMode_e)), (UNITY_INT)(((int)VoltMon_GetMode_e())), (
-# 24 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
+# 32 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
  ((void *)0)
-# 24 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- ), (UNITY_UINT)(24), UNITY_DISPLAY_STYLE_INT);
-  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT16)((expLastRawAdc_u16)), (UNITY_INT)(UNITY_UINT16)((VoltMon_GetLastRawAdc_u16())), (
-# 25 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
+# 32 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+ ), (UNITY_UINT)(32), UNITY_DISPLAY_STYLE_INT);
+  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT16)((expLastRaw_u16)), (UNITY_INT)(UNITY_UINT16)((VoltMon_GetLastRawAdc_u16())), (
+# 33 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
  ((void *)0)
-# 25 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- ), (UNITY_UINT)(25), UNITY_DISPLAY_STYLE_UINT16);
-  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT16)((expLastVoltage_mV_u16)), (UNITY_INT)(UNITY_UINT16)((VoltMon_GetLastVoltage_mV_u16())), (
-# 26 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
+# 33 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+ ), (UNITY_UINT)(33), UNITY_DISPLAY_STYLE_UINT16);
+  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT16)((expLastVoltage_u16)), (UNITY_INT)(UNITY_UINT16)((VoltMon_GetLastVoltage_mV_u16())), (
+# 34 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
  ((void *)0)
-# 26 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- ), (UNITY_UINT)(26), UNITY_DISPLAY_STYLE_UINT16);
-  UnityAssertEqualNumber((UNITY_INT)((expUvActive_b)), (UNITY_INT)((VoltMon_GetUvActive_b())), (
-# 27 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
+# 34 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+ ), (UNITY_UINT)(34), UNITY_DISPLAY_STYLE_UINT16);
+  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )(((uint8_t)expUvActive_b)), (UNITY_INT)(UNITY_UINT8 )(((uint8_t)VoltMon_GetUvActive_b())), (
+# 35 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
  ((void *)0)
-# 27 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- ), (UNITY_UINT)(27), UNITY_DISPLAY_STYLE_INT);
-  UnityAssertEqualNumber((UNITY_INT)((expOvActive_b)), (UNITY_INT)((VoltMon_GetOvActive_b())), (
-# 28 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
+# 35 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+ ), (UNITY_UINT)(35), UNITY_DISPLAY_STYLE_UINT8);
+  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )(((uint8_t)expOvActive_b)), (UNITY_INT)(UNITY_UINT8 )(((uint8_t)VoltMon_GetOvActive_b())), (
+# 36 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
  ((void *)0)
-# 28 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- ), (UNITY_UINT)(28), UNITY_DISPLAY_STYLE_INT);
+# 36 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+ ), (UNITY_UINT)(36), UNITY_DISPLAY_STYLE_UINT8);
 }
 
-void testVariableReset(uint32_t statusFlg_u32,
-                       VoltMon_mode_e mode_e,
-                       uint16_t lastRawAdc_u16,
-                       uint16_t lastVoltage_mV_u16,
-                       
-# 35 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
-                      _Bool 
-# 35 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
-                           uvActive_b,
-                       
-# 36 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
-                      _Bool 
-# 36 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
-                           ovActive_b)
+static void testVariablesReset(uint32_t status_u32,
+                               VoltMon_mode_e mode_e,
+                               uint16_t lastRaw_u16,
+                               uint16_t lastVoltage_u16,
+                               
+# 43 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                              _Bool 
+# 43 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                                             uvActive_b,
+                               
+# 44 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                              _Bool 
+# 44 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                                             ovActive_b)
 {
-  VoltMon_SetStatusFlg_u32(statusFlg_u32);
+  VoltMon_SetStatusFlg_u32(status_u32);
   VoltMon_SetMode_e(mode_e);
-  VoltMon_SetLastRawAdc_u16(lastRawAdc_u16);
-  VoltMon_SetLastVoltage_mV_u16(lastVoltage_mV_u16);
+  VoltMon_SetLastRawAdc_u16(lastRaw_u16);
+  VoltMon_SetLastVoltage_mV_u16(lastVoltage_u16);
   VoltMon_SetUvActive_b(uvActive_b);
   VoltMon_SetOvActive_b(ovActive_b);
 }
 
 
 
-
-
 void setUp(void)
 {
-
-  testVariableReset(0u,
-                    VoltMon_modeIdle_e,
-                    0u,
-                    0u,
-                    
-# 57 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
-                   0
-# 57 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
-                        ,
-                    
-# 58 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
-                   0
-# 58 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
-                        );
+  testVariablesReset(0u, VoltMon_modeIdle_e, 0u, 0u, 
+# 58 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                                                    0
+# 58 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                                                         , 
+# 58 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                                                           0
+# 58 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                                                                );
 }
 
 void tearDown(void)
 {
-
 }
 
 
 
-
-
-void test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_cfg_is_NULL(void)
+void test_VoltMon_UpdateAdc_u8_should_return_1_and_set_ERR_when_not_initialized(void)
 {
+  VoltMon_cfg_s cfg_s;
+  cfg_s.rawMax_u16 = 1000u;
+  cfg_s.factor_u16 = 1u;
+  cfg_s.offset_s16 = 0;
+  cfg_s.uvTh_mV_u16 = 0u;
+  cfg_s.ovTh_mV_u16 = 0u;
+  cfg_s.hyst_mV_u16 = 0u;
 
-  VoltMon_CfgGet_pcfg_CMockExpectAndReturn(73, 
-# 73 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
+  testVariablesReset(0u, VoltMon_modeIdle_e, 11u, 22u, 
+# 77 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                                                      0
+# 77 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                                                           , 
+# 77 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                                                             0
+# 77 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                                                                  );
+
+  VoltMon_CfgGet_pcfg_CMockExpectAndReturn(79, &cfg_s);
+
+  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((1u)), (UNITY_INT)(UNITY_UINT8 )((VoltMon_UpdateAdc_u8(10u))), (
+# 81 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
  ((void *)0)
-# 73 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- );
+# 81 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+ ), (UNITY_UINT)(81), UNITY_DISPLAY_STYLE_UINT8);
 
-
-  uint8_t ret_u8 = VoltMon_Init_u8();
-
-
-  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((1u)), (UNITY_INT)(UNITY_UINT8 )((ret_u8)), (
-# 79 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
- ((void *)0)
-# 79 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- ), (UNITY_UINT)(79), UNITY_DISPLAY_STYLE_UINT8);
-  do { if (((VoltMon_GetStatusFlg_u32() & (0x00000002u)) != 0u)) { } else { UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((80))); } } while (0);
-
-
-  UnityAssertEqualNumber((UNITY_INT)(((int)VoltMon_modeIdle_e)), (UNITY_INT)(((int)VoltMon_GetMode_e())), (
-# 83 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
- ((void *)0)
-# 83 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- ), (UNITY_UINT)(83), UNITY_DISPLAY_STYLE_INT);
-  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT16)((0u)), (UNITY_INT)(UNITY_UINT16)((VoltMon_GetLastRawAdc_u16())), (
-# 84 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
- ((void *)0)
-# 84 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- ), (UNITY_UINT)(84), UNITY_DISPLAY_STYLE_UINT16);
-  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT16)((0u)), (UNITY_INT)(UNITY_UINT16)((VoltMon_GetLastVoltage_mV_u16())), (
-# 85 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
- ((void *)0)
-# 85 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- ), (UNITY_UINT)(85), UNITY_DISPLAY_STYLE_UINT16);
-  do { if (!(VoltMon_GetUvActive_b())) { } else { UnityFail( ((" Expected FALSE Was TRUE")), (UNITY_UINT)((86))); } } while (0);
-  do { if (!(VoltMon_GetOvActive_b())) { } else { UnityFail( ((" Expected FALSE Was TRUE")), (UNITY_UINT)((87))); } } while (0);
+  testVariablesAssert((0x00000002u),
+                      VoltMon_modeIdle_e,
+                      11u,
+                      22u,
+                      
+# 87 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 87 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          ,
+                      
+# 88 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 88 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          );
 }
 
-void test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_rawMax_is_0(void)
+void test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_cfg_is_NULL(void)
 {
+  testVariablesReset((0x00000001u), VoltMon_modeIdle_e, 7u, 8u, 
+# 93 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                                                                         0
+# 93 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                                                                              , 
+# 93 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                                                                                0
+# 93 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                                                                                     );
 
-  static const VoltMon_cfg_s cfg_s =
-  {
-    .rawMax_u16 = 0u,
-    .factor_u16 = 1u,
-    .offset_s16 = 0,
-    .uvTh_mV_u16 = 1000u,
-    .ovTh_mV_u16 = 5000u,
-    .hyst_mV_u16 = 100u,
-  };
+  VoltMon_CfgGet_pcfg_CMockExpectAndReturn(95, (const VoltMon_cfg_s *)0);
 
-  VoltMon_CfgGet_pcfg_CMockExpectAndReturn(103, &cfg_s);
-
-
-  uint8_t ret_u8 = VoltMon_Init_u8();
-
-
-  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((1u)), (UNITY_INT)(UNITY_UINT8 )((ret_u8)), (
-# 109 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
+  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((2u)), (UNITY_INT)(UNITY_UINT8 )((VoltMon_UpdateAdc_u8(0u))), (
+# 97 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
  ((void *)0)
-# 109 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- ), (UNITY_UINT)(109), UNITY_DISPLAY_STYLE_UINT8);
-  do { if (((VoltMon_GetStatusFlg_u32() & (0x00000002u)) != 0u)) { } else { UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((110))); } } while (0);
+# 97 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+ ), (UNITY_UINT)(97), UNITY_DISPLAY_STYLE_UINT8);
 
-
-  UnityAssertEqualNumber((UNITY_INT)(((int)VoltMon_modeIdle_e)), (UNITY_INT)(((int)VoltMon_GetMode_e())), (
-# 113 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
- ((void *)0)
-# 113 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- ), (UNITY_UINT)(113), UNITY_DISPLAY_STYLE_INT);
-  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT16)((0u)), (UNITY_INT)(UNITY_UINT16)((VoltMon_GetLastRawAdc_u16())), (
-# 114 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
- ((void *)0)
-# 114 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- ), (UNITY_UINT)(114), UNITY_DISPLAY_STYLE_UINT16);
-  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT16)((0u)), (UNITY_INT)(UNITY_UINT16)((VoltMon_GetLastVoltage_mV_u16())), (
-# 115 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
- ((void *)0)
-# 115 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- ), (UNITY_UINT)(115), UNITY_DISPLAY_STYLE_UINT16);
-  do { if (!(VoltMon_GetUvActive_b())) { } else { UnityFail( ((" Expected FALSE Was TRUE")), (UNITY_UINT)((116))); } } while (0);
-  do { if (!(VoltMon_GetOvActive_b())) { } else { UnityFail( ((" Expected FALSE Was TRUE")), (UNITY_UINT)((117))); } } while (0);
+  testVariablesAssert((0x00000001u) | (0x00000002u) | (0x00000010u),
+                      VoltMon_modeIdle_e,
+                      7u,
+                      8u,
+                      
+# 103 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 103 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          ,
+                      
+# 104 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 104 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          );
 }
 
-void test_VoltMon_Init_u8_should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid(void)
+
+
+void test_VoltMon_UpdateAdc_u8_should_accept_raw_min_0_when_rawMax_allows_it(void)
 {
+  VoltMon_cfg_s cfg_s;
+  cfg_s.rawMax_u16 = 100u;
+  cfg_s.factor_u16 = 1u;
+  cfg_s.offset_s16 = 0;
+  cfg_s.uvTh_mV_u16 = 0u;
+  cfg_s.ovTh_mV_u16 = 0u;
+  cfg_s.hyst_mV_u16 = 0u;
 
-  static const VoltMon_cfg_s cfg_s =
-  {
-    .rawMax_u16 = 4095u,
-    .factor_u16 = 1u,
-    .offset_s16 = 0,
-    .uvTh_mV_u16 = 1000u,
-    .ovTh_mV_u16 = 5000u,
-    .hyst_mV_u16 = 100u,
-  };
-
-
-  testVariableReset(0xFFFFFFFFu,
-                    VoltMon_modeDiag_e,
-                    1234u,
-                    4321u,
-                    
-# 138 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
-                   1
-# 138 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
-                       ,
-                    
-# 139 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
-                   1
-# 139 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
-                       );
-
-  VoltMon_CfgGet_pcfg_CMockExpectAndReturn(141, &cfg_s);
-
-
-  uint8_t ret_u8 = VoltMon_Init_u8();
-
-
-  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((0u)), (UNITY_INT)(UNITY_UINT8 )((ret_u8)), (
-# 147 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
- ((void *)0)
-# 147 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
- ), (UNITY_UINT)(147), UNITY_DISPLAY_STYLE_UINT8);
-
-
-  testVariablesAsset((0x00000001u),
+  testVariablesReset((0x00000001u) | (0x00000010u),
                      VoltMon_modeIdle_e,
-                     0u,
-                     0u,
+                     9u,
+                     99u,
                      
-# 154 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
+# 123 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
                     0
-# 154 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
+# 123 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
                          ,
                      
-# 155 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c" 3 4
+# 124 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
                     0
-# 155 "utExecutionAndResults/utUnderTest/test/test_VoltMon_Init_u8.c"
+# 124 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
                          );
+
+  VoltMon_CfgGet_pcfg_CMockExpectAndReturn(126, &cfg_s);
+
+  ComputeVoltage_u16_CMockExpectAndReturn(128, 0u, (const VoltMon_cfg_s *)0, 111u);
+  ComputeVoltage_u16_CMockIgnoreArg_cfg_pcs(129);
+
+  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((0u)), (UNITY_INT)(UNITY_UINT8 )((VoltMon_UpdateAdc_u8(0u))), (
+# 131 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+ ((void *)0)
+# 131 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+ ), (UNITY_UINT)(131), UNITY_DISPLAY_STYLE_UINT8);
+
+  testVariablesAssert((0x00000001u),
+                      VoltMon_modeIdle_e,
+                      0u,
+                      111u,
+                      
+# 137 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 137 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          ,
+                      
+# 138 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 138 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          );
+}
+
+void test_VoltMon_UpdateAdc_u8_should_accept_raw_equal_to_rawMax_as_valid_boundary(void)
+{
+  VoltMon_cfg_s cfg_s;
+  cfg_s.rawMax_u16 = 100u;
+  cfg_s.factor_u16 = 1u;
+  cfg_s.offset_s16 = 0;
+  cfg_s.uvTh_mV_u16 = 0u;
+  cfg_s.ovTh_mV_u16 = 0u;
+  cfg_s.hyst_mV_u16 = 0u;
+
+  testVariablesReset((0x00000001u) | (0x00000010u),
+                     VoltMon_modeIdle_e,
+                     9u,
+                     99u,
+                     
+# 155 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                    0
+# 155 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                         ,
+                     
+# 156 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                    0
+# 156 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                         );
+
+  VoltMon_CfgGet_pcfg_CMockExpectAndReturn(158, &cfg_s);
+
+  ComputeVoltage_u16_CMockExpectAndReturn(160, 100u, (const VoltMon_cfg_s *)0, 4321u);
+  ComputeVoltage_u16_CMockIgnoreArg_cfg_pcs(161);
+
+  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((0u)), (UNITY_INT)(UNITY_UINT8 )((VoltMon_UpdateAdc_u8(100u))), (
+# 163 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+ ((void *)0)
+# 163 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+ ), (UNITY_UINT)(163), UNITY_DISPLAY_STYLE_UINT8);
+
+  testVariablesAssert((0x00000001u),
+                      VoltMon_modeIdle_e,
+                      100u,
+                      4321u,
+                      
+# 169 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 169 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          ,
+                      
+# 170 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 170 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          );
+}
+
+void test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_raw_is_rawMax_plus_1(void)
+{
+  VoltMon_cfg_s cfg_s;
+  cfg_s.rawMax_u16 = 100u;
+  cfg_s.factor_u16 = 2u;
+  cfg_s.offset_s16 = 0;
+  cfg_s.uvTh_mV_u16 = 0u;
+  cfg_s.ovTh_mV_u16 = 0u;
+  cfg_s.hyst_mV_u16 = 0u;
+
+  testVariablesReset((0x00000001u), VoltMon_modeIdle_e, 55u, 66u, 
+# 183 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                                                                           0
+# 183 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                                                                                , 
+# 183 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                                                                                  0
+# 183 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                                                                                       );
+
+  VoltMon_CfgGet_pcfg_CMockExpectAndReturn(185, &cfg_s);
+
+  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((2u)), (UNITY_INT)(UNITY_UINT8 )((VoltMon_UpdateAdc_u8((uint16_t)(cfg_s.rawMax_u16 + 1u)))), (
+# 187 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+ ((void *)0)
+# 187 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+ ), (UNITY_UINT)(187), UNITY_DISPLAY_STYLE_UINT8);
+
+  testVariablesAssert((0x00000001u) | (0x00000002u) | (0x00000010u),
+                      VoltMon_modeIdle_e,
+                      55u,
+                      66u,
+                      
+# 193 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 193 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          ,
+                      
+# 194 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 194 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          );
+}
+
+void test_VoltMon_UpdateAdc_u8_should_handle_corner_case_rawMax_0_only_raw_0_valid(void)
+{
+  VoltMon_cfg_s cfg_s;
+  cfg_s.rawMax_u16 = 0u;
+  cfg_s.factor_u16 = 1u;
+  cfg_s.offset_s16 = 0;
+  cfg_s.uvTh_mV_u16 = 0u;
+  cfg_s.ovTh_mV_u16 = 0u;
+  cfg_s.hyst_mV_u16 = 0u;
+
+
+  testVariablesReset((0x00000001u) | (0x00000010u),
+                     VoltMon_modeIdle_e,
+                     77u,
+                     88u,
+                     
+# 212 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                    0
+# 212 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                         ,
+                     
+# 213 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                    0
+# 213 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                         );
+
+  VoltMon_CfgGet_pcfg_CMockExpectAndReturn(215, &cfg_s);
+  ComputeVoltage_u16_CMockExpectAndReturn(216, 0u, (const VoltMon_cfg_s *)0, 5u);
+  ComputeVoltage_u16_CMockIgnoreArg_cfg_pcs(217);
+
+  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((0u)), (UNITY_INT)(UNITY_UINT8 )((VoltMon_UpdateAdc_u8(0u))), (
+# 219 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+ ((void *)0)
+# 219 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+ ), (UNITY_UINT)(219), UNITY_DISPLAY_STYLE_UINT8);
+
+  testVariablesAssert((0x00000001u),
+                      VoltMon_modeIdle_e,
+                      0u,
+                      5u,
+                      
+# 225 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 225 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          ,
+                      
+# 226 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 226 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          );
+
+
+  testVariablesReset((0x00000001u),
+                     VoltMon_modeIdle_e,
+                     10u,
+                     20u,
+                     
+# 233 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                    0
+# 233 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                         ,
+                     
+# 234 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                    0
+# 234 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                         );
+
+  VoltMon_CfgGet_pcfg_CMockExpectAndReturn(236, &cfg_s);
+
+  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((2u)), (UNITY_INT)(UNITY_UINT8 )((VoltMon_UpdateAdc_u8(1u))), (
+# 238 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+ ((void *)0)
+# 238 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+ ), (UNITY_UINT)(238), UNITY_DISPLAY_STYLE_UINT8);
+
+  testVariablesAssert((0x00000001u) | (0x00000002u) | (0x00000010u),
+                      VoltMon_modeIdle_e,
+                      10u,
+                      20u,
+                      
+# 244 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 244 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          ,
+                      
+# 245 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 245 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          );
+}
+
+void test_VoltMon_UpdateAdc_u8_should_accept_raw_uint16_max_when_rawMax_uint16_max(void)
+{
+  VoltMon_cfg_s cfg_s;
+  cfg_s.rawMax_u16 = 65535u;
+  cfg_s.factor_u16 = 1u;
+  cfg_s.offset_s16 = 0;
+  cfg_s.uvTh_mV_u16 = 0u;
+  cfg_s.ovTh_mV_u16 = 0u;
+  cfg_s.hyst_mV_u16 = 0u;
+
+  testVariablesReset((0x00000001u) | (0x00000010u),
+                     VoltMon_modeIdle_e,
+                     1u,
+                     2u,
+                     
+# 262 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                    0
+# 262 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                         ,
+                     
+# 263 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                    0
+# 263 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                         );
+
+  VoltMon_CfgGet_pcfg_CMockExpectAndReturn(265, &cfg_s);
+
+  ComputeVoltage_u16_CMockExpectAndReturn(267, 65535u, (const VoltMon_cfg_s *)0, 60000u);
+  ComputeVoltage_u16_CMockIgnoreArg_cfg_pcs(268);
+
+  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((0u)), (UNITY_INT)(UNITY_UINT8 )((VoltMon_UpdateAdc_u8(65535u))), (
+# 270 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+ ((void *)0)
+# 270 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+ ), (UNITY_UINT)(270), UNITY_DISPLAY_STYLE_UINT8);
+
+  testVariablesAssert((0x00000001u),
+                      VoltMon_modeIdle_e,
+                      65535u,
+                      60000u,
+                      
+# 276 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 276 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          ,
+                      
+# 277 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 277 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          );
+}
+
+void test_VoltMon_UpdateAdc_u8_should_update_last_values_clear_INVAL_and_keep_ERR_if_it_was_already_set(void)
+{
+  VoltMon_cfg_s cfg_s;
+  cfg_s.rawMax_u16 = 500u;
+  cfg_s.factor_u16 = 3u;
+  cfg_s.offset_s16 = 0;
+  cfg_s.uvTh_mV_u16 = 0u;
+  cfg_s.ovTh_mV_u16 = 0u;
+  cfg_s.hyst_mV_u16 = 0u;
+
+  testVariablesReset((0x00000001u) | (0x00000002u) | (0x00000010u),
+                     VoltMon_modeIdle_e,
+                     1u,
+                     2u,
+                     
+# 294 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                    0
+# 294 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                         ,
+                     
+# 295 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                    0
+# 295 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                         );
+
+  VoltMon_CfgGet_pcfg_CMockExpectAndReturn(297, &cfg_s);
+
+  ComputeVoltage_u16_CMockExpectAndReturn(299, 50u, (const VoltMon_cfg_s *)0, 1234u);
+  ComputeVoltage_u16_CMockIgnoreArg_cfg_pcs(300);
+
+  UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT8 )((0u)), (UNITY_INT)(UNITY_UINT8 )((VoltMon_UpdateAdc_u8(50u))), (
+# 302 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+ ((void *)0)
+# 302 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+ ), (UNITY_UINT)(302), UNITY_DISPLAY_STYLE_UINT8);
+
+  testVariablesAssert((0x00000001u) | (0x00000002u),
+                      VoltMon_modeIdle_e,
+                      50u,
+                      1234u,
+                      
+# 308 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 308 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          ,
+                      
+# 309 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 3 4
+                     0
+# 309 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
+                          );
 }

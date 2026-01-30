@@ -79,13 +79,29 @@ typedef enum
  *
  * This is useful for tests and controlled shutdown.
  *
+ * @par Activity diagram
+ * @code
+ * start
+ * if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0) then (not init)
+ *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+ *   :return 1;
+ * else (init)
+ *   :Mode_e = VoltMon_modeIdle_e;
+ *   :LastRawAdc_u16 = 0; LastVoltage_mV_u16 = 0;
+ *   :UvActive_b = false; OvActive_b = false;
+ *   :StatusFlg_u32 = 0;
+ *   :return 0;
+ * endif
+ * stop
+ * @endcode
+ *
  * @par Interface summary
  *
  * | Interface            | In | Out | Type / Signature          | Param | Factor | Offset | Size | Range | Unit |
  * |---------------------|----|-----|---------------------------|-------|--------|--------|------|-------|------|
  * | VoltMon_DeInit_u8   |    |  X  | uint8_t (void)            |  -    |   1    |   0    |  1   | 0..3  | [-]  |
- * | StatusFlg_u32       |    |  X  | uint32_t (static)         |  -    |   1    |   0    |  1   | -     | [-]  |
- * | Mode_e              |    |  X  | VoltMon_mode_e (static)   |  -    |   1    |   0    |  1   | -     | [-]  |
+ * | StatusFlg_u32       |    |  X  | uint32_t (static)         |  -    |   1    |   0    |  1   | [0,UINT32_MAX] | [-]  |
+ * | Mode_e              |    |  X  | VoltMon_mode_e (static)   |  -    |   1    |   0    |  1   | -     | [0,2]  |
  *
  * @return uint8_t
  * @retval 0 De-initialized.
@@ -106,13 +122,30 @@ uint8_t VoltMon_DeInit_u8(void);
  *
  * Invalid mode requests are rejected and the ERR flag is set.
  *
+ * @par Activity diagram
+ * @code
+ * start
+ * if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0) then (not init)
+ *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+ *   :return 1;
+ * elseif ((mode != VoltMon_modeIdle_e) && (mode != VoltMon_modeRun_e) && (mode != VoltMon_modeDiag_e)) then (invalid mode)
+ *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+ *   :return 2;
+ * else (accepted)
+ *   :Mode_e = mode;
+ *   :StatusFlg_u32 &= ~VOLTMON_STATUS_INVAL_U32;
+ *   :return 0;
+ * endif
+ * stop
+ * @endcode
+ *
  * @par Interface summary
  *
  * | Interface              | In | Out | Type / Signature                          | Param | Factor | Offset | Size | Range | Unit |
  * |-----------------------|----|-----|-------------------------------------------|-------|--------|--------|------|-------|------|
- * | VoltMon_SetMode_u8    | X  |  X  | uint8_t (VoltMon_mode_e mode)             | mode  |   1    |   0    |  1   | -     | [-]  |
- * | Mode_e                |    |  X  | VoltMon_mode_e (static)                   |  -    |   1    |   0    |  1   | -     | [-]  |
- * | StatusFlg_u32         |    |  X  | uint32_t (static)                         |  -    |   1    |   0    |  1   | -     | [-]  |
+ * | VoltMon_SetMode_u8    | X  |  X  | uint8_t (VoltMon_mode_e mode)             | mode  |   1    |   0    |  1   | [0,UINT8_MAX] | [-]  |
+ * | Mode_e                |    |  X  | VoltMon_mode_e (static)                   |  -    |   1    |   0    |  1   | -     | [0,2]  |
+ * | StatusFlg_u32         |    |  X  | uint32_t (static)                         |  -    |   1    |   0    |  1   | [0,UINT32_MAX] | [-]  |
  *
  * @param mode Requested mode.
  * @return uint8_t
@@ -137,13 +170,33 @@ uint8_t VoltMon_SetMode_u8(VoltMon_mode_e mode);
  * The function does not directly set UV/OV flags; evaluation is done in
  * VoltMon_Process() to keep timing deterministic.
  *
+ * @par Activity diagram
+ * @code
+ * start
+ * :l_cfg_pcs = VoltMon_CfgGet_pcfg();
+ * if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0) then (not init)
+ *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+ *   :return 1;
+ * elseif ((l_cfg_pcs == 0) || (rawAdc_u16 > l_cfg_pcs->rawMax_u16)) then (invalid input)
+ *   :StatusFlg_u32 |= (VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32);
+ *   :return 2;
+ * else (valid)
+ *   :LastRawAdc_u16 = rawAdc_u16;
+ *   :LastVoltage_mV_u16 = ComputeVoltage_u16(rawAdc_u16, l_cfg_pcs);
+ *   :StatusFlg_u32 &= ~VOLTMON_STATUS_INVAL_U32;
+ *   :return 0;
+ * endif
+ * stop
+ * @endcode
+ *
  * @par Interface summary
  *
- * | Interface                 | In | Out | Type / Signature                         | Param  | Factor | Offset | Size | Range | Unit |
- * |--------------------------|----|-----|------------------------------------------|--------|--------|--------|------|-------|------|
- * | VoltMon_UpdateAdc_u8     | X  |  X  | uint8_t (uint16_t rawAdc_u16)            | rawAdc |   1    |   0    |  2   | -     | [-]  |
- * | LastRawAdc_u16           |    |  X  | uint16_t (static)                         |   -    |   1    |   0    |  2   | -     | [-]  |
- * | LastVoltage_mV_u16       |    |  X  | uint16_t (static)                         |   -    |   1    |   0    |  2   | -     | [mV] |
+ * | Interface                 | In | Out | Type / Signature   | Param  | Factor | Offset | Size | Range | Unit |
+ * |--------------------------|----|-----|---------------------|--------|--------|--------|------|-------|------|
+ * | rawAdc                   | X  |  X  | uint16_t            | rawAdc |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
+ * | LastRawAdc_u16           |    |  X  | uint16_t (static)   |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
+ * | LastVoltage_mV_u16       |    |  X  | uint16_t (static)   |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
+ * | returned value           | X  |  X  | uint16_t            | - |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
  *
  * @param rawAdc_u16 ADC raw counts.
  * @return uint8_t
@@ -166,15 +219,40 @@ uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16);
  *   - In DIAG mode keep ERR flag sticky once asserted.
  * - Always execute a bounded loop to keep deterministic timing.
  *
+ * @par Activity diagram
+ * @code
+ * start
+ * :l_CycleCnt_u32++;
+ * :l_cfg_pcs = VoltMon_CfgGet_pcfg();
+ * :l_errSticky_b = (Mode_e == VoltMon_modeDiag_e);
+ * repeat (8 iterations)
+ *   if (((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) != 0) && ((Mode_e == VoltMon_modeRun_e) || (Mode_e == VoltMon_modeDiag_e))) then (evaluate)
+ *     :l_evalRet_u8 = CheckThresholds_u8(LastVoltage_mV_u16, l_cfg_pcs, &UvActive_b, &OvActive_b);
+ *     if (l_evalRet_u8 != 0) then (error)
+ *       :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+ *     endif
+ *     :UpdateStatusFlags_v(UvActive_b, OvActive_b, l_errSticky_b);
+ *     if ((l_CycleCnt_u32 & 0x1) == 0) then (even)
+ *       :no-op;
+ *     else (odd)
+ *       :no-op;
+ *     endif
+ *   else (idle / not init)
+ *     :no-op;
+ *   endif
+ * repeat while (iteration < 8)
+ * stop
+ * @endcode
+ *
  * @par Interface summary
  *
  * | Interface            | In | Out | Type / Signature              | Param | Factor | Offset | Size | Range | Unit |
  * |---------------------|----|-----|-------------------------------|-------|--------|--------|------|-------|------|
  * | VoltMon_Process     |    |  X  | void (void)                   |  -    |   1    |   0    |  -   | -     | [-]  |
- * | Mode_e              | X  |     | VoltMon_mode_e (static)       |  -    |   1    |   0    |  1   | -     | [-]  |
- * | LastVoltage_mV_u16  | X  |     | uint16_t (static)             |  -    |   1    |   0    |  2   | -     | [mV] |
- * | StatusFlg_u32       | X  |  X  | uint32_t (static)             |  -    |   1    |   0    |  4   | -     | [-]  |
- * | l_CycleCnt_u32      | X  |  X  | uint32_t (static local)       |  -    |   1    |   0    |  4   | -     | [-]  |
+ * | Mode_e              | X  |     | VoltMon_mode_e (static)       |  -    |   1    |   0    |  1   | -     | 0,2]  |
+ * | LastVoltage_mV_u16  | X  |     | uint16_t (static)             |  -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
+ * | StatusFlg_u32       | X  |  X  | uint32_t (static)             |  -    |   1    |   0    |  4   | [0,UINT32_MAX] | [-]  |
+ * | l_CycleCnt_u32      | X  |  X  | uint32_t (static local)       |  -    |   1    |   0    |  4   | [0,UINT32_MAX] | [-]  |
  *
  * @return void
  */
@@ -189,12 +267,24 @@ void VoltMon_Process(void);
  * Provide the last stored voltage value (mV) computed from the last ADC input.
  * If the module is not initialized, 0 mV is returned and ERR flag is set.
  *
+ * @par Activity diagram
+ * @code
+ * start
+ * if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0) then (not init)
+ *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+ *   :return 0;
+ * else (init)
+ *   :return LastVoltage_mV_u16;
+ * endif
+ * stop
+ * @endcode
+ *
  * @par Interface summary
  *
  * | Interface                   | In | Out | Type / Signature              | Param | Factor | Offset | Size | Range | Unit |
  * |----------------------------|----|-----|-------------------------------|-------|--------|--------|------|-------|------|
- * | VoltMon_GetVoltage_mV_u16  |    |  X  | uint16_t (void)               |  -    |   1    |   0    |  2   | -     | [mV] |
- * | LastVoltage_mV_u16         | X  |     | uint16_t (static)             |  -    |   1    |   0    |  2   | -     | [mV] |
+ * | VoltMon_GetVoltage_mV_u16  |    |  X  | uint16_t (void)               |  -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
+ * | LastVoltage_mV_u16         | X  |     | uint16_t (static)             |  -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
  *
  * @return uint16_t Last computed voltage [mV], or 0 if not initialized.
  */
@@ -209,12 +299,19 @@ uint16_t VoltMon_GetVoltage_mV_u16(void);
  * Return the current status bitmask (INIT/ERR/UV/OV/INVAL).
  * No side effects are performed.
  *
+ * @par Activity diagram
+ * @code
+ * start
+ * :return StatusFlg_u32;
+ * stop
+ * @endcode
+ *
  * @par Interface summary
  *
  * | Interface                | In | Out | Type / Signature        | Param | Factor | Offset | Size | Range | Unit |
  * |-------------------------|----|-----|-------------------------|-------|--------|--------|------|-------|------|
- * | VoltMon_GetStatus_u32   |    |  X  | uint32_t (void)         |  -    |   1    |   0    |  4   | -     | [-]  |
- * | StatusFlg_u32           | X  |     | uint32_t (static)       |  -    |   1    |   0    |  4   | -     | [-]  |
+ * | VoltMon_GetStatus_u32   |    |  X  | uint32_t (void)         |  -    |   1    |   0    |  4   | [0,UINT32_MAX] | [-]  |
+ * | StatusFlg_u32           | X  |     | uint32_t (static)       |  -    |   1    |   0    |  4   | [0,UINT32_MAX] | [-]  |
  *
  * @return uint32_t Status flags bitmask.
  */

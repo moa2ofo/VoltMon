@@ -1,0 +1,47 @@
+---
+:source:
+  :file: utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c
+  :dirname: utExecutionAndResults/utUnderTest/test
+  :basename: test_VoltMon_UpdateAdc_u8.c
+:successes:
+- :test: test_VoltMon_UpdateAdc_u8_should_return_1_and_set_ERR_when_not_initialized
+  :line: 67
+  :message: ''
+  :unity_test_time: 0
+- :test: test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_cfg_is_NULL
+  :line: 91
+  :message: ''
+  :unity_test_time: 0
+- :test: test_VoltMon_UpdateAdc_u8_should_accept_raw_min_0_when_rawMax_allows_it
+  :line: 109
+  :message: ''
+  :unity_test_time: 0
+- :test: test_VoltMon_UpdateAdc_u8_should_accept_raw_equal_to_rawMax_as_valid_boundary
+  :line: 141
+  :message: ''
+  :unity_test_time: 0
+- :test: test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_raw_is_rawMax_plus_1
+  :line: 173
+  :message: ''
+  :unity_test_time: 0
+- :test: test_VoltMon_UpdateAdc_u8_should_handle_corner_case_rawMax_0_only_raw_0_valid
+  :line: 197
+  :message: ''
+  :unity_test_time: 0
+- :test: test_VoltMon_UpdateAdc_u8_should_accept_raw_uint16_max_when_rawMax_uint16_max
+  :line: 248
+  :message: ''
+  :unity_test_time: 0
+- :test: test_VoltMon_UpdateAdc_u8_should_update_last_values_clear_INVAL_and_keep_ERR_if_it_was_already_set
+  :line: 280
+  :message: ''
+  :unity_test_time: 0
+:failures: []
+:ignores: []
+:counts:
+  :total: 8
+  :passed: 8
+  :failed: 0
+  :ignored: 0
+:stdout: []
+:time: 0.015946298000926618
