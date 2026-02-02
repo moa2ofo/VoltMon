@@ -23,48 +23,35 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 /*==================[macros]=================================================*/
 
 /** @brief Module status flag: initialized. */
-#define VOLTMON_STATUS_INIT_U32      (0x00000001u)
+#define VOLTMON_STATUS_INIT_U32 (0x00000001u)
 /** @brief Module status flag: any error detected (generic). */
-#define VOLTMON_STATUS_ERR_U32       (0x00000002u)
+#define VOLTMON_STATUS_ERR_U32 (0x00000002u)
 /** @brief Module status flag: undervoltage active. */
-#define VOLTMON_STATUS_UV_U32        (0x00000004u)
+#define VOLTMON_STATUS_UV_U32 (0x00000004u)
 /** @brief Module status flag: overvoltage active. */
-#define VOLTMON_STATUS_OV_U32        (0x00000008u)
+#define VOLTMON_STATUS_OV_U32 (0x00000008u)
 /** @brief Module status flag: last input invalid. */
-#define VOLTMON_STATUS_INVAL_U32     (0x00000010u)
+#define VOLTMON_STATUS_INVAL_U32 (0x00000010u)
 
 /*==================[types]==================================================*/
 
 /**
  * @brief VoltMon operating mode.
  */
-typedef enum
-{
-  VoltMon_modeIdle_e = 0,
-  VoltMon_modeRun_e  = 1,
-  VoltMon_modeDiag_e = 2
-} VoltMon_mode_e;
+typedef enum { VoltMon_modeIdle_e = 0, VoltMon_modeRun_e = 1, VoltMon_modeDiag_e = 2 } VoltMon_mode_e;
 
 /**
  * @brief Result codes for VoltMon services.
  */
-typedef enum
-{
-  VoltMon_retOk_e             = 0,
-  VoltMon_retNotInit_e        = 1,
-  VoltMon_retInvalidParam_e   = 2,
-  VoltMon_retBusyOrRejected_e = 3
-} VoltMon_ret_e;
+typedef enum { VoltMon_retOk_e = 0, VoltMon_retNotInit_e = 1, VoltMon_retInvalidParam_e = 2, VoltMon_retBusyOrRejected_e = 3 } VoltMon_ret_e;
 
 /*==================[public function prototypes]=============================*/
-
-
 
 /**
  * @brief De-initialize the VoltMon module.

@@ -242,8 +242,7 @@ typedef __uintmax_t uintmax_t;
 # 38 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h"
 
 # 38 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h"
-typedef struct
-{
+typedef struct {
   uint16_t rawMax_u16;
   uint16_t factor_u16;
   int16_t offset_s16;
@@ -251,5 +250,5 @@ typedef struct
   uint16_t ovTh_mV_u16;
   uint16_t hyst_mV_u16;
 } VoltMon_cfg_s;
-# 69 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h"
-const VoltMon_cfg_s * VoltMon_CfgGet_pcfg(void);
+# 68 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h"
+const VoltMon_cfg_s *VoltMon_CfgGet_pcfg(void);

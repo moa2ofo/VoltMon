@@ -10160,7 +10160,6 @@ void verifyTest(void);
 
 
 
-
 # 1 "/usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h" 1 3 4
 /* Copyright (C) 1998-2022 Free Software Foundation, Inc.
 
@@ -10213,7 +10212,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 /* Signal that all the definitions are present.  */
 #define __bool_true_false_are_defined 1
 
-# 28 "utExecutionAndResults/utUnderTest/src/VoltMon.h" 2
+# 27 "utExecutionAndResults/utUnderTest/src/VoltMon.h" 2
+
 
 /*==================[macros]=================================================*/
 
@@ -10233,27 +10233,14 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 /**
  * @brief VoltMon operating mode.
  */
-typedef enum
-{
-  VoltMon_modeIdle_e = 0,
-  VoltMon_modeRun_e  = 1,
-  VoltMon_modeDiag_e = 2
-} VoltMon_mode_e;
+typedef enum { VoltMon_modeIdle_e = 0, VoltMon_modeRun_e = 1, VoltMon_modeDiag_e = 2 } VoltMon_mode_e;
 
 /**
  * @brief Result codes for VoltMon services.
  */
-typedef enum
-{
-  VoltMon_retOk_e             = 0,
-  VoltMon_retNotInit_e        = 1,
-  VoltMon_retInvalidParam_e   = 2,
-  VoltMon_retBusyOrRejected_e = 3
-} VoltMon_ret_e;
+typedef enum { VoltMon_retOk_e = 0, VoltMon_retNotInit_e = 1, VoltMon_retInvalidParam_e = 2, VoltMon_retBusyOrRejected_e = 3 } VoltMon_ret_e;
 
 /*==================[public function prototypes]=============================*/
-
-
 
 /**
  * @brief De-initialize the VoltMon module.
@@ -10513,31 +10500,6 @@ uint32_t VoltMon_GetStatus_u32(void);
 /** @} */ /* end of defgroup VoltMon */
 
 # 3 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h" 2
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 1
-/*==================[VoltMon_priv.h]=========================================*/
-/**
- * @file    VoltMon_priv.h
- * @brief   Private declarations for VoltMon (static functions in VoltMon.c).
- * @author  -
- * @date    2026-01-30
- *
- * @defgroup VoltMonPriv VoltMon Private Interface
- * @{
- *
- * @details
- * This header declares the internal (cfile-static) functions implemented in
- * VoltMon.c. It is included only by VoltMon.c.
- */
-
-
-#define VOLTMON_PRIV_H 
-
-
-
-
-
-
-
 # 1 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h" 1
 /*==================[VoltMon_cfg.h]==========================================*/
 /**
@@ -10576,11 +10538,10 @@ uint32_t VoltMon_GetStatus_u32(void);
  * - ovTh_mV_u16: overvoltage threshold [mV]
  * - hyst_mV_u16: hysteresis [mV] applied to clear UV/OV flags
  */
-typedef struct
-{
+typedef struct {
   uint16_t rawMax_u16;
   uint16_t factor_u16;
-  int16_t  offset_s16;
+  int16_t offset_s16;
   uint16_t uvTh_mV_u16;
   uint16_t ovTh_mV_u16;
   uint16_t hyst_mV_u16;
@@ -10607,7 +10568,7 @@ typedef struct
  *
  * @return const VoltMon_cfg_s* Pointer to the configuration (never NULL).
  */
-const VoltMon_cfg_s * VoltMon_CfgGet_pcfg(void);
+const VoltMon_cfg_s *VoltMon_CfgGet_pcfg(void);
 
 
 
@@ -10615,7 +10576,33 @@ const VoltMon_cfg_s * VoltMon_CfgGet_pcfg(void);
 
 /** @} */ /* end of defgroup VoltMonCfg */
 
-# 26 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 2
+# 4 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h" 2
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 1
+/*==================[VoltMon_priv.h]=========================================*/
+/**
+ * @file    VoltMon_priv.h
+ * @brief   Private declarations for VoltMon (static functions in VoltMon.c).
+ * @author  -
+ * @date    2026-01-30
+ *
+ * @defgroup VoltMonPriv VoltMon Private Interface
+ * @{
+ *
+ * @details
+ * This header declares the internal (cfile-static) functions implemented in
+ * VoltMon.c. It is included only by VoltMon.c.
+ */
+
+
+#define VOLTMON_PRIV_H 
+
+
+
+
+
+
+
+
 
 /**
  * @brief Compute voltage in mV from ADC raw sample.
@@ -10638,7 +10625,7 @@ const VoltMon_cfg_s * VoltMon_CfgGet_pcfg(void);
  * @param cfg_pcs Pointer to configuration.
  * @return uint16_t Voltage [mV] clamped to uint16_t.
  */
-static uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s * cfg_pcs);
+static uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s *cfg_pcs);
 
 /**
  * @brief Check thresholds and compute new UV/OV state.
@@ -10664,10 +10651,7 @@ static uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s * cf
  * @param ovActive_pb Pointer to OV state (in/out).
  * @return uint8_t 0 on success, 1 if cfg invalid.
  */
-static uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16,
-                                  const VoltMon_cfg_s * cfg_pcs,
-                                  bool * uvActive_pb,
-                                  bool * ovActive_pb);
+static uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs, bool *uvActive_pb, bool *ovActive_pb);
 
 /**
  * @brief Update status flags coherently from internal states.
@@ -10700,33 +10684,27 @@ static void UpdateStatusFlags_v(bool uvActive_b, bool ovActive_b, bool errSticky
 
 /** @} */ /* end of defgroup VoltMonPriv */
 
-# 4 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h" 2
-
-
+# 5 "utExecutionAndResults/utUnderTest/src/VoltMon_Init_u8.h" 2
 
 /* Get/Set API for VoltMon module */
 
 uint32_t VoltMon_GetStatusFlg_u32(void);
-void     VoltMon_SetStatusFlg_u32(uint32_t value);
+void VoltMon_SetStatusFlg_u32(uint32_t value);
 
 VoltMon_mode_e VoltMon_GetMode_e(void);
-void           VoltMon_SetMode_e(VoltMon_mode_e mode);
+void VoltMon_SetMode_e(VoltMon_mode_e mode);
 
 uint16_t VoltMon_GetLastRawAdc_u16(void);
-void     VoltMon_SetLastRawAdc_u16(uint16_t value);
+void VoltMon_SetLastRawAdc_u16(uint16_t value);
 
 uint16_t VoltMon_GetLastVoltage_mV_u16(void);
-void     VoltMon_SetLastVoltage_mV_u16(uint16_t value);
+void VoltMon_SetLastVoltage_mV_u16(uint16_t value);
 
 bool VoltMon_GetUvActive_b(void);
 void VoltMon_SetUvActive_b(bool value);
 
 bool VoltMon_GetOvActive_b(void);
 void VoltMon_SetOvActive_b(bool value);
-
-
-
-
 
 /**
  * @brief Initialize the VoltMon module.
@@ -10832,13 +10810,7 @@ void VoltMon_CfgGet_pcfg_Stub(CMOCK_VoltMon_CfgGet_pcfg_CALLBACK Callback);
 /* Test helper functions required by project rules                             */
 /*============================================================================*/
 
-void testVariablesAsset(uint32_t expStatusFlg_u32,
-                        VoltMon_mode_e expMode_e,
-                        uint16_t expLastRawAdc_u16,
-                        uint16_t expLastVoltage_mV_u16,
-                        bool expUvActive_b,
-                        bool expOvActive_b)
-{
+void testVariablesAsset(uint32_t expStatusFlg_u32, VoltMon_mode_e expMode_e, uint16_t expLastRawAdc_u16, uint16_t expLastVoltage_mV_u16, bool expUvActive_b, bool expOvActive_b) {
   TEST_ASSERT_EQUAL_UINT32(expStatusFlg_u32, VoltMon_GetStatusFlg_u32());
   TEST_ASSERT_EQUAL_INT((int)expMode_e, (int)VoltMon_GetMode_e());
   TEST_ASSERT_EQUAL_UINT16(expLastRawAdc_u16, VoltMon_GetLastRawAdc_u16());
@@ -10847,13 +10819,7 @@ void testVariablesAsset(uint32_t expStatusFlg_u32,
   TEST_ASSERT_EQUAL(expOvActive_b, VoltMon_GetOvActive_b());
 }
 
-void testVariableReset(uint32_t statusFlg_u32,
-                       VoltMon_mode_e mode_e,
-                       uint16_t lastRawAdc_u16,
-                       uint16_t lastVoltage_mV_u16,
-                       bool uvActive_b,
-                       bool ovActive_b)
-{
+void testVariableReset(uint32_t statusFlg_u32, VoltMon_mode_e mode_e, uint16_t lastRawAdc_u16, uint16_t lastVoltage_mV_u16, bool uvActive_b, bool ovActive_b) {
   VoltMon_SetStatusFlg_u32(statusFlg_u32);
   VoltMon_SetMode_e(mode_e);
   VoltMon_SetLastRawAdc_u16(lastRawAdc_u16);
@@ -10866,28 +10832,18 @@ void testVariableReset(uint32_t statusFlg_u32,
 /* Unity hooks                                                                 */
 /*============================================================================*/
 
-void setUp(void)
-{
+void setUp(void) {
   /* Reset all module state to guarantee test isolation */
-  testVariableReset(0u,
-                    VoltMon_modeIdle_e,
-                    0u,
-                    0u,
-                    false,
-                    false);
+  testVariableReset(0u, VoltMon_modeIdle_e, 0u, 0u, false, false);
 }
 
-void tearDown(void)
-{
-  /* nothing */
-}
+void tearDown(void) { /* nothing */ }
 
 /*============================================================================*/
 /* Tests                                                                       */
 /*============================================================================*/
 
-void test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_cfg_is_NULL(void)
-{
+void test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_cfg_is_NULL(void) {
   /* Arrange */
   VoltMon_CfgGet_pcfg_ExpectAndReturn(NULL);
 
@@ -10906,17 +10862,15 @@ void test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_cfg_is_NULL(void)
   TEST_ASSERT_FALSE(VoltMon_GetOvActive_b());
 }
 
-void test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_rawMax_is_0(void)
-{
+void test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_rawMax_is_0(void) {
   /* Arrange */
-  static const VoltMon_cfg_s cfg_s =
-  {
-    .rawMax_u16     = 0u,
-    .factor_u16     = 1u,
-    .offset_s16     = 0,
-    .uvTh_mV_u16    = 1000u,
-    .ovTh_mV_u16    = 5000u,
-    .hyst_mV_u16    = 100u,
+  static const VoltMon_cfg_s cfg_s = {
+      .rawMax_u16 = 0u,
+      .factor_u16 = 1u,
+      .offset_s16 = 0,
+      .uvTh_mV_u16 = 1000u,
+      .ovTh_mV_u16 = 5000u,
+      .hyst_mV_u16 = 100u,
   };
 
   VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
@@ -10936,26 +10890,19 @@ void test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_rawMax_is_0(void)
   TEST_ASSERT_FALSE(VoltMon_GetOvActive_b());
 }
 
-void test_VoltMon_Init_u8_should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid(void)
-{
+void test_VoltMon_Init_u8_should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid(void) {
   /* Arrange */
-  static const VoltMon_cfg_s cfg_s =
-  {
-    .rawMax_u16     = 4095u,
-    .factor_u16     = 1u,
-    .offset_s16     = 0,
-    .uvTh_mV_u16    = 1000u,
-    .ovTh_mV_u16    = 5000u,
-    .hyst_mV_u16    = 100u,
+  static const VoltMon_cfg_s cfg_s = {
+      .rawMax_u16 = 4095u,
+      .factor_u16 = 1u,
+      .offset_s16 = 0,
+      .uvTh_mV_u16 = 1000u,
+      .ovTh_mV_u16 = 5000u,
+      .hyst_mV_u16 = 100u,
   };
 
   /* Pre-load garbage state to verify the function really resets everything */
-  testVariableReset(0xFFFFFFFFu,
-                    VoltMon_modeDiag_e,
-                    1234u,
-                    4321u,
-                    true,
-                    true);
+  testVariableReset(0xFFFFFFFFu, VoltMon_modeDiag_e, 1234u, 4321u, true, true);
 
   VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
 
@@ -10966,10 +10913,5 @@ void test_VoltMon_Init_u8_should_return_0_set_INIT_and_clear_flags_when_cfg_is_v
   TEST_ASSERT_EQUAL_UINT8(0u, ret_u8);
 
   /* Expected clean initialized state */
-  testVariablesAsset(VOLTMON_STATUS_INIT_U32,
-                     VoltMon_modeIdle_e,
-                     0u,
-                     0u,
-                     false,
-                     false);
+  testVariablesAsset(VOLTMON_STATUS_INIT_U32, VoltMon_modeIdle_e, 0u, 0u, false, false);
 }

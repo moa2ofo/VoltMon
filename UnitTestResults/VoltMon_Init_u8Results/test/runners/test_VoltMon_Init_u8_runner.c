@@ -14,26 +14,16 @@ char* GlobalOrderError;
 /*=======External Functions This Runner Calls=====*/
 extern void setUp(void);
 extern void tearDown(void);
-extern void testVariablesAsset(uint32_t expStatusFlg_u32,
-                        VoltMon_mode_e expMode_e,
-                        uint16_t expLastRawAdc_u16,
-                        uint16_t expLastVoltage_mV_u16,
-
-                       _Bool
-                            expUvActive_b,
-
-                       _Bool
-                            expOvActive_b);
-extern void testVariableReset(uint32_t statusFlg_u32,
-                       VoltMon_mode_e mode_e,
-                       uint16_t lastRawAdc_u16,
-                       uint16_t lastVoltage_mV_u16,
-
-                      _Bool
-                           uvActive_b,
-
-                      _Bool
-                           ovActive_b);
+extern void testVariablesAsset(uint32_t expStatusFlg_u32, VoltMon_mode_e expMode_e, uint16_t expLastRawAdc_u16, uint16_t expLastVoltage_mV_u16,
+                                                                                                                                        _Bool
+                                                                                                                                             expUvActive_b,
+                                                                                                                                                            _Bool
+                                                                                                                                                                 expOvActive_b);
+extern void testVariableReset(uint32_t statusFlg_u32, VoltMon_mode_e mode_e, uint16_t lastRawAdc_u16, uint16_t lastVoltage_mV_u16,
+                                                                                                                           _Bool
+                                                                                                                                uvActive_b,
+                                                                                                                                            _Bool
+                                                                                                                                                 ovActive_b);
 extern void test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_cfg_is_NULL(void);
 extern void test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_rawMax_is_0(void);
 extern void test_VoltMon_Init_u8_should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid(void);
@@ -105,10 +95,10 @@ int main(void)
 {
   UnityBegin("test_VoltMon_Init_u8.c");
   run_test(testVariablesAsset, "testVariablesAsset", 16);
-  run_test(testVariableReset, "testVariableReset", 31);
-  run_test(test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_cfg_is_NULL, "test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_cfg_is_NULL", 70);
-  run_test(test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_rawMax_is_0, "test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_rawMax_is_0", 90);
-  run_test(test_VoltMon_Init_u8_should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid, "test_VoltMon_Init_u8_should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid", 120);
+  run_test(testVariableReset, "testVariableReset", 25);
+  run_test(test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_cfg_is_NULL, "test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_cfg_is_NULL", 49);
+  run_test(test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_rawMax_is_0, "test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_rawMax_is_0", 68);
+  run_test(test_VoltMon_Init_u8_should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid, "test_VoltMon_Init_u8_should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid", 96);
 
   CMock_Guts_MemFreeFinal();
   return UNITY_END();

@@ -9,19 +9,19 @@
   :message: ''
   :unity_test_time: 0
 - :test: testVariableReset
-  :line: 31
+  :line: 25
   :message: ''
   :unity_test_time: 0
 - :test: test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_cfg_is_NULL
-  :line: 70
+  :line: 49
   :message: ''
   :unity_test_time: 0
 - :test: test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_rawMax_is_0
-  :line: 90
+  :line: 68
   :message: ''
   :unity_test_time: 0
 - :test: test_VoltMon_Init_u8_should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid
-  :line: 120
+  :line: 96
   :message: ''
   :unity_test_time: 0
 :failures: []
@@ -32,4 +32,4 @@
   :failed: 0
   :ignored: 0
 :stdout: []
-:time: 0.01773178900111816
+:time: 0.0008421440000034863

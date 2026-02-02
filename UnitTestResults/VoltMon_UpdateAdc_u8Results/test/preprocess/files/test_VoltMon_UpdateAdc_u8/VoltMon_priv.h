@@ -5,15 +5,12 @@
 
 #include "VoltMon_cfg.h"
 
-uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s * cfg_pcs);
-uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16,
-                                  const VoltMon_cfg_s * cfg_pcs,
-
-                                 _Bool
-                                      * uvActive_pb,
-
-                                 _Bool
-                                      * ovActive_pb);
+uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s *cfg_pcs);
+uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs,
+                                                                                 _Bool
+                                                                                      *uvActive_pb,
+                                                                                                    _Bool
+                                                                                                         *ovActive_pb);
 void UpdateStatusFlags_v(
                         _Bool
                              uvActive_b,

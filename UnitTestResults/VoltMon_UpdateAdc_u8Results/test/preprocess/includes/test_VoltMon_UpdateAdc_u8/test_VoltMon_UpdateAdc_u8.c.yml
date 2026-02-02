@@ -1,8 +1,8 @@
 ---
 - utExecutionAndResults/utUnderTest/build/vendor/unity/src/unity.h
 - utExecutionAndResults/utUnderTest/src/VoltMon.h
+- utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h
 - utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h
 - utExecutionAndResults/utUnderTest/src/VoltMon_priv.h
-- utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h
 - mock_VoltMon_cfg.h
 - mock_VoltMon_priv.h

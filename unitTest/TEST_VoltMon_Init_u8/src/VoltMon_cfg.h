@@ -35,11 +35,10 @@ extern "C" {
  * - ovTh_mV_u16: overvoltage threshold [mV]
  * - hyst_mV_u16: hysteresis [mV] applied to clear UV/OV flags
  */
-typedef struct
-{
+typedef struct {
   uint16_t rawMax_u16;
   uint16_t factor_u16;
-  int16_t  offset_s16;
+  int16_t offset_s16;
   uint16_t uvTh_mV_u16;
   uint16_t ovTh_mV_u16;
   uint16_t hyst_mV_u16;
@@ -66,7 +65,7 @@ typedef struct
  *
  * @return const VoltMon_cfg_s* Pointer to the configuration (never NULL).
  */
-const VoltMon_cfg_s * VoltMon_CfgGet_pcfg(void);
+const VoltMon_cfg_s *VoltMon_CfgGet_pcfg(void);
 
 #ifdef __cplusplus
 }

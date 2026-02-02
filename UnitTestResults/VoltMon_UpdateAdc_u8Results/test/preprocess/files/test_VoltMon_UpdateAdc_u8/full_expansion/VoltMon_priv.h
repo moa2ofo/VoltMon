@@ -5,6 +5,8 @@
 # 0 "<command-line>" 2
 # 1 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
 # 23 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h" 1
+# 23 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h"
 # 1 "/usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h" 1 3 4
 # 9 "/usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h" 3 4
 # 1 "/usr/include/stdint.h" 1 3 4
@@ -238,15 +240,11 @@ typedef unsigned long int uintptr_t;
 typedef __intmax_t intmax_t;
 typedef __uintmax_t uintmax_t;
 # 10 "/usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h" 2 3 4
-# 24 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 2
-# 1 "/usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h" 1 3 4
-# 25 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 2
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h" 1
+# 24 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h" 2
 # 38 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h"
 
 # 38 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h"
-typedef struct
-{
+typedef struct {
   uint16_t rawMax_u16;
   uint16_t factor_u16;
   int16_t offset_s16;
@@ -254,35 +252,34 @@ typedef struct
   uint16_t ovTh_mV_u16;
   uint16_t hyst_mV_u16;
 } VoltMon_cfg_s;
-# 69 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h"
-const VoltMon_cfg_s * VoltMon_CfgGet_pcfg(void);
-# 26 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 2
+# 68 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h"
+const VoltMon_cfg_s *VoltMon_CfgGet_pcfg(void);
+# 24 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 2
+# 1 "/usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h" 1 3 4
+# 25 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 2
 # 48 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
-uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s * cfg_pcs);
+uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s *cfg_pcs);
 # 74 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
-uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16,
-                                  const VoltMon_cfg_s * cfg_pcs,
-                                  
-# 76 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 3 4
-                                 _Bool 
-# 76 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
-                                      * uvActive_pb,
-                                  
-# 77 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 3 4
-                                 _Bool 
-# 77 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
-                                      * ovActive_pb);
-# 102 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
+uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs, 
+# 74 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 3 4
+                                                                                 _Bool 
+# 74 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
+                                                                                      *uvActive_pb, 
+# 74 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 3 4
+                                                                                                    _Bool 
+# 74 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
+                                                                                                         *ovActive_pb);
+# 99 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
 void UpdateStatusFlags_v(
-# 102 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 3 4
+# 99 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 3 4
                         _Bool 
-# 102 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
+# 99 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
                              uvActive_b, 
-# 102 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 3 4
+# 99 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 3 4
                                          _Bool 
-# 102 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
+# 99 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
                                               ovActive_b, 
-# 102 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 3 4
+# 99 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 3 4
                                                           _Bool 
-# 102 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
+# 99 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h"
                                                                errSticky_b);

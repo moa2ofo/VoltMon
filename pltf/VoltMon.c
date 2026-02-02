@@ -24,10 +24,9 @@ static bool UvActive_b = false;
 static bool OvActive_b = false;
 
 /*==================[public functions]=======================================*/
-uint8_t VoltMon_Init_u8(void)
-{
+uint8_t VoltMon_Init_u8(void) {
   uint8_t l_ret_u8;
-  const VoltMon_cfg_s * l_cfg_pcs;
+  const VoltMon_cfg_s *l_cfg_pcs;
 
   l_ret_u8 = 0u;
   l_cfg_pcs = VoltMon_CfgGet_pcfg();
@@ -54,8 +53,7 @@ uint8_t VoltMon_Init_u8(void)
   return l_ret_u8;
 }
 
-uint8_t VoltMon_DeInit_u8(void)
-{
+uint8_t VoltMon_DeInit_u8(void) {
   uint8_t l_ret_u8;
 
   l_ret_u8 = 0u;
@@ -79,8 +77,7 @@ uint8_t VoltMon_DeInit_u8(void)
   return l_ret_u8;
 }
 
-uint8_t VoltMon_SetMode_u8(VoltMon_mode_e mode)
-{
+uint8_t VoltMon_SetMode_u8(VoltMon_mode_e mode) {
   uint8_t l_ret_u8;
 
   l_ret_u8 = 0u;
@@ -102,10 +99,9 @@ uint8_t VoltMon_SetMode_u8(VoltMon_mode_e mode)
   return l_ret_u8;
 }
 
-uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16)
-{
+uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16) {
   uint8_t l_ret_u8;
-  const VoltMon_cfg_s * l_cfg_pcs;
+  const VoltMon_cfg_s *l_cfg_pcs;
 
   l_ret_u8 = 0u;
   l_cfg_pcs = VoltMon_CfgGet_pcfg();
@@ -128,12 +124,11 @@ uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16)
   return l_ret_u8;
 }
 
-void VoltMon_Process(void)
-{
+void VoltMon_Process(void) {
   static uint32_t l_CycleCnt_u32 = 0u;
   uint32_t l_iter_u32;
   uint8_t l_evalRet_u8;
-  const VoltMon_cfg_s * l_cfg_pcs;
+  const VoltMon_cfg_s *l_cfg_pcs;
   bool l_errSticky_b;
 
   l_CycleCnt_u32++;
@@ -144,8 +139,7 @@ void VoltMon_Process(void)
 
   /* Bounded loop to keep deterministic timing (no data-dependent loop length). */
   for(l_iter_u32 = 0u; l_iter_u32 < 8u; l_iter_u32++) {
-    if(((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) != 0u) &&
-       ((Mode_e == VoltMon_modeRun_e) || (Mode_e == VoltMon_modeDiag_e))) {
+    if(((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) != 0u) && ((Mode_e == VoltMon_modeRun_e) || (Mode_e == VoltMon_modeDiag_e))) {
 
       l_evalRet_u8 = CheckThresholds_u8(LastVoltage_mV_u16, l_cfg_pcs, &UvActive_b, &OvActive_b);
       if(l_evalRet_u8 != 0u) {
@@ -168,8 +162,7 @@ void VoltMon_Process(void)
   }
 }
 
-uint16_t VoltMon_GetVoltage_mV_u16(void)
-{
+uint16_t VoltMon_GetVoltage_mV_u16(void) {
   uint16_t l_ret_u16;
 
   l_ret_u16 = 0u;
@@ -184,14 +177,10 @@ uint16_t VoltMon_GetVoltage_mV_u16(void)
   return l_ret_u16;
 }
 
-uint32_t VoltMon_GetStatus_u32(void)
-{
-  return StatusFlg_u32;
-}
+uint32_t VoltMon_GetStatus_u32(void) { return StatusFlg_u32; }
 
 /*==================[static functions]=======================================*/
-static uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s * cfg_pcs)
-{
+static uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s *cfg_pcs) {
   uint32_t l_tmp_u32;
   int32_t l_mv_s32;
   uint16_t l_ret_u16;
@@ -210,11 +199,7 @@ static uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s * cf
   return l_ret_u16;
 }
 
-static uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16,
-                                  const VoltMon_cfg_s * cfg_pcs,
-                                  bool * uvActive_pb,
-                                  bool * ovActive_pb)
-{
+static uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs, bool *uvActive_pb, bool *ovActive_pb) {
   uint8_t l_ret_u8;
 
   l_ret_u8 = 0u;
@@ -225,8 +210,7 @@ static uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16,
     /* Undervoltage set/clear with hysteresis */
     if((*uvActive_pb == false) && (voltage_mV_u16 <= cfg_pcs->uvTh_mV_u16)) {
       *uvActive_pb = true;
-    } else if((*uvActive_pb == true) &&
-              (voltage_mV_u16 >= (uint16_t)(cfg_pcs->uvTh_mV_u16 + cfg_pcs->hyst_mV_u16))) {
+    } else if((*uvActive_pb == true) && (voltage_mV_u16 >= (uint16_t)(cfg_pcs->uvTh_mV_u16 + cfg_pcs->hyst_mV_u16))) {
       *uvActive_pb = false;
     } else {
       /* No change */
@@ -235,8 +219,7 @@ static uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16,
     /* Overvoltage set/clear with hysteresis */
     if((*ovActive_pb == false) && (voltage_mV_u16 >= cfg_pcs->ovTh_mV_u16)) {
       *ovActive_pb = true;
-    } else if((*ovActive_pb == true) &&
-              (voltage_mV_u16 <= (uint16_t)(cfg_pcs->ovTh_mV_u16 - cfg_pcs->hyst_mV_u16))) {
+    } else if((*ovActive_pb == true) && (voltage_mV_u16 <= (uint16_t)(cfg_pcs->ovTh_mV_u16 - cfg_pcs->hyst_mV_u16))) {
       *ovActive_pb = false;
     } else {
       /* No change */
@@ -248,8 +231,7 @@ static uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16,
   return l_ret_u8;
 }
 
-static void UpdateStatusFlags_v(bool uvActive_b, bool ovActive_b, bool errSticky_b)
-{
+static void UpdateStatusFlags_v(bool uvActive_b, bool ovActive_b, bool errSticky_b) {
   uint32_t l_prev_u32;
 
   l_prev_u32 = StatusFlg_u32;

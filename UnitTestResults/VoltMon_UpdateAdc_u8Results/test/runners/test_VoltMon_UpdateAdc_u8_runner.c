@@ -5,9 +5,9 @@
 #include "cmock.h"
 #include "unity.h"
 #include "VoltMon.h"
+#include "VoltMon_UpdateAdc_u8.h"
 #include "VoltMon_cfg.h"
 #include "VoltMon_priv.h"
-#include "VoltMon_UpdateAdc_u8.h"
 #include "mock_VoltMon_cfg.h"
 #include "mock_VoltMon_priv.h"
 
@@ -96,14 +96,14 @@ static void run_test(UnityTestFunction func, const char* name, UNITY_LINE_TYPE l
 int main(void)
 {
   UnityBegin("test_VoltMon_UpdateAdc_u8.c");
-  run_test(test_VoltMon_UpdateAdc_u8_should_return_1_and_set_ERR_when_not_initialized, "test_VoltMon_UpdateAdc_u8_should_return_1_and_set_ERR_when_not_initialized", 67);
-  run_test(test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_cfg_is_NULL, "test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_cfg_is_NULL", 91);
-  run_test(test_VoltMon_UpdateAdc_u8_should_accept_raw_min_0_when_rawMax_allows_it, "test_VoltMon_UpdateAdc_u8_should_accept_raw_min_0_when_rawMax_allows_it", 109);
-  run_test(test_VoltMon_UpdateAdc_u8_should_accept_raw_equal_to_rawMax_as_valid_boundary, "test_VoltMon_UpdateAdc_u8_should_accept_raw_equal_to_rawMax_as_valid_boundary", 141);
-  run_test(test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_raw_is_rawMax_plus_1, "test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_raw_is_rawMax_plus_1", 173);
-  run_test(test_VoltMon_UpdateAdc_u8_should_handle_corner_case_rawMax_0_only_raw_0_valid, "test_VoltMon_UpdateAdc_u8_should_handle_corner_case_rawMax_0_only_raw_0_valid", 197);
-  run_test(test_VoltMon_UpdateAdc_u8_should_accept_raw_uint16_max_when_rawMax_uint16_max, "test_VoltMon_UpdateAdc_u8_should_accept_raw_uint16_max_when_rawMax_uint16_max", 248);
-  run_test(test_VoltMon_UpdateAdc_u8_should_update_last_values_clear_INVAL_and_keep_ERR_if_it_was_already_set, "test_VoltMon_UpdateAdc_u8_should_update_last_values_clear_INVAL_and_keep_ERR_if_it_was_already_set", 280);
+  run_test(test_VoltMon_UpdateAdc_u8_should_return_1_and_set_ERR_when_not_initialized, "test_VoltMon_UpdateAdc_u8_should_return_1_and_set_ERR_when_not_initialized", 50);
+  run_test(test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_cfg_is_NULL, "test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_cfg_is_NULL", 68);
+  run_test(test_VoltMon_UpdateAdc_u8_should_accept_raw_min_0_when_rawMax_allows_it, "test_VoltMon_UpdateAdc_u8_should_accept_raw_min_0_when_rawMax_allows_it", 80);
+  run_test(test_VoltMon_UpdateAdc_u8_should_accept_raw_equal_to_rawMax_as_valid_boundary, "test_VoltMon_UpdateAdc_u8_should_accept_raw_equal_to_rawMax_as_valid_boundary", 101);
+  run_test(test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_raw_is_rawMax_plus_1, "test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_raw_is_rawMax_plus_1", 122);
+  run_test(test_VoltMon_UpdateAdc_u8_should_handle_corner_case_rawMax_0_only_raw_0_valid, "test_VoltMon_UpdateAdc_u8_should_handle_corner_case_rawMax_0_only_raw_0_valid", 140);
+  run_test(test_VoltMon_UpdateAdc_u8_should_accept_raw_uint16_max_when_rawMax_uint16_max, "test_VoltMon_UpdateAdc_u8_should_accept_raw_uint16_max_when_rawMax_uint16_max", 170);
+  run_test(test_VoltMon_UpdateAdc_u8_should_update_last_values_clear_INVAL_and_keep_ERR_if_it_was_already_set, "test_VoltMon_UpdateAdc_u8_should_update_last_values_clear_INVAL_and_keep_ERR_if_it_was_already_set", 191);
 
   CMock_Guts_MemFreeFinal();
   return UNITY_END();

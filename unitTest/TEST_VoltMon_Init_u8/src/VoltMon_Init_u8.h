@@ -1,32 +1,27 @@
 
 #include "VoltMon.h"
-#include "VoltMon_priv.h"
 #include "VoltMon_cfg.h"
-
+#include "VoltMon_priv.h"
 
 /* Get/Set API for VoltMon module */
 
 uint32_t VoltMon_GetStatusFlg_u32(void);
-void     VoltMon_SetStatusFlg_u32(uint32_t value);
+void VoltMon_SetStatusFlg_u32(uint32_t value);
 
 VoltMon_mode_e VoltMon_GetMode_e(void);
-void           VoltMon_SetMode_e(VoltMon_mode_e mode);
+void VoltMon_SetMode_e(VoltMon_mode_e mode);
 
 uint16_t VoltMon_GetLastRawAdc_u16(void);
-void     VoltMon_SetLastRawAdc_u16(uint16_t value);
+void VoltMon_SetLastRawAdc_u16(uint16_t value);
 
 uint16_t VoltMon_GetLastVoltage_mV_u16(void);
-void     VoltMon_SetLastVoltage_mV_u16(uint16_t value);
+void VoltMon_SetLastVoltage_mV_u16(uint16_t value);
 
 bool VoltMon_GetUvActive_b(void);
 void VoltMon_SetUvActive_b(bool value);
 
 bool VoltMon_GetOvActive_b(void);
 void VoltMon_SetOvActive_b(bool value);
-
-
-
-
 
 /**
  * @brief Initialize the VoltMon module.

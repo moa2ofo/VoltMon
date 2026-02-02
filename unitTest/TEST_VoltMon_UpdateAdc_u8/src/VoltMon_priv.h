@@ -20,9 +20,9 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-#include <stdbool.h>
 #include "VoltMon_cfg.h"
+#include <stdbool.h>
+#include <stdint.h>
 
 /**
  * @brief Compute voltage in mV from ADC raw sample.
@@ -45,7 +45,7 @@ extern "C" {
  * @param cfg_pcs Pointer to configuration.
  * @return uint16_t Voltage [mV] clamped to uint16_t.
  */
-uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s * cfg_pcs);
+uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s *cfg_pcs);
 
 /**
  * @brief Check thresholds and compute new UV/OV state.
@@ -71,10 +71,7 @@ uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s * cfg_pcs);
  * @param ovActive_pb Pointer to OV state (in/out).
  * @return uint8_t 0 on success, 1 if cfg invalid.
  */
-uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16,
-                                  const VoltMon_cfg_s * cfg_pcs,
-                                  bool * uvActive_pb,
-                                  bool * ovActive_pb);
+uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs, bool *uvActive_pb, bool *ovActive_pb);
 
 /**
  * @brief Update status flags coherently from internal states.
