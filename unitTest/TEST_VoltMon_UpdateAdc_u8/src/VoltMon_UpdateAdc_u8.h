@@ -59,12 +59,14 @@ void VoltMon_SetOvActive_b(bool value);
  *
  * @par Interface summary
  *
- * | Interface                 | In | Out | Type / Signature   | Param  | Factor | Offset | Size | Range | Unit |
- * |--------------------------|----|-----|---------------------|--------|--------|--------|------|-------|------|
- * | rawAdc                   | X  |  X  | uint16_t            | rawAdc |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
- * | LastRawAdc_u16           |    |  X  | uint16_t (static)   |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
- * | LastVoltage_mV_u16       |    |  X  | uint16_t (static)   |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
- * | returned value           | X  |  X  | uint16_t            | - |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
+ * | Interface                 | In | Out | Type / Signature                         | Param  | Factor | Offset | Size | Range          | Unit |
+ * |--------------------------|----|-----|-------------------------------------------|--------|--------|--------|------|----------------|------|
+ * | rawAdc                   | X  |  X  | uint16_t                                  | rawAdc |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
+ * | VoltMon_CfgGet_pcfg      | X  |  X  |* VoltMon_cfg_s(void)                      |  -     |   1    |   0    |  2   | [-]            | [-]  |
+ * | ComputeVoltage_u16       | X  |  X  | unit16_t(uint16_t , const VoltMon_cfg_s *)|  -     |   1    |   0    |  2   | [-]            | [-]  |
+ * | LastRawAdc_u16           |    |  X  | uint16_t (static)                         |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
+ * | LastVoltage_mV_u16       |    |  X  | uint16_t (static)                         |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
+ * | returned value           | X  |  X  | uint16_t                                  | -      |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
  *
  * @param rawAdc_u16 ADC raw counts.
  * @return uint8_t
