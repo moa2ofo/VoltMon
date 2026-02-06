@@ -345,7 +345,7 @@ void VoltMon_SetOvActive_b(
                           _Bool 
 # 24 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h"
                                value);
-# 75 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h"
+# 77 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h"
 uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16);
 # 3 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
 # 1 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h" 1

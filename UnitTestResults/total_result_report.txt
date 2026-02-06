@@ -1,4 +1,4 @@
 | function_name        | total  | passed | failed | ignored | linesCvrg | branchesCvrg | Date and time  | Tester |
 |----------------------|--------|--------|--------|---------|-----------|--------------|----------------|--------|
-| VoltMon_UpdateAdc_u8 | FAILED | FAILED | FAILED | FAILED  | FAILED    | FAILED       | 06/02/26 10:16 | root   |
-| VoltMon_Init_u8      | 5      | 5      | 0      | 0       | 100.0%    | 100.0%       | 06/02/26 10:16 | root   |
+| VoltMon_UpdateAdc_u8 | FAILED | FAILED | FAILED | FAILED  | FAILED    | FAILED       | 06/02/26 10:49 | root   |
+| VoltMon_Init_u8      | 5      | 5      | 0      | 0       | 100.0%    | 100.0%       | 06/02/26 10:49 | root   |
