@@ -3,11 +3,11 @@
 /*=======Automagically Detected Files To Include=====*/
 #include "unity.h"
 #include "cmock.h"
-#include "unity.h"
 #include "VoltMon.h"
 #include "VoltMon_UpdateAdc_u8.h"
 #include "VoltMon_cfg.h"
 #include "VoltMon_priv.h"
+#include "unity.h"
 #include "mock_VoltMon_cfg.h"
 #include "mock_VoltMon_priv.h"
 
@@ -18,14 +18,18 @@ char* GlobalOrderError;
 /*=======External Functions This Runner Calls=====*/
 extern void setUp(void);
 extern void tearDown(void);
-extern void test_VoltMon_UpdateAdc_u8_should_return_1_and_set_ERR_when_not_initialized(void);
-extern void test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_cfg_is_NULL(void);
-extern void test_VoltMon_UpdateAdc_u8_should_accept_raw_min_0_when_rawMax_allows_it(void);
-extern void test_VoltMon_UpdateAdc_u8_should_accept_raw_equal_to_rawMax_as_valid_boundary(void);
-extern void test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_raw_is_rawMax_plus_1(void);
-extern void test_VoltMon_UpdateAdc_u8_should_handle_corner_case_rawMax_0_only_raw_0_valid(void);
-extern void test_VoltMon_UpdateAdc_u8_should_accept_raw_uint16_max_when_rawMax_uint16_max(void);
-extern void test_VoltMon_UpdateAdc_u8_should_update_last_values_clear_INVAL_and_keep_ERR_if_it_was_already_set(void);
+extern void test_VoltMon_UpdateAdc_u8_returns_invalid_param_for_rawAdc_above_max(void);
+extern void test_VoltMon_UpdateAdc_u8_returns_not_init_when_mode_is_idle(void);
+extern void test_VoltMon_UpdateAdc_u8_updates_voltage_and_status_under_uv_threshold(void);
+extern void test_VoltMon_UpdateAdc_u8_updates_voltage_and_status_under_ov_threshold(void);
+extern void test_VoltMon_UpdateAdc_u8_updates_voltage_and_status_with_no_thresholds_active(void);
+extern void test_VoltMon_UpdateAdc_u8_returns_busy_when_mode_diag(void);
+extern void test_VoltMon_UpdateAdc_u8_voltage_exactly_at_uv_threshold_sets_uv_active(void);
+extern void test_VoltMon_UpdateAdc_u8_voltage_just_below_uv_threshold_clears_uv_active(void);
+extern void test_VoltMon_UpdateAdc_u8_voltage_just_above_uv_threshold_sets_uv_active(void);
+extern void test_VoltMon_UpdateAdc_u8_voltage_exactly_at_ov_threshold_sets_ov_active(void);
+extern void test_VoltMon_UpdateAdc_u8_voltage_just_below_ov_threshold_clears_ov_active(void);
+extern void test_VoltMon_UpdateAdc_u8_voltage_just_above_ov_threshold_sets_ov_active(void);
 
 
 /*=======Mock Management=====*/
@@ -47,6 +51,12 @@ static void CMock_Destroy(void)
   mock_VoltMon_cfg_Destroy();
   mock_VoltMon_priv_Destroy();
 }
+
+/*=======Setup (stub)=====*/
+void setUp(void) {}
+
+/*=======Teardown (stub)=====*/
+void tearDown(void) {}
 
 /*=======Test Reset Options=====*/
 void resetTest(void);
@@ -96,14 +106,18 @@ static void run_test(UnityTestFunction func, const char* name, UNITY_LINE_TYPE l
 int main(void)
 {
   UnityBegin("test_VoltMon_UpdateAdc_u8.c");
-  run_test(test_VoltMon_UpdateAdc_u8_should_return_1_and_set_ERR_when_not_initialized, "test_VoltMon_UpdateAdc_u8_should_return_1_and_set_ERR_when_not_initialized", 50);
-  run_test(test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_cfg_is_NULL, "test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_cfg_is_NULL", 68);
-  run_test(test_VoltMon_UpdateAdc_u8_should_accept_raw_min_0_when_rawMax_allows_it, "test_VoltMon_UpdateAdc_u8_should_accept_raw_min_0_when_rawMax_allows_it", 80);
-  run_test(test_VoltMon_UpdateAdc_u8_should_accept_raw_equal_to_rawMax_as_valid_boundary, "test_VoltMon_UpdateAdc_u8_should_accept_raw_equal_to_rawMax_as_valid_boundary", 101);
-  run_test(test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_raw_is_rawMax_plus_1, "test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_raw_is_rawMax_plus_1", 122);
-  run_test(test_VoltMon_UpdateAdc_u8_should_handle_corner_case_rawMax_0_only_raw_0_valid, "test_VoltMon_UpdateAdc_u8_should_handle_corner_case_rawMax_0_only_raw_0_valid", 140);
-  run_test(test_VoltMon_UpdateAdc_u8_should_accept_raw_uint16_max_when_rawMax_uint16_max, "test_VoltMon_UpdateAdc_u8_should_accept_raw_uint16_max_when_rawMax_uint16_max", 170);
-  run_test(test_VoltMon_UpdateAdc_u8_should_update_last_values_clear_INVAL_and_keep_ERR_if_it_was_already_set, "test_VoltMon_UpdateAdc_u8_should_update_last_values_clear_INVAL_and_keep_ERR_if_it_was_already_set", 191);
+  run_test(test_VoltMon_UpdateAdc_u8_returns_invalid_param_for_rawAdc_above_max, "test_VoltMon_UpdateAdc_u8_returns_invalid_param_for_rawAdc_above_max", 11);
+  run_test(test_VoltMon_UpdateAdc_u8_returns_not_init_when_mode_is_idle, "test_VoltMon_UpdateAdc_u8_returns_not_init_when_mode_is_idle", 18);
+  run_test(test_VoltMon_UpdateAdc_u8_updates_voltage_and_status_under_uv_threshold, "test_VoltMon_UpdateAdc_u8_updates_voltage_and_status_under_uv_threshold", 25);
+  run_test(test_VoltMon_UpdateAdc_u8_updates_voltage_and_status_under_ov_threshold, "test_VoltMon_UpdateAdc_u8_updates_voltage_and_status_under_ov_threshold", 53);
+  run_test(test_VoltMon_UpdateAdc_u8_updates_voltage_and_status_with_no_thresholds_active, "test_VoltMon_UpdateAdc_u8_updates_voltage_and_status_with_no_thresholds_active", 73);
+  run_test(test_VoltMon_UpdateAdc_u8_returns_busy_when_mode_diag, "test_VoltMon_UpdateAdc_u8_returns_busy_when_mode_diag", 93);
+  run_test(test_VoltMon_UpdateAdc_u8_voltage_exactly_at_uv_threshold_sets_uv_active, "test_VoltMon_UpdateAdc_u8_voltage_exactly_at_uv_threshold_sets_uv_active", 100);
+  run_test(test_VoltMon_UpdateAdc_u8_voltage_just_below_uv_threshold_clears_uv_active, "test_VoltMon_UpdateAdc_u8_voltage_just_below_uv_threshold_clears_uv_active", 117);
+  run_test(test_VoltMon_UpdateAdc_u8_voltage_just_above_uv_threshold_sets_uv_active, "test_VoltMon_UpdateAdc_u8_voltage_just_above_uv_threshold_sets_uv_active", 135);
+  run_test(test_VoltMon_UpdateAdc_u8_voltage_exactly_at_ov_threshold_sets_ov_active, "test_VoltMon_UpdateAdc_u8_voltage_exactly_at_ov_threshold_sets_ov_active", 153);
+  run_test(test_VoltMon_UpdateAdc_u8_voltage_just_below_ov_threshold_clears_ov_active, "test_VoltMon_UpdateAdc_u8_voltage_just_below_ov_threshold_clears_ov_active", 171);
+  run_test(test_VoltMon_UpdateAdc_u8_voltage_just_above_ov_threshold_sets_ov_active, "test_VoltMon_UpdateAdc_u8_voltage_just_above_ov_threshold_sets_ov_active", 189);
 
   CMock_Guts_MemFreeFinal();
   return UNITY_END();

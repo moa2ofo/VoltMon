@@ -824,54 +824,96 @@
 
 # 0 "<command-line>" 2
 # 1 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c"
-/*==================[test_VoltMon_UpdateAdc_u8.c]============================*
- * Unit tests for VoltMon_UpdateAdc_u8 (Ceedling + Unity + CMock)
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon.h" 1
+/*==================[VoltMon.h]==============================================*/
+/**
+ * @file    VoltMon.h
+ * @brief   Public interface for the VoltMon (Voltage Monitoring) module.
+ * @author  -
+ * @date    2026-01-30
  *
- * Assumption (per your update):
- * - ComputeVoltage_u16() is NOT static anymore, so it can be mocked via CMock
- *   by including mock_VoltMon_priv.h.
- *==========================================================================*/
-
-# 1 "utExecutionAndResults/utUnderTest/build/vendor/unity/src/unity.h" 1
-/* =========================================================================
-    Unity - A Test Framework for C
-    ThrowTheSwitch.org
-    Copyright (c) 2007-25 Mike Karlesky, Mark VanderVoord, & Greg Williams
-    SPDX-License-Identifier: MIT
-========================================================================= */
+ * @defgroup VoltMon Voltage Monitoring Module
+ * @{
+ *
+ * @details
+ * The VoltMon module monitors an input voltage value provided by the platform
+ * (e.g., ADC raw counts) and evaluates it against configurable thresholds.
+ * The module is split into:
+ * - Platform/logic: VoltMon.c/.h (stand-alone)
+ * - Configuration: VoltMon_cfg.c/.h (project-dependent)
+ */
 
 
-#define UNITY_FRAMEWORK_H 
-#define UNITY 
-
-#define UNITY_VERSION_MAJOR 2
-#define UNITY_VERSION_MINOR 6
-#define UNITY_VERSION_BUILD 1
-#define UNITY_VERSION ((UNITY_VERSION_MAJOR << 16) | (UNITY_VERSION_MINOR << 8) | UNITY_VERSION_BUILD)
+#define VOLTMON_H 
 
 
 
 
 
+# 1 "/usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h" 1 3 4
+/* Copyright (C) 1998-2022 Free Software Foundation, Inc.
 
-# 1 "utExecutionAndResults/utUnderTest/build/vendor/unity/src/unity_internals.h" 1
-/* =========================================================================
-    Unity - A Test Framework for C
-    ThrowTheSwitch.org
-    Copyright (c) 2007-25 Mike Karlesky, Mark VanderVoord, & Greg Williams
-    SPDX-License-Identifier: MIT
-========================================================================= */
+This file is part of GCC.
+
+GCC is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3, or (at your option)
+any later version.
+
+GCC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+Under Section 7 of GPL version 3, you are granted additional
+permissions described in the GCC Runtime Library Exception, version
+3.1, as published by the Free Software Foundation.
+
+You should have received a copy of the GNU General Public License and
+a copy of the GCC Runtime Library Exception along with this program;
+see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<http://www.gnu.org/licenses/>.  */
+
+/*
+ * ISO C Standard:  7.16  Boolean type and values  <stdbool.h>
+ */
 
 
-#define UNITY_INTERNALS_H 
+#define _STDBOOL_H 
+
+
+
+#define bool _Bool
+
+
+
+
+#define true 1
+#define false 0
 
 
 
 
 
 
-# 1 "/usr/include/setjmp.h" 1 3 4
-/* Copyright (C) 1991-2022 Free Software Foundation, Inc.
+
+
+
+/* Signal that all the definitions are present.  */
+#define __bool_true_false_are_defined 1
+
+# 27 "utExecutionAndResults/utUnderTest/src/VoltMon.h" 2
+# 1 "/usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h" 1 3 4
+
+
+
+
+
+
+
+
+# 1 "/usr/include/stdint.h" 1 3 4
+/* Copyright (C) 1997-2022 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -889,11 +931,45 @@
    <https://www.gnu.org/licenses/>.  */
 
 /*
- *	ISO C99 Standard: 7.13 Nonlocal jumps	<setjmp.h>
+ *	ISO C99: 7.18 Integer types <stdint.h>
  */
 
 
-#define _SETJMP_H 1
+#define _STDINT_H 1
+
+#define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION 
+# 1 "/usr/include/x86_64-linux-gnu/bits/libc-header-start.h" 1 3 4
+/* Handle feature test macros at the start of a header.
+   Copyright (C) 2016-2022 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+/* This header is internal to glibc and should not be included outside
+   of glibc headers.  Headers including it must define
+   __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION first.  This header
+   cannot have multiple include guards because ISO C feature test
+   macros depend on the definition of the macro when an affected
+   header is included, not when the first system header is
+   included.  */
+
+
+
+
+
+#undef __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
 
 # 1 "/usr/include/features.h" 1 3 4
 /* Copyright (C) 1991-2022 Free Software Foundation, Inc.
@@ -2008,241 +2084,7 @@
 # 514 "/usr/include/features.h" 2 3 4
 
 
-# 26 "/usr/include/setjmp.h" 2 3 4
-
-__BEGIN_DECLS
-
-# 1 "/usr/include/x86_64-linux-gnu/bits/setjmp.h" 1 3 4
-/* Copyright (C) 2001-2022 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
-
-/* Define the machine-dependent type `jmp_buf'.  x86-64 version.  */
-
-#define _BITS_SETJMP_H 1
-
-
-
-
-
-# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
-/* Determine the wordsize from the preprocessor defines.  */
-
-
-#define __WORDSIZE 64
-
-
-
-
-
-
-#define __WORDSIZE_TIME64_COMPAT32 1
-
-
-/* Both x86-64 and x32 use the 64-bit system call interface.  */
-#define __SYSCALL_WORDSIZE 64
-# 27 "/usr/include/x86_64-linux-gnu/bits/setjmp.h" 2 3 4
-
-
-
-
-typedef long int __jmp_buf[8];
-
-
-
-
-
-
-
-
-# 30 "/usr/include/setjmp.h" 2 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h" 1 3 4
-/* Define struct __jmp_buf_tag.
-   Copyright (C) 1991-2022 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
-
-
-#define __jmp_buf_tag_defined 1
-
-
-# 1 "/usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h" 1 3 4
-
-#define ____sigset_t_defined 
-
-#define _SIGSET_NWORDS (1024 / (8 * sizeof (unsigned long int)))
-typedef struct
-{
-  unsigned long int __val[_SIGSET_NWORDS];
-} __sigset_t;
-
-# 24 "/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h" 2 3 4
-
-/* Calling environment, plus possibly a saved signal mask.  */
-struct __jmp_buf_tag
-  {
-    /* NOTE: The machine-dependent definitions of `__sigsetjmp'
-       assume that a `jmp_buf' begins with a `__jmp_buf' and that
-       `__mask_was_saved' follows it.  Do not move these members
-       or add others before it.  */
-    __jmp_buf __jmpbuf;		/* Calling environment.  */
-    int __mask_was_saved;	/* Saved the signal mask?  */
-    __sigset_t __saved_mask;	/* Saved signal mask.  */
-  };
-
-# 31 "/usr/include/setjmp.h" 2 3 4
-
-typedef struct __jmp_buf_tag jmp_buf[1];
-
-/* Store the calling environment in ENV, also saving the signal mask.
-   Return 0.  */
-extern int setjmp (jmp_buf __env) __THROWNL;
-
-/* Store the calling environment in ENV, also saving the
-   signal mask if SAVEMASK is nonzero.  Return 0.
-   This is the internal name for `sigsetjmp'.  */
-extern int __sigsetjmp (struct __jmp_buf_tag __env[1], int __savemask) __THROWNL;
-
-/* Store the calling environment in ENV, not saving the signal mask.
-   Return 0.  */
-extern int _setjmp (struct __jmp_buf_tag __env[1]) __THROWNL;
-
-/* Do not save the signal mask.  This is equivalent to the `_setjmp'
-   BSD function.  */
-#define setjmp(env) _setjmp (env)
-
-
-/* Jump to the environment saved in ENV, making the
-   `setjmp' call there return VAL, or 1 if VAL is 0.  */
-extern void longjmp (struct __jmp_buf_tag __env[1], int __val)
-     __THROWNL __attribute__ ((__noreturn__));
-
-
-/* Same.  Usually `_longjmp' is used with `_setjmp', which does not save
-   the signal mask.  But it is how ENV was saved that determines whether
-   `longjmp' restores the mask; `_longjmp' is just an alias.  */
-extern void _longjmp (struct __jmp_buf_tag __env[1], int __val)
-     __THROWNL __attribute__ ((__noreturn__));
-
-
-
-
-/* Use the same type for `jmp_buf' and `sigjmp_buf'.
-   The `__mask_was_saved' flag determines whether
-   or not `longjmp' will restore the signal mask.  */
-typedef struct __jmp_buf_tag sigjmp_buf[1];
-
-/* Store the calling environment in ENV, also saving the
-   signal mask if SAVEMASK is nonzero.  Return 0.  */
-#define sigsetjmp(env,savemask) __sigsetjmp (env, savemask)
-
-/* Jump to the environment saved in ENV, making the
-   sigsetjmp call there return VAL, or 1 if VAL is 0.
-   Restore the signal mask if that sigsetjmp call saved it.
-   This is just an alias `longjmp'.  */
-extern void siglongjmp (sigjmp_buf __env, int __val)
-     __THROWNL __attribute__ ((__noreturn__));
-
-
-
-/* Define helper functions to catch unsafe code.  */
-
-
-
-
-__END_DECLS
-
-# 17 "utExecutionAndResults/utUnderTest/build/vendor/unity/src/unity_internals.h" 2
-
-
-
-# 1 "/usr/include/math.h" 1 3 4
-/* Declarations for math functions.
-   Copyright (C) 1991-2022 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
-
-/*
- *	ISO C99 Standard: 7.12 Mathematics	<math.h>
- */
-
-
-#define _MATH_H 1
-
-#define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION 
-# 1 "/usr/include/x86_64-linux-gnu/bits/libc-header-start.h" 1 3 4
-/* Handle feature test macros at the start of a header.
-   Copyright (C) 2016-2022 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
-
-/* This header is internal to glibc and should not be included outside
-   of glibc headers.  Headers including it must define
-   __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION first.  This header
-   cannot have multiple include guards because ISO C feature test
-   macros depend on the definition of the macro when an affected
-   header is included, not when the first system header is
-   included.  */
-
-
-
-
-
-#undef __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
-
-
+# 34 "/usr/include/x86_64-linux-gnu/bits/libc-header-start.h" 2 3 4
 
 /* ISO/IEC TR 24731-2:2010 defines the __STDC_WANT_LIB_EXT2__
    macro.  */
@@ -2319,16 +2161,7 @@ __END_DECLS
 
 
 #define __GLIBC_USE_IEC_60559_TYPES_EXT 0
-# 28 "/usr/include/math.h" 2 3 4
-
-
-
-
-
-
-__BEGIN_DECLS
-
-/* Get definitions of __intmax_t and __uintmax_t.  */
+# 27 "/usr/include/stdint.h" 2 3 4
 # 1 "/usr/include/x86_64-linux-gnu/bits/types.h" 1 3 4
 /* bits/types.h -- definitions of __*_t types underlying *_t types.
    Copyright (C) 2002-2022 Free Software Foundation, Inc.
@@ -2746,7 +2579,1362 @@ typedef int __sig_atomic_t;
 
 #undef __STD_TYPE
 
-# 38 "/usr/include/math.h" 2 3 4
+# 28 "/usr/include/stdint.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/wchar.h" 1 3 4
+/* wchar_t type related definitions.
+   Copyright (C) 2000-2022 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+
+#define _BITS_WCHAR_H 1
+
+/* The fallback definitions, for when __WCHAR_MAX__ or __WCHAR_MIN__
+   are not defined, give the right value and type as long as both int
+   and wchar_t are 32-bit types.  Adding L'\0' to a constant value
+   ensures that the type is correct; it is necessary to use (L'\0' +
+   0) rather than just L'\0' so that the type in C++ is the promoted
+   version of wchar_t rather than the distinct wchar_t type itself.
+   Because wchar_t in preprocessor #if expressions is treated as
+   intmax_t or uintmax_t, the expression (L'\0' - 1) would have the
+   wrong value for WCHAR_MAX in such expressions and so cannot be used
+   to define __WCHAR_MAX in the unsigned case.  */
+
+
+#define __WCHAR_MAX __WCHAR_MAX__
+
+
+
+
+
+
+
+#define __WCHAR_MIN __WCHAR_MIN__
+
+
+
+
+
+
+# 29 "/usr/include/stdint.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
+/* Determine the wordsize from the preprocessor defines.  */
+
+
+#define __WORDSIZE 64
+
+
+
+
+
+
+#define __WORDSIZE_TIME64_COMPAT32 1
+
+
+/* Both x86-64 and x32 use the 64-bit system call interface.  */
+#define __SYSCALL_WORDSIZE 64
+# 30 "/usr/include/stdint.h" 2 3 4
+
+/* Exact integral types.  */
+
+/* Signed.  */
+# 1 "/usr/include/x86_64-linux-gnu/bits/stdint-intn.h" 1 3 4
+/* Define intN_t types.
+   Copyright (C) 2017-2022 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+
+#define _BITS_STDINT_INTN_H 1
+
+
+
+typedef __int8_t int8_t;
+typedef __int16_t int16_t;
+typedef __int32_t int32_t;
+typedef __int64_t int64_t;
+
+# 35 "/usr/include/stdint.h" 2 3 4
+
+/* Unsigned.  */
+# 1 "/usr/include/x86_64-linux-gnu/bits/stdint-uintn.h" 1 3 4
+/* Define uintN_t types.
+   Copyright (C) 2017-2022 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+
+#define _BITS_STDINT_UINTN_H 1
+
+
+
+typedef __uint8_t uint8_t;
+typedef __uint16_t uint16_t;
+typedef __uint32_t uint32_t;
+typedef __uint64_t uint64_t;
+
+# 38 "/usr/include/stdint.h" 2 3 4
+
+
+/* Small types.  */
+
+/* Signed.  */
+typedef __int_least8_t int_least8_t;
+typedef __int_least16_t int_least16_t;
+typedef __int_least32_t int_least32_t;
+typedef __int_least64_t int_least64_t;
+
+/* Unsigned.  */
+typedef __uint_least8_t uint_least8_t;
+typedef __uint_least16_t uint_least16_t;
+typedef __uint_least32_t uint_least32_t;
+typedef __uint_least64_t uint_least64_t;
+
+
+/* Fast types.  */
+
+/* Signed.  */
+typedef signed char		int_fast8_t;
+
+typedef long int		int_fast16_t;
+typedef long int		int_fast32_t;
+typedef long int		int_fast64_t;
+
+
+
+
+
+
+
+/* Unsigned.  */
+typedef unsigned char		uint_fast8_t;
+
+typedef unsigned long int	uint_fast16_t;
+typedef unsigned long int	uint_fast32_t;
+typedef unsigned long int	uint_fast64_t;
+
+
+
+
+
+
+
+
+/* Types for `void *' pointers.  */
+
+
+typedef long int		intptr_t;
+#define __intptr_t_defined 
+
+typedef unsigned long int	uintptr_t;
+
+
+
+
+
+
+
+
+
+/* Largest integral types.  */
+typedef __intmax_t		intmax_t;
+typedef __uintmax_t		uintmax_t;
+
+
+
+#define __INT64_C(c) c ## L
+#define __UINT64_C(c) c ## UL
+
+
+
+
+
+/* Limits of integral types.  */
+
+/* Minimum of signed integral types.  */
+#define INT8_MIN (-128)
+#define INT16_MIN (-32767-1)
+#define INT32_MIN (-2147483647-1)
+#define INT64_MIN (-__INT64_C(9223372036854775807)-1)
+/* Maximum of signed integral types.  */
+#define INT8_MAX (127)
+#define INT16_MAX (32767)
+#define INT32_MAX (2147483647)
+#define INT64_MAX (__INT64_C(9223372036854775807))
+
+/* Maximum of unsigned integral types.  */
+#define UINT8_MAX (255)
+#define UINT16_MAX (65535)
+#define UINT32_MAX (4294967295U)
+#define UINT64_MAX (__UINT64_C(18446744073709551615))
+
+
+/* Minimum of signed integral types having a minimum size.  */
+#define INT_LEAST8_MIN (-128)
+#define INT_LEAST16_MIN (-32767-1)
+#define INT_LEAST32_MIN (-2147483647-1)
+#define INT_LEAST64_MIN (-__INT64_C(9223372036854775807)-1)
+/* Maximum of signed integral types having a minimum size.  */
+#define INT_LEAST8_MAX (127)
+#define INT_LEAST16_MAX (32767)
+#define INT_LEAST32_MAX (2147483647)
+#define INT_LEAST64_MAX (__INT64_C(9223372036854775807))
+
+/* Maximum of unsigned integral types having a minimum size.  */
+#define UINT_LEAST8_MAX (255)
+#define UINT_LEAST16_MAX (65535)
+#define UINT_LEAST32_MAX (4294967295U)
+#define UINT_LEAST64_MAX (__UINT64_C(18446744073709551615))
+
+
+/* Minimum of fast signed integral types having a minimum size.  */
+#define INT_FAST8_MIN (-128)
+
+#define INT_FAST16_MIN (-9223372036854775807L-1)
+#define INT_FAST32_MIN (-9223372036854775807L-1)
+
+
+
+
+#define INT_FAST64_MIN (-__INT64_C(9223372036854775807)-1)
+/* Maximum of fast signed integral types having a minimum size.  */
+#define INT_FAST8_MAX (127)
+
+#define INT_FAST16_MAX (9223372036854775807L)
+#define INT_FAST32_MAX (9223372036854775807L)
+
+
+
+
+#define INT_FAST64_MAX (__INT64_C(9223372036854775807))
+
+/* Maximum of fast unsigned integral types having a minimum size.  */
+#define UINT_FAST8_MAX (255)
+
+#define UINT_FAST16_MAX (18446744073709551615UL)
+#define UINT_FAST32_MAX (18446744073709551615UL)
+
+
+
+
+#define UINT_FAST64_MAX (__UINT64_C(18446744073709551615))
+
+
+/* Values to test for integral types holding `void *' pointer.  */
+
+#define INTPTR_MIN (-9223372036854775807L-1)
+#define INTPTR_MAX (9223372036854775807L)
+#define UINTPTR_MAX (18446744073709551615UL)
+
+
+
+
+
+
+
+/* Minimum for largest signed integral type.  */
+#define INTMAX_MIN (-__INT64_C(9223372036854775807)-1)
+/* Maximum for largest signed integral type.  */
+#define INTMAX_MAX (__INT64_C(9223372036854775807))
+
+/* Maximum for largest unsigned integral type.  */
+#define UINTMAX_MAX (__UINT64_C(18446744073709551615))
+
+
+/* Limits of other integer types.  */
+
+/* Limits of `ptrdiff_t' type.  */
+
+#define PTRDIFF_MIN (-9223372036854775807L-1)
+#define PTRDIFF_MAX (9223372036854775807L)
+# 220 "/usr/include/stdint.h" 3 4
+
+/* Limits of `sig_atomic_t'.  */
+#define SIG_ATOMIC_MIN (-2147483647-1)
+#define SIG_ATOMIC_MAX (2147483647)
+
+/* Limit of `size_t' type.  */
+
+#define SIZE_MAX (18446744073709551615UL)
+
+
+
+
+
+
+
+
+/* Limits of `wchar_t'.  */
+
+/* These constants might also be defined in <wchar.h>.  */
+#define WCHAR_MIN __WCHAR_MIN
+#define WCHAR_MAX __WCHAR_MAX
+
+
+/* Limits of `wint_t'.  */
+#define WINT_MIN (0u)
+#define WINT_MAX (4294967295u)
+
+/* Signed.  */
+#define INT8_C(c) c
+#define INT16_C(c) c
+#define INT32_C(c) c
+
+#define INT64_C(c) c ## L
+
+
+
+
+/* Unsigned.  */
+#define UINT8_C(c) c
+#define UINT16_C(c) c
+#define UINT32_C(c) c ## U
+
+#define UINT64_C(c) c ## UL
+
+
+
+
+/* Maximal type.  */
+
+#define INTMAX_C(c) c ## L
+#define UINTMAX_C(c) c ## UL
+
+
+
+
+
+# 318 "/usr/include/stdint.h" 3 4
+
+# 10 "/usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h" 2 3 4
+
+
+
+#define _GCC_WRAP_STDINT_H 
+# 28 "utExecutionAndResults/utUnderTest/src/VoltMon.h" 2
+
+/*==================[macros]=================================================*/
+
+/** @brief Module status flag: initialized. */
+#define VOLTMON_STATUS_INIT_U32 (0x00000001u)
+/** @brief Module status flag: any error detected (generic). */
+#define VOLTMON_STATUS_ERR_U32 (0x00000002u)
+/** @brief Module status flag: undervoltage active. */
+#define VOLTMON_STATUS_UV_U32 (0x00000004u)
+/** @brief Module status flag: overvoltage active. */
+#define VOLTMON_STATUS_OV_U32 (0x00000008u)
+/** @brief Module status flag: last input invalid. */
+#define VOLTMON_STATUS_INVAL_U32 (0x00000010u)
+
+/*==================[types]==================================================*/
+
+/**
+ * @brief VoltMon operating mode.
+ */
+typedef enum { VoltMon_modeIdle_e = 0, VoltMon_modeRun_e = 1, VoltMon_modeDiag_e = 2 } VoltMon_mode_e;
+
+/**
+ * @brief Result codes for VoltMon services.
+ */
+typedef enum { VoltMon_retOk_e = 0, VoltMon_retNotInit_e = 1, VoltMon_retInvalidParam_e = 2, VoltMon_retBusyOrRejected_e = 3 } VoltMon_ret_e;
+
+/*==================[public function prototypes]=============================*/
+
+/**
+ * @brief Initialize the VoltMon module.
+ *
+ * @details
+ * **Goal of the function**
+ *
+ * Bring the module into a known and safe state:
+ * - Load basic defaults.
+ * - Clear flags.
+ * - Set initial mode to IDLE.
+ * - Validate configuration availability.
+ *
+ * The function is intended to be called once at startup.
+ *
+ * @par Activity diagram
+ * @code
+ * start
+ * :l_cfg_pcs = VoltMon_CfgGet_pcfg();
+ * if ((l_cfg_pcs == 0) || (l_cfg_pcs->rawMax_u16 == 0)) then (invalid cfg)
+ *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+ *   :return 1;
+ * else (ok)
+ *   :StatusFlg_u32 = VOLTMON_STATUS_INIT_U32;
+ *   :Mode_e = VoltMon_modeIdle_e;
+ *   :LastRawAdc_u16 = 0; LastVoltage_mV_u16 = 0;
+ *   :UvActive_b = false; OvActive_b = false;
+ *   :StatusFlg_u32 &= ~(VOLTMON_STATUS_UV_U32 | VOLTMON_STATUS_OV_U32 | VOLTMON_STATUS_INVAL_U32);
+ *   :return 0;
+ * endif
+ * stop
+ * @endcode
+ *
+ * @par Interface summary
+ *
+ * | Interface         | In | Out | Type / Signature           | Param | Factor | Offset | Size | Range | Unit |
+ * |------------------|----|-----|----------------------------|-------|--------|--------|------|-------|------|
+ * | VoltMon_Init_u8  |    |  X  | uint8_t (void)             |  -    |   1    |   0    |  1   | 0..3  | [-]  |
+ * | StatusFlg_u32    |    |  X  | uint32_t (static)          |  -    |   1    |   0    |  1   | [0,UINT32_MAX] | [-]  |
+ * | Mode_e           |    |  X  | VoltMon_mode_e (static)    |  -    |   1    |   0    |  1   | -     | [0,2]  |
+ *
+ * @return uint8_t
+ * @retval 0 Module initialized successfully.
+ * @retval 1 Configuration missing/invalid.
+ */
+uint8_t VoltMon_Init_u8(void);
+
+/**
+ * @brief De-initialize the VoltMon module.
+ *
+ * @details
+ * **Goal of the function**
+ *
+ * Put the module into an uninitialized state:
+ * - Clear INIT flag.
+ * - Force IDLE mode.
+ * - Clear voltage value and error state.
+ *
+ * This is useful for tests and controlled shutdown.
+ *
+ * @par Activity diagram
+ * @code
+ * start
+ * if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0) then (not init)
+ *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+ *   :return 1;
+ * else (init)
+ *   :Mode_e = VoltMon_modeIdle_e;
+ *   :LastRawAdc_u16 = 0; LastVoltage_mV_u16 = 0;
+ *   :UvActive_b = false; OvActive_b = false;
+ *   :StatusFlg_u32 = 0;
+ *   :return 0;
+ * endif
+ * stop
+ * @endcode
+ *
+ * @par Interface summary
+ *
+ * | Interface            | In | Out | Type / Signature          | Param | Factor | Offset | Size | Range | Unit |
+ * |---------------------|----|-----|---------------------------|-------|--------|--------|------|-------|------|
+ * | VoltMon_DeInit_u8   |    |  X  | uint8_t (void)            |  -    |   1    |   0    |  1   | 0..3  | [-]  |
+ * | StatusFlg_u32       |    |  X  | uint32_t (static)         |  -    |   1    |   0    |  1   | [0,UINT32_MAX] | [-]  |
+ * | Mode_e              |    |  X  | VoltMon_mode_e (static)   |  -    |   1    |   0    |  1   | -     | [0,2]  |
+ *
+ * @return uint8_t
+ * @retval 0 De-initialized.
+ * @retval 1 Module was not initialized.
+ */
+uint8_t VoltMon_DeInit_u8(void);
+
+/**
+ * @brief Set the VoltMon operating mode.
+ *
+ * @details
+ * **Goal of the function**
+ *
+ * Switch the module behavior according to the requested mode:
+ * - IDLE: no threshold evaluation (still stores last voltage).
+ * - RUN: evaluate thresholds and set UV/OV flags deterministically.
+ * - DIAG: behaves like RUN but keeps ERR flag sticky for diagnostics.
+ *
+ * Invalid mode requests are rejected and the ERR flag is set.
+ *
+ * @par Activity diagram
+ * @code
+ * start
+ * if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0) then (not init)
+ *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+ *   :return 1;
+ * elseif ((mode != VoltMon_modeIdle_e) && (mode != VoltMon_modeRun_e) && (mode != VoltMon_modeDiag_e)) then (invalid mode)
+ *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+ *   :return 2;
+ * else (accepted)
+ *   :Mode_e = mode;
+ *   :StatusFlg_u32 &= ~VOLTMON_STATUS_INVAL_U32;
+ *   :return 0;
+ * endif
+ * stop
+ * @endcode
+ *
+ * @par Interface summary
+ *
+ * | Interface              | In | Out | Type / Signature                          | Param | Factor | Offset | Size | Range | Unit |
+ * |-----------------------|----|-----|-------------------------------------------|-------|--------|--------|------|-------|------|
+ * | VoltMon_SetMode_u8    | X  |  X  | uint8_t (VoltMon_mode_e mode)             | mode  |   1    |   0    |  1   | [0,UINT8_MAX] | [-]  |
+ * | Mode_e                |    |  X  | VoltMon_mode_e (static)                   |  -    |   1    |   0    |  1   | -     | [0,2]  |
+ * | StatusFlg_u32         |    |  X  | uint32_t (static)                         |  -    |   1    |   0    |  1   | [0,UINT32_MAX] | [-]  |
+ *
+ * @param mode Requested mode.
+ * @return uint8_t
+ * @retval 0 Mode accepted.
+ * @retval 1 Not initialized.
+ * @retval 2 Invalid mode.
+ */
+uint8_t VoltMon_SetMode_u8(VoltMon_mode_e mode);
+
+/**
+ * @brief Run one deterministic processing step of the VoltMon module.
+ *
+ * @details
+ * **Goal of the function**
+ *
+ * Execute a bounded amount of work per call:
+ * - Maintain a function-static cycle counter (for deterministic internal pacing).
+ * - When in RUN/DIAG mode, evaluate the last computed voltage against thresholds:
+ *   - Set/clear UV/OV flags.
+ *   - In DIAG mode keep ERR flag sticky once asserted.
+ * - Always execute a bounded loop to keep deterministic timing.
+ *
+ * @par Activity diagram
+ * @code
+ * start
+ * :l_CycleCnt_u32++;
+ * :l_cfg_pcs = VoltMon_CfgGet_pcfg();
+ * :l_errSticky_b = (Mode_e == VoltMon_modeDiag_e);
+ * repeat (8 iterations)
+ *   if (((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) != 0) && ((Mode_e == VoltMon_modeRun_e) || (Mode_e == VoltMon_modeDiag_e))) then (evaluate)
+ *     :l_evalRet_u8 = CheckThresholds_u8(LastVoltage_mV_u16, l_cfg_pcs, &UvActive_b, &OvActive_b);
+ *     if (l_evalRet_u8 != 0) then (error)
+ *       :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+ *     endif
+ *     :UpdateStatusFlags_v(UvActive_b, OvActive_b, l_errSticky_b);
+ *     if ((l_CycleCnt_u32 & 0x1) == 0) then (even)
+ *       :no-op;
+ *     else (odd)
+ *       :no-op;
+ *     endif
+ *   else (idle / not init)
+ *     :no-op;
+ *   endif
+ * repeat while (iteration < 8)
+ * stop
+ * @endcode
+ *
+ * @par Interface summary
+ *
+ * | Interface            | In | Out | Type / Signature              | Param | Factor | Offset | Size | Range | Unit |
+ * |---------------------|----|-----|-------------------------------|-------|--------|--------|------|-------|------|
+ * | VoltMon_Process     |    |  X  | void (void)                   |  -    |   1    |   0    |  -   | -     | [-]  |
+ * | Mode_e              | X  |     | VoltMon_mode_e (static)       |  -    |   1    |   0    |  1   | -     | 0,2]  |
+ * | LastVoltage_mV_u16  | X  |     | uint16_t (static)             |  -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
+ * | StatusFlg_u32       | X  |  X  | uint32_t (static)             |  -    |   1    |   0    |  4   | [0,UINT32_MAX] | [-]  |
+ * | l_CycleCnt_u32      | X  |  X  | uint32_t (static local)       |  -    |   1    |   0    |  4   | [0,UINT32_MAX] | [-]  |
+ *
+ * @return void
+ */
+void VoltMon_Process(void);
+
+/**
+ * @brief Read the last computed voltage in millivolts.
+ *
+ * @details
+ * **Goal of the function**
+ *
+ * Provide the last stored voltage value (mV) computed from the last ADC input.
+ * If the module is not initialized, 0 mV is returned and ERR flag is set.
+ *
+ * @par Activity diagram
+ * @code
+ * start
+ * if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0) then (not init)
+ *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+ *   :return 0;
+ * else (init)
+ *   :return LastVoltage_mV_u16;
+ * endif
+ * stop
+ * @endcode
+ *
+ * @par Interface summary
+ *
+ * | Interface                   | In | Out | Type / Signature              | Param | Factor | Offset | Size | Range | Unit |
+ * |----------------------------|----|-----|-------------------------------|-------|--------|--------|------|-------|------|
+ * | VoltMon_GetVoltage_mV_u16  |    |  X  | uint16_t (void)               |  -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
+ * | LastVoltage_mV_u16         | X  |     | uint16_t (static)             |  -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
+ *
+ * @return uint16_t Last computed voltage [mV], or 0 if not initialized.
+ */
+uint16_t VoltMon_GetVoltage_mV_u16(void);
+
+/**
+ * @brief Get the current module status flags.
+ *
+ * @details
+ * **Goal of the function**
+ *
+ * Return the current status bitmask (INIT/ERR/UV/OV/INVAL).
+ * No side effects are performed.
+ *
+ * @par Activity diagram
+ * @code
+ * start
+ * :return StatusFlg_u32;
+ * stop
+ * @endcode
+ *
+ * @par Interface summary
+ *
+ * | Interface                | In | Out | Type / Signature        | Param | Factor | Offset | Size | Range | Unit |
+ * |-------------------------|----|-----|-------------------------|-------|--------|--------|------|-------|------|
+ * | VoltMon_GetStatus_u32   |    |  X  | uint32_t (void)         |  -    |   1    |   0    |  4   | [0,UINT32_MAX] | [-]  |
+ * | StatusFlg_u32           | X  |     | uint32_t (static)       |  -    |   1    |   0    |  4   | [0,UINT32_MAX] | [-]  |
+ *
+ * @return uint32_t Status flags bitmask.
+ */
+uint32_t VoltMon_GetStatus_u32(void);
+
+
+
+
+
+/** @} */ /* end of defgroup VoltMon */
+
+# 2 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 1
+
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon.h" 1
+/*==================[VoltMon.h]==============================================*/
+/**
+ * @file    VoltMon.h
+ * @brief   Public interface for the VoltMon (Voltage Monitoring) module.
+ * @author  -
+ * @date    2026-01-30
+ *
+ * @defgroup VoltMon Voltage Monitoring Module
+ * @{
+ *
+ * @details
+ * The VoltMon module monitors an input voltage value provided by the platform
+ * (e.g., ADC raw counts) and evaluates it against configurable thresholds.
+ * The module is split into:
+ * - Platform/logic: VoltMon.c/.h (stand-alone)
+ * - Configuration: VoltMon_cfg.c/.h (project-dependent)
+ */
+
+# 3 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 2
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h" 1
+/*==================[VoltMon_cfg.h]==========================================*/
+/**
+ * @file    VoltMon_cfg.h
+ * @brief   Configuration interface for the VoltMon module.
+ * @author  -
+ * @date    2026-01-30
+ *
+ * @defgroup VoltMonCfg VoltMon Configuration
+ * @{
+ *
+ * @details
+ * This file contains the configuration types and the configuration getter.
+ * The actual configuration instance is defined in VoltMon_cfg.c.
+ */
+
+
+#define VOLTMON_CFG_H 
+
+
+
+
+
+
+
+/*==================[types]==================================================*/
+
+/**
+ * @brief VoltMon configuration structure.
+ *
+ * @details
+ * - rawMax_u16: maximum allowed ADC raw count (input validation)
+ * - factor_u16: scaling factor for mV conversion (mV = raw * factor + offset)
+ * - offset_s16: offset for mV conversion (signed)
+ * - uvTh_mV_u16: undervoltage threshold [mV]
+ * - ovTh_mV_u16: overvoltage threshold [mV]
+ * - hyst_mV_u16: hysteresis [mV] applied to clear UV/OV flags
+ */
+typedef struct {
+  uint16_t rawMax_u16;
+  uint16_t factor_u16;
+  int16_t offset_s16;
+  uint16_t uvTh_mV_u16;
+  uint16_t ovTh_mV_u16;
+  uint16_t hyst_mV_u16;
+} VoltMon_cfg_s;
+
+/*==================[configuration access]===================================*/
+
+/**
+ * @brief Get the active VoltMon configuration pointer.
+ *
+ * @details
+ * **Goal of the function**
+ *
+ * Provide read-only access to the configuration stored in VoltMon_cfg.c.
+ * This indirection allows:
+ * - project-specific configuration without modifying platform code
+ * - a single consistent access point for VoltMon.c
+ *
+ * @par Interface summary
+ *
+ * | Interface             | In | Out | Type / Signature                      | Param | Factor | Offset | Size | Range | Unit |
+ * |-----------------------|----|-----|---------------------------------------|-------|--------|--------|------|-------|------|
+ * | VoltMon_CfgGet_pcfg   |    |  X  | const VoltMon_cfg_s * (void)          |  -    |   1    |   0    |  4   | -     | [-]  |
+ *
+ * @return const VoltMon_cfg_s* Pointer to the configuration (never NULL).
+ */
+const VoltMon_cfg_s *VoltMon_CfgGet_pcfg(void);
+
+
+
+
+
+/** @} */ /* end of defgroup VoltMonCfg */
+
+# 4 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 2
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 1
+/*==================[VoltMon_priv.h]=========================================*/
+/**
+ * @file    VoltMon_priv.h
+ * @brief   Private declarations for VoltMon (static functions in VoltMon.c).
+ * @author  -
+ * @date    2026-01-30
+ *
+ * @defgroup VoltMonPriv VoltMon Private Interface
+ * @{
+ *
+ * @details
+ * This header declares the internal (cfile-static) functions implemented in
+ * VoltMon.c. It is included only by VoltMon.c.
+ */
+
+
+#define VOLTMON_PRIV_H 
+
+
+
+
+
+
+
+
+
+/**
+ * @brief Compute voltage in mV from ADC raw sample.
+ *
+ * @details
+ * **Goal of the function**
+ *
+ * Convert the raw ADC value into millivolts using configuration parameters:
+ * - mV = raw * factor + offset
+ * - clamp to [0..65535] to avoid wrap
+ *
+ * @par Interface summary
+ *
+ * | Interface             | In | Out | Type / Signature                    | Param | Factor | Offset | Size | Range | Unit |
+ * |----------------------|----|-----|-------------------------------------|-------|--------|--------|------|-------|------|
+ * | ComputeVoltage_u16   | X  |  X  | uint16_t (uint16_t raw, cfg*)       | raw   |   1    |   0    |  2   | -     | [-]  |
+ * |                      | X  |     | const VoltMon_cfg_s * cfg           | cfg   |   1    |   0    |  4   | -     | [-]  |
+ *
+ * @param rawAdc_u16 Raw ADC counts.
+ * @param cfg_pcs Pointer to configuration.
+ * @return uint16_t Voltage [mV] clamped to uint16_t.
+ */
+uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s *cfg_pcs);
+
+/**
+ * @brief Check thresholds and compute new UV/OV state.
+ *
+ * @details
+ * **Goal of the function**
+ *
+ * Evaluate voltage with hysteresis:
+ * - UV set if V <= uvTh
+ * - UV cleared if V >= uvTh + hyst
+ * - OV set if V >= ovTh
+ * - OV cleared if V <= ovTh - hyst
+ *
+ * @par Interface summary
+ *
+ * | Interface              | In | Out | Type / Signature                              | Param | Factor | Offset | Size | Range | Unit |
+ * |-----------------------|----|-----|-----------------------------------------------|-------|--------|--------|------|-------|------|
+ * | CheckThresholds_u8    | X  |  X  | uint8_t (uint16_t v, cfg*, bool*, bool*)      | v     |   1    |   0    |  2   | -     | [mV] |
+ *
+ * @param voltage_mV_u16 Voltage [mV].
+ * @param cfg_pcs Pointer to configuration.
+ * @param uvActive_pb Pointer to UV state (in/out).
+ * @param ovActive_pb Pointer to OV state (in/out).
+ * @return uint8_t 0 on success, 1 if cfg invalid.
+ */
+uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs, bool *uvActive_pb, bool *ovActive_pb);
+
+/**
+ * @brief Update status flags coherently from internal states.
+ *
+ * @details
+ * **Goal of the function**
+ *
+ * Apply UV/OV bits into the status bitmask:
+ * - Set or clear VOLTMON_STATUS_UV_U32
+ * - Set or clear VOLTMON_STATUS_OV_U32
+ * - Keep INIT as-is
+ * - Keep ERR sticky if requested
+ *
+ * @par Interface summary
+ *
+ * | Interface              | In | Out | Type / Signature                | Param | Factor | Offset | Size | Range | Unit |
+ * |-----------------------|----|-----|---------------------------------|-------|--------|--------|------|-------|------|
+ * | UpdateStatusFlags_v   | X  |  X  | void (bool uv, bool ov, bool)   |  -    |   1    |   0    |  -   | -     | [-]  |
+ *
+ * @param uvActive_b Current undervoltage state.
+ * @param ovActive_b Current overvoltage state.
+ * @param errSticky_b If true, keep ERR flag sticky once set.
+ * @return void
+ */
+void UpdateStatusFlags_v(bool uvActive_b, bool ovActive_b, bool errSticky_b);
+
+
+
+
+
+/** @} */ /* end of defgroup VoltMonPriv */
+
+# 5 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 2
+
+/* Get/Set API for VoltMon module */
+
+uint32_t VoltMon_GetStatusFlg_u32(void);
+void VoltMon_SetStatusFlg_u32(uint32_t value);
+
+VoltMon_mode_e VoltMon_GetMode_e(void);
+void VoltMon_SetMode_e(VoltMon_mode_e mode);
+
+uint16_t VoltMon_GetLastRawAdc_u16(void);
+void VoltMon_SetLastRawAdc_u16(uint16_t value);
+
+uint16_t VoltMon_GetLastVoltage_mV_u16(void);
+void VoltMon_SetLastVoltage_mV_u16(uint16_t value);
+
+bool VoltMon_GetUvActive_b(void);
+void VoltMon_SetUvActive_b(bool value);
+
+bool VoltMon_GetOvActive_b(void);
+void VoltMon_SetOvActive_b(bool value);
+
+/**
+ * @brief Provide a new ADC raw sample to VoltMon.
+ *
+ * @details
+ * **Goal of the function**
+ *
+ * Update the internal raw sample and compute the corresponding voltage in mV
+ * using the configuration scaling:
+ * - Compute mV = raw * factor + offset
+ * - Store last computed voltage
+ * - Validate input range (raw <= rawMax)
+ *
+ * The function does not directly set UV/OV flags; evaluation is done in
+ * VoltMon_Process() to keep timing deterministic.
+ *
+ * @par Activity diagram
+ * @code
+ * start
+ * :l_cfg_pcs = VoltMon_CfgGet_pcfg();
+ * if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0) then (not init)
+ *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+ *   :return 1;
+ * elseif ((l_cfg_pcs == 0) || (rawAdc_u16 > l_cfg_pcs->rawMax_u16)) then (invalid input)
+ *   :StatusFlg_u32 |= (VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32);
+ *   :return 2;
+ * else (valid)
+ *   :LastRawAdc_u16 = rawAdc_u16;
+ *   :LastVoltage_mV_u16 = ComputeVoltage_u16(rawAdc_u16, l_cfg_pcs);
+ *   :StatusFlg_u32 &= ~VOLTMON_STATUS_INVAL_U32;
+ *   :return 0;
+ * endif
+ * stop
+ * @endcode
+ *
+ * @par Interface summary
+ *
+ * | Interface                 | In | Out | Type / Signature   | Param  | Factor | Offset | Size | Range | Unit |
+ * |--------------------------|----|-----|---------------------|--------|--------|--------|------|-------|------|
+ * | rawAdc                   | X  |  X  | uint16_t            | rawAdc |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
+ * | LastRawAdc_u16           |    |  X  | uint16_t (static)   |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
+ * | LastVoltage_mV_u16       |    |  X  | uint16_t (static)   |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
+ * | returned value           | X  |  X  | uint16_t            | - |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
+ *
+ * @param rawAdc_u16 ADC raw counts.
+ * @return uint8_t
+ * @retval 0 Updated.
+ * @retval 1 Not initialized.
+ * @retval 2 Input invalid/out of configured range.
+ */
+uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16);
+# 3 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h" 1
+/*==================[VoltMon_cfg.h]==========================================*/
+/**
+ * @file    VoltMon_cfg.h
+ * @brief   Configuration interface for the VoltMon module.
+ * @author  -
+ * @date    2026-01-30
+ *
+ * @defgroup VoltMonCfg VoltMon Configuration
+ * @{
+ *
+ * @details
+ * This file contains the configuration types and the configuration getter.
+ * The actual configuration instance is defined in VoltMon_cfg.c.
+ */
+
+# 4 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 1
+/*==================[VoltMon_priv.h]=========================================*/
+/**
+ * @file    VoltMon_priv.h
+ * @brief   Private declarations for VoltMon (static functions in VoltMon.c).
+ * @author  -
+ * @date    2026-01-30
+ *
+ * @defgroup VoltMonPriv VoltMon Private Interface
+ * @{
+ *
+ * @details
+ * This header declares the internal (cfile-static) functions implemented in
+ * VoltMon.c. It is included only by VoltMon.c.
+ */
+
+# 5 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+# 1 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_UpdateAdc_u8/mock_VoltMon_cfg.h" 1
+/* AUTOGENERATED FILE. DO NOT EDIT. */
+
+#define _MOCK_VOLTMON_CFG_H 
+
+# 1 "utExecutionAndResults/utUnderTest/build/vendor/unity/src/unity.h" 1
+/* =========================================================================
+    Unity - A Test Framework for C
+    ThrowTheSwitch.org
+    Copyright (c) 2007-25 Mike Karlesky, Mark VanderVoord, & Greg Williams
+    SPDX-License-Identifier: MIT
+========================================================================= */
+
+
+#define UNITY_FRAMEWORK_H 
+#define UNITY 
+
+#define UNITY_VERSION_MAJOR 2
+#define UNITY_VERSION_MINOR 6
+#define UNITY_VERSION_BUILD 1
+#define UNITY_VERSION ((UNITY_VERSION_MAJOR << 16) | (UNITY_VERSION_MINOR << 8) | UNITY_VERSION_BUILD)
+
+
+
+
+
+
+# 1 "utExecutionAndResults/utUnderTest/build/vendor/unity/src/unity_internals.h" 1
+/* =========================================================================
+    Unity - A Test Framework for C
+    ThrowTheSwitch.org
+    Copyright (c) 2007-25 Mike Karlesky, Mark VanderVoord, & Greg Williams
+    SPDX-License-Identifier: MIT
+========================================================================= */
+
+
+#define UNITY_INTERNALS_H 
+
+
+
+
+
+
+# 1 "/usr/include/setjmp.h" 1 3 4
+/* Copyright (C) 1991-2022 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+/*
+ *	ISO C99 Standard: 7.13 Nonlocal jumps	<setjmp.h>
+ */
+
+
+#define _SETJMP_H 1
+
+
+
+__BEGIN_DECLS
+
+# 1 "/usr/include/x86_64-linux-gnu/bits/setjmp.h" 1 3 4
+/* Copyright (C) 2001-2022 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+/* Define the machine-dependent type `jmp_buf'.  x86-64 version.  */
+
+#define _BITS_SETJMP_H 1
+
+
+
+
+
+# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
+/* Determine the wordsize from the preprocessor defines.  */
+
+
+#define __WORDSIZE 64
+
+
+
+
+
+
+#define __WORDSIZE_TIME64_COMPAT32 1
+
+
+/* Both x86-64 and x32 use the 64-bit system call interface.  */
+#define __SYSCALL_WORDSIZE 64
+# 27 "/usr/include/x86_64-linux-gnu/bits/setjmp.h" 2 3 4
+
+
+
+
+typedef long int __jmp_buf[8];
+
+
+
+
+
+
+
+
+# 30 "/usr/include/setjmp.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h" 1 3 4
+/* Define struct __jmp_buf_tag.
+   Copyright (C) 1991-2022 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+
+#define __jmp_buf_tag_defined 1
+
+
+# 1 "/usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h" 1 3 4
+
+#define ____sigset_t_defined 
+
+#define _SIGSET_NWORDS (1024 / (8 * sizeof (unsigned long int)))
+typedef struct
+{
+  unsigned long int __val[_SIGSET_NWORDS];
+} __sigset_t;
+
+# 24 "/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h" 2 3 4
+
+/* Calling environment, plus possibly a saved signal mask.  */
+struct __jmp_buf_tag
+  {
+    /* NOTE: The machine-dependent definitions of `__sigsetjmp'
+       assume that a `jmp_buf' begins with a `__jmp_buf' and that
+       `__mask_was_saved' follows it.  Do not move these members
+       or add others before it.  */
+    __jmp_buf __jmpbuf;		/* Calling environment.  */
+    int __mask_was_saved;	/* Saved the signal mask?  */
+    __sigset_t __saved_mask;	/* Saved signal mask.  */
+  };
+
+# 31 "/usr/include/setjmp.h" 2 3 4
+
+typedef struct __jmp_buf_tag jmp_buf[1];
+
+/* Store the calling environment in ENV, also saving the signal mask.
+   Return 0.  */
+extern int setjmp (jmp_buf __env) __THROWNL;
+
+/* Store the calling environment in ENV, also saving the
+   signal mask if SAVEMASK is nonzero.  Return 0.
+   This is the internal name for `sigsetjmp'.  */
+extern int __sigsetjmp (struct __jmp_buf_tag __env[1], int __savemask) __THROWNL;
+
+/* Store the calling environment in ENV, not saving the signal mask.
+   Return 0.  */
+extern int _setjmp (struct __jmp_buf_tag __env[1]) __THROWNL;
+
+/* Do not save the signal mask.  This is equivalent to the `_setjmp'
+   BSD function.  */
+#define setjmp(env) _setjmp (env)
+
+
+/* Jump to the environment saved in ENV, making the
+   `setjmp' call there return VAL, or 1 if VAL is 0.  */
+extern void longjmp (struct __jmp_buf_tag __env[1], int __val)
+     __THROWNL __attribute__ ((__noreturn__));
+
+
+/* Same.  Usually `_longjmp' is used with `_setjmp', which does not save
+   the signal mask.  But it is how ENV was saved that determines whether
+   `longjmp' restores the mask; `_longjmp' is just an alias.  */
+extern void _longjmp (struct __jmp_buf_tag __env[1], int __val)
+     __THROWNL __attribute__ ((__noreturn__));
+
+
+
+
+/* Use the same type for `jmp_buf' and `sigjmp_buf'.
+   The `__mask_was_saved' flag determines whether
+   or not `longjmp' will restore the signal mask.  */
+typedef struct __jmp_buf_tag sigjmp_buf[1];
+
+/* Store the calling environment in ENV, also saving the
+   signal mask if SAVEMASK is nonzero.  Return 0.  */
+#define sigsetjmp(env,savemask) __sigsetjmp (env, savemask)
+
+/* Jump to the environment saved in ENV, making the
+   sigsetjmp call there return VAL, or 1 if VAL is 0.
+   Restore the signal mask if that sigsetjmp call saved it.
+   This is just an alias `longjmp'.  */
+extern void siglongjmp (sigjmp_buf __env, int __val)
+     __THROWNL __attribute__ ((__noreturn__));
+
+
+
+/* Define helper functions to catch unsafe code.  */
+
+
+
+
+__END_DECLS
+
+# 17 "utExecutionAndResults/utUnderTest/build/vendor/unity/src/unity_internals.h" 2
+
+
+
+# 1 "/usr/include/math.h" 1 3 4
+/* Declarations for math functions.
+   Copyright (C) 1991-2022 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+/*
+ *	ISO C99 Standard: 7.12 Mathematics	<math.h>
+ */
+
+
+#define _MATH_H 1
+
+#define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION 
+# 1 "/usr/include/x86_64-linux-gnu/bits/libc-header-start.h" 1 3 4
+/* Handle feature test macros at the start of a header.
+   Copyright (C) 2016-2022 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, see
+   <https://www.gnu.org/licenses/>.  */
+
+/* This header is internal to glibc and should not be included outside
+   of glibc headers.  Headers including it must define
+   __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION first.  This header
+   cannot have multiple include guards because ISO C feature test
+   macros depend on the definition of the macro when an affected
+   header is included, not when the first system header is
+   included.  */
+
+
+
+
+
+#undef __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
+
+
+
+/* ISO/IEC TR 24731-2:2010 defines the __STDC_WANT_LIB_EXT2__
+   macro.  */
+#undef __GLIBC_USE_LIB_EXT2
+
+
+
+
+#define __GLIBC_USE_LIB_EXT2 0
+
+
+/* ISO/IEC TS 18661-1:2014 defines the __STDC_WANT_IEC_60559_BFP_EXT__
+   macro.  Most but not all symbols enabled by that macro in TS
+   18661-1 are enabled unconditionally in C2X.  In C2X, the symbols in
+   Annex F still require a new feature test macro
+   __STDC_WANT_IEC_60559_EXT__ instead (C2X does not define
+   __STDC_WANT_IEC_60559_BFP_EXT__), while a few features from TS
+   18661-1 are not included in C2X (and thus should depend on
+   __STDC_WANT_IEC_60559_BFP_EXT__ even when C2X features are
+   enabled).
+
+   __GLIBC_USE (IEC_60559_BFP_EXT) controls those features from TS
+   18661-1 not included in C2X.
+
+   __GLIBC_USE (IEC_60559_BFP_EXT_C2X) controls those features from TS
+   18661-1 that are also included in C2X (with no feature test macro
+   required in C2X).
+
+   __GLIBC_USE (IEC_60559_EXT) controls those features from TS 18661-1
+   that are included in C2X but conditional on
+   __STDC_WANT_IEC_60559_EXT__.  (There are currently no features
+   conditional on __STDC_WANT_IEC_60559_EXT__ that are not in TS
+   18661-1.)  */
+#undef __GLIBC_USE_IEC_60559_BFP_EXT
+
+
+
+#define __GLIBC_USE_IEC_60559_BFP_EXT 0
+
+#undef __GLIBC_USE_IEC_60559_BFP_EXT_C2X
+
+
+
+#define __GLIBC_USE_IEC_60559_BFP_EXT_C2X 0
+
+#undef __GLIBC_USE_IEC_60559_EXT
+
+
+
+#define __GLIBC_USE_IEC_60559_EXT 0
+
+
+/* ISO/IEC TS 18661-4:2015 defines the
+   __STDC_WANT_IEC_60559_FUNCS_EXT__ macro.  Other than the reduction
+   functions, the symbols from this TS are enabled unconditionally in
+   C2X.  */
+#undef __GLIBC_USE_IEC_60559_FUNCS_EXT
+
+
+
+#define __GLIBC_USE_IEC_60559_FUNCS_EXT 0
+
+#undef __GLIBC_USE_IEC_60559_FUNCS_EXT_C2X
+
+
+
+#define __GLIBC_USE_IEC_60559_FUNCS_EXT_C2X 0
+
+
+/* ISO/IEC TS 18661-3:2015 defines the
+   __STDC_WANT_IEC_60559_TYPES_EXT__ macro.  */
+#undef __GLIBC_USE_IEC_60559_TYPES_EXT
+
+
+
+#define __GLIBC_USE_IEC_60559_TYPES_EXT 0
+# 28 "/usr/include/math.h" 2 3 4
+
+
+
+
+
+
+__BEGIN_DECLS
+
+/* Get definitions of __intmax_t and __uintmax_t.  */
+
 
 /* Get machine-dependent vector math functions declarations.  */
 # 1 "/usr/include/x86_64-linux-gnu/bits/math-vector.h" 1 3 4
@@ -5827,524 +7015,7 @@ typedef struct {
  * The user may override any of these derived constants:
  * UNITY_INT_WIDTH, UNITY_LONG_WIDTH, UNITY_POINTER_WIDTH */
 
-# 1 "/usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h" 1 3 4
 
-
-
-
-
-
-
-
-# 1 "/usr/include/stdint.h" 1 3 4
-/* Copyright (C) 1997-2022 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
-
-/*
- *	ISO C99: 7.18 Integer types <stdint.h>
- */
-
-
-#define _STDINT_H 1
-
-#define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION 
-# 1 "/usr/include/x86_64-linux-gnu/bits/libc-header-start.h" 1 3 4
-/* Handle feature test macros at the start of a header.
-   Copyright (C) 2016-2022 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
-
-/* This header is internal to glibc and should not be included outside
-   of glibc headers.  Headers including it must define
-   __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION first.  This header
-   cannot have multiple include guards because ISO C feature test
-   macros depend on the definition of the macro when an affected
-   header is included, not when the first system header is
-   included.  */
-
-
-
-
-
-#undef __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
-
-
-
-/* ISO/IEC TR 24731-2:2010 defines the __STDC_WANT_LIB_EXT2__
-   macro.  */
-#undef __GLIBC_USE_LIB_EXT2
-
-
-
-
-#define __GLIBC_USE_LIB_EXT2 0
-
-
-/* ISO/IEC TS 18661-1:2014 defines the __STDC_WANT_IEC_60559_BFP_EXT__
-   macro.  Most but not all symbols enabled by that macro in TS
-   18661-1 are enabled unconditionally in C2X.  In C2X, the symbols in
-   Annex F still require a new feature test macro
-   __STDC_WANT_IEC_60559_EXT__ instead (C2X does not define
-   __STDC_WANT_IEC_60559_BFP_EXT__), while a few features from TS
-   18661-1 are not included in C2X (and thus should depend on
-   __STDC_WANT_IEC_60559_BFP_EXT__ even when C2X features are
-   enabled).
-
-   __GLIBC_USE (IEC_60559_BFP_EXT) controls those features from TS
-   18661-1 not included in C2X.
-
-   __GLIBC_USE (IEC_60559_BFP_EXT_C2X) controls those features from TS
-   18661-1 that are also included in C2X (with no feature test macro
-   required in C2X).
-
-   __GLIBC_USE (IEC_60559_EXT) controls those features from TS 18661-1
-   that are included in C2X but conditional on
-   __STDC_WANT_IEC_60559_EXT__.  (There are currently no features
-   conditional on __STDC_WANT_IEC_60559_EXT__ that are not in TS
-   18661-1.)  */
-#undef __GLIBC_USE_IEC_60559_BFP_EXT
-
-
-
-#define __GLIBC_USE_IEC_60559_BFP_EXT 0
-
-#undef __GLIBC_USE_IEC_60559_BFP_EXT_C2X
-
-
-
-#define __GLIBC_USE_IEC_60559_BFP_EXT_C2X 0
-
-#undef __GLIBC_USE_IEC_60559_EXT
-
-
-
-#define __GLIBC_USE_IEC_60559_EXT 0
-
-
-/* ISO/IEC TS 18661-4:2015 defines the
-   __STDC_WANT_IEC_60559_FUNCS_EXT__ macro.  Other than the reduction
-   functions, the symbols from this TS are enabled unconditionally in
-   C2X.  */
-#undef __GLIBC_USE_IEC_60559_FUNCS_EXT
-
-
-
-#define __GLIBC_USE_IEC_60559_FUNCS_EXT 0
-
-#undef __GLIBC_USE_IEC_60559_FUNCS_EXT_C2X
-
-
-
-#define __GLIBC_USE_IEC_60559_FUNCS_EXT_C2X 0
-
-
-/* ISO/IEC TS 18661-3:2015 defines the
-   __STDC_WANT_IEC_60559_TYPES_EXT__ macro.  */
-#undef __GLIBC_USE_IEC_60559_TYPES_EXT
-
-
-
-#define __GLIBC_USE_IEC_60559_TYPES_EXT 0
-# 27 "/usr/include/stdint.h" 2 3 4
-
-# 1 "/usr/include/x86_64-linux-gnu/bits/wchar.h" 1 3 4
-/* wchar_t type related definitions.
-   Copyright (C) 2000-2022 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
-
-
-#define _BITS_WCHAR_H 1
-
-/* The fallback definitions, for when __WCHAR_MAX__ or __WCHAR_MIN__
-   are not defined, give the right value and type as long as both int
-   and wchar_t are 32-bit types.  Adding L'\0' to a constant value
-   ensures that the type is correct; it is necessary to use (L'\0' +
-   0) rather than just L'\0' so that the type in C++ is the promoted
-   version of wchar_t rather than the distinct wchar_t type itself.
-   Because wchar_t in preprocessor #if expressions is treated as
-   intmax_t or uintmax_t, the expression (L'\0' - 1) would have the
-   wrong value for WCHAR_MAX in such expressions and so cannot be used
-   to define __WCHAR_MAX in the unsigned case.  */
-
-
-#define __WCHAR_MAX __WCHAR_MAX__
-
-
-
-
-
-
-
-#define __WCHAR_MIN __WCHAR_MIN__
-
-
-
-
-
-
-# 29 "/usr/include/stdint.h" 2 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
-/* Determine the wordsize from the preprocessor defines.  */
-
-
-#define __WORDSIZE 64
-
-
-
-
-
-
-#define __WORDSIZE_TIME64_COMPAT32 1
-
-
-/* Both x86-64 and x32 use the 64-bit system call interface.  */
-#define __SYSCALL_WORDSIZE 64
-# 30 "/usr/include/stdint.h" 2 3 4
-
-/* Exact integral types.  */
-
-/* Signed.  */
-# 1 "/usr/include/x86_64-linux-gnu/bits/stdint-intn.h" 1 3 4
-/* Define intN_t types.
-   Copyright (C) 2017-2022 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
-
-
-#define _BITS_STDINT_INTN_H 1
-
-
-
-typedef __int8_t int8_t;
-typedef __int16_t int16_t;
-typedef __int32_t int32_t;
-typedef __int64_t int64_t;
-
-# 35 "/usr/include/stdint.h" 2 3 4
-
-/* Unsigned.  */
-# 1 "/usr/include/x86_64-linux-gnu/bits/stdint-uintn.h" 1 3 4
-/* Define uintN_t types.
-   Copyright (C) 2017-2022 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.
-
-   The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-
-   The GNU C Library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with the GNU C Library; if not, see
-   <https://www.gnu.org/licenses/>.  */
-
-
-#define _BITS_STDINT_UINTN_H 1
-
-
-
-typedef __uint8_t uint8_t;
-typedef __uint16_t uint16_t;
-typedef __uint32_t uint32_t;
-typedef __uint64_t uint64_t;
-
-# 38 "/usr/include/stdint.h" 2 3 4
-
-
-/* Small types.  */
-
-/* Signed.  */
-typedef __int_least8_t int_least8_t;
-typedef __int_least16_t int_least16_t;
-typedef __int_least32_t int_least32_t;
-typedef __int_least64_t int_least64_t;
-
-/* Unsigned.  */
-typedef __uint_least8_t uint_least8_t;
-typedef __uint_least16_t uint_least16_t;
-typedef __uint_least32_t uint_least32_t;
-typedef __uint_least64_t uint_least64_t;
-
-
-/* Fast types.  */
-
-/* Signed.  */
-typedef signed char		int_fast8_t;
-
-typedef long int		int_fast16_t;
-typedef long int		int_fast32_t;
-typedef long int		int_fast64_t;
-
-
-
-
-
-
-
-/* Unsigned.  */
-typedef unsigned char		uint_fast8_t;
-
-typedef unsigned long int	uint_fast16_t;
-typedef unsigned long int	uint_fast32_t;
-typedef unsigned long int	uint_fast64_t;
-
-
-
-
-
-
-
-
-/* Types for `void *' pointers.  */
-
-
-typedef long int		intptr_t;
-#define __intptr_t_defined 
-
-typedef unsigned long int	uintptr_t;
-
-
-
-
-
-
-
-
-
-/* Largest integral types.  */
-typedef __intmax_t		intmax_t;
-typedef __uintmax_t		uintmax_t;
-
-
-
-#define __INT64_C(c) c ## L
-#define __UINT64_C(c) c ## UL
-
-
-
-
-
-/* Limits of integral types.  */
-
-/* Minimum of signed integral types.  */
-#define INT8_MIN (-128)
-#define INT16_MIN (-32767-1)
-#define INT32_MIN (-2147483647-1)
-#define INT64_MIN (-__INT64_C(9223372036854775807)-1)
-/* Maximum of signed integral types.  */
-#define INT8_MAX (127)
-#define INT16_MAX (32767)
-#define INT32_MAX (2147483647)
-#define INT64_MAX (__INT64_C(9223372036854775807))
-
-/* Maximum of unsigned integral types.  */
-#define UINT8_MAX (255)
-#define UINT16_MAX (65535)
-#define UINT32_MAX (4294967295U)
-#define UINT64_MAX (__UINT64_C(18446744073709551615))
-
-
-/* Minimum of signed integral types having a minimum size.  */
-#define INT_LEAST8_MIN (-128)
-#define INT_LEAST16_MIN (-32767-1)
-#define INT_LEAST32_MIN (-2147483647-1)
-#define INT_LEAST64_MIN (-__INT64_C(9223372036854775807)-1)
-/* Maximum of signed integral types having a minimum size.  */
-#define INT_LEAST8_MAX (127)
-#define INT_LEAST16_MAX (32767)
-#define INT_LEAST32_MAX (2147483647)
-#define INT_LEAST64_MAX (__INT64_C(9223372036854775807))
-
-/* Maximum of unsigned integral types having a minimum size.  */
-#define UINT_LEAST8_MAX (255)
-#define UINT_LEAST16_MAX (65535)
-#define UINT_LEAST32_MAX (4294967295U)
-#define UINT_LEAST64_MAX (__UINT64_C(18446744073709551615))
-
-
-/* Minimum of fast signed integral types having a minimum size.  */
-#define INT_FAST8_MIN (-128)
-
-#define INT_FAST16_MIN (-9223372036854775807L-1)
-#define INT_FAST32_MIN (-9223372036854775807L-1)
-
-
-
-
-#define INT_FAST64_MIN (-__INT64_C(9223372036854775807)-1)
-/* Maximum of fast signed integral types having a minimum size.  */
-#define INT_FAST8_MAX (127)
-
-#define INT_FAST16_MAX (9223372036854775807L)
-#define INT_FAST32_MAX (9223372036854775807L)
-
-
-
-
-#define INT_FAST64_MAX (__INT64_C(9223372036854775807))
-
-/* Maximum of fast unsigned integral types having a minimum size.  */
-#define UINT_FAST8_MAX (255)
-
-#define UINT_FAST16_MAX (18446744073709551615UL)
-#define UINT_FAST32_MAX (18446744073709551615UL)
-
-
-
-
-#define UINT_FAST64_MAX (__UINT64_C(18446744073709551615))
-
-
-/* Values to test for integral types holding `void *' pointer.  */
-
-#define INTPTR_MIN (-9223372036854775807L-1)
-#define INTPTR_MAX (9223372036854775807L)
-#define UINTPTR_MAX (18446744073709551615UL)
-
-
-
-
-
-
-
-/* Minimum for largest signed integral type.  */
-#define INTMAX_MIN (-__INT64_C(9223372036854775807)-1)
-/* Maximum for largest signed integral type.  */
-#define INTMAX_MAX (__INT64_C(9223372036854775807))
-
-/* Maximum for largest unsigned integral type.  */
-#define UINTMAX_MAX (__UINT64_C(18446744073709551615))
-
-
-/* Limits of other integer types.  */
-
-/* Limits of `ptrdiff_t' type.  */
-
-#define PTRDIFF_MIN (-9223372036854775807L-1)
-#define PTRDIFF_MAX (9223372036854775807L)
-# 220 "/usr/include/stdint.h" 3 4
-
-/* Limits of `sig_atomic_t'.  */
-#define SIG_ATOMIC_MIN (-2147483647-1)
-#define SIG_ATOMIC_MAX (2147483647)
-
-/* Limit of `size_t' type.  */
-
-#define SIZE_MAX (18446744073709551615UL)
-
-
-
-
-
-
-
-
-/* Limits of `wchar_t'.  */
-
-/* These constants might also be defined in <wchar.h>.  */
-#define WCHAR_MIN __WCHAR_MIN
-#define WCHAR_MAX __WCHAR_MAX
-
-
-/* Limits of `wint_t'.  */
-#define WINT_MIN (0u)
-#define WINT_MAX (4294967295u)
-
-/* Signed.  */
-#define INT8_C(c) c
-#define INT16_C(c) c
-#define INT32_C(c) c
-
-#define INT64_C(c) c ## L
-
-
-
-
-/* Unsigned.  */
-#define UINT8_C(c) c
-#define UINT16_C(c) c
-#define UINT32_C(c) c ## U
-
-#define UINT64_C(c) c ## UL
-
-
-
-
-/* Maximal type.  */
-
-#define INTMAX_C(c) c ## L
-#define UINTMAX_C(c) c ## UL
-
-
-
-
-
-# 318 "/usr/include/stdint.h" 3 4
-
-# 10 "/usr/lib/gcc/x86_64-linux-gnu/12/include/stdint.h" 2 3 4
-
-
-
-#define _GCC_WRAP_STDINT_H 
-# 38 "utExecutionAndResults/utUnderTest/build/vendor/unity/src/unity_internals.h" 2
 
 
 
@@ -10132,692 +10803,7 @@ void verifyTest(void);
 
 
 
-# 10 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
-# 1 "/usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h" 1 3 4
-/* Copyright (C) 1998-2022 Free Software Foundation, Inc.
-
-This file is part of GCC.
-
-GCC is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3, or (at your option)
-any later version.
-
-GCC is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-Under Section 7 of GPL version 3, you are granted additional
-permissions described in the GCC Runtime Library Exception, version
-3.1, as published by the Free Software Foundation.
-
-You should have received a copy of the GNU General Public License and
-a copy of the GCC Runtime Library Exception along with this program;
-see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-<http://www.gnu.org/licenses/>.  */
-
-/*
- * ISO C Standard:  7.16  Boolean type and values  <stdbool.h>
- */
-
-
-#define _STDBOOL_H 
-
-
-
-#define bool _Bool
-
-
-
-
-#define true 1
-#define false 0
-
-
-
-
-
-
-
-
-
-/* Signal that all the definitions are present.  */
-#define __bool_true_false_are_defined 1
-
-# 11 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
-
-
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon.h" 1
-/*==================[VoltMon.h]==============================================*/
-/**
- * @file    VoltMon.h
- * @brief   Public interface for the VoltMon (Voltage Monitoring) module.
- * @author  -
- * @date    2026-01-30
- *
- * @defgroup VoltMon Voltage Monitoring Module
- * @{
- *
- * @details
- * The VoltMon module monitors an input voltage value provided by the platform
- * (e.g., ADC raw counts) and evaluates it against configurable thresholds.
- * The module is split into:
- * - Platform/logic: VoltMon.c/.h (stand-alone)
- * - Configuration: VoltMon_cfg.c/.h (project-dependent)
- */
-
-
-#define VOLTMON_H 
-
-
-
-
-
-
-
-
-/*==================[macros]=================================================*/
-
-/** @brief Module status flag: initialized. */
-#define VOLTMON_STATUS_INIT_U32 (0x00000001u)
-/** @brief Module status flag: any error detected (generic). */
-#define VOLTMON_STATUS_ERR_U32 (0x00000002u)
-/** @brief Module status flag: undervoltage active. */
-#define VOLTMON_STATUS_UV_U32 (0x00000004u)
-/** @brief Module status flag: overvoltage active. */
-#define VOLTMON_STATUS_OV_U32 (0x00000008u)
-/** @brief Module status flag: last input invalid. */
-#define VOLTMON_STATUS_INVAL_U32 (0x00000010u)
-
-/*==================[types]==================================================*/
-
-/**
- * @brief VoltMon operating mode.
- */
-typedef enum { VoltMon_modeIdle_e = 0, VoltMon_modeRun_e = 1, VoltMon_modeDiag_e = 2 } VoltMon_mode_e;
-
-/**
- * @brief Result codes for VoltMon services.
- */
-typedef enum { VoltMon_retOk_e = 0, VoltMon_retNotInit_e = 1, VoltMon_retInvalidParam_e = 2, VoltMon_retBusyOrRejected_e = 3 } VoltMon_ret_e;
-
-/*==================[public function prototypes]=============================*/
-
-/**
- * @brief Initialize the VoltMon module.
- *
- * @details
- * **Goal of the function**
- *
- * Bring the module into a known and safe state:
- * - Load basic defaults.
- * - Clear flags.
- * - Set initial mode to IDLE.
- * - Validate configuration availability.
- *
- * The function is intended to be called once at startup.
- *
- * @par Activity diagram
- * @code
- * start
- * :l_cfg_pcs = VoltMon_CfgGet_pcfg();
- * if ((l_cfg_pcs == 0) || (l_cfg_pcs->rawMax_u16 == 0)) then (invalid cfg)
- *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
- *   :return 1;
- * else (ok)
- *   :StatusFlg_u32 = VOLTMON_STATUS_INIT_U32;
- *   :Mode_e = VoltMon_modeIdle_e;
- *   :LastRawAdc_u16 = 0; LastVoltage_mV_u16 = 0;
- *   :UvActive_b = false; OvActive_b = false;
- *   :StatusFlg_u32 &= ~(VOLTMON_STATUS_UV_U32 | VOLTMON_STATUS_OV_U32 | VOLTMON_STATUS_INVAL_U32);
- *   :return 0;
- * endif
- * stop
- * @endcode
- *
- * @par Interface summary
- *
- * | Interface         | In | Out | Type / Signature           | Param | Factor | Offset | Size | Range | Unit |
- * |------------------|----|-----|----------------------------|-------|--------|--------|------|-------|------|
- * | VoltMon_Init_u8  |    |  X  | uint8_t (void)             |  -    |   1    |   0    |  1   | 0..3  | [-]  |
- * | StatusFlg_u32    |    |  X  | uint32_t (static)          |  -    |   1    |   0    |  1   | [0,UINT32_MAX] | [-]  |
- * | Mode_e           |    |  X  | VoltMon_mode_e (static)    |  -    |   1    |   0    |  1   | -     | [0,2]  |
- *
- * @return uint8_t
- * @retval 0 Module initialized successfully.
- * @retval 1 Configuration missing/invalid.
- */
-uint8_t VoltMon_Init_u8(void);
-
-/**
- * @brief De-initialize the VoltMon module.
- *
- * @details
- * **Goal of the function**
- *
- * Put the module into an uninitialized state:
- * - Clear INIT flag.
- * - Force IDLE mode.
- * - Clear voltage value and error state.
- *
- * This is useful for tests and controlled shutdown.
- *
- * @par Activity diagram
- * @code
- * start
- * if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0) then (not init)
- *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
- *   :return 1;
- * else (init)
- *   :Mode_e = VoltMon_modeIdle_e;
- *   :LastRawAdc_u16 = 0; LastVoltage_mV_u16 = 0;
- *   :UvActive_b = false; OvActive_b = false;
- *   :StatusFlg_u32 = 0;
- *   :return 0;
- * endif
- * stop
- * @endcode
- *
- * @par Interface summary
- *
- * | Interface            | In | Out | Type / Signature          | Param | Factor | Offset | Size | Range | Unit |
- * |---------------------|----|-----|---------------------------|-------|--------|--------|------|-------|------|
- * | VoltMon_DeInit_u8   |    |  X  | uint8_t (void)            |  -    |   1    |   0    |  1   | 0..3  | [-]  |
- * | StatusFlg_u32       |    |  X  | uint32_t (static)         |  -    |   1    |   0    |  1   | [0,UINT32_MAX] | [-]  |
- * | Mode_e              |    |  X  | VoltMon_mode_e (static)   |  -    |   1    |   0    |  1   | -     | [0,2]  |
- *
- * @return uint8_t
- * @retval 0 De-initialized.
- * @retval 1 Module was not initialized.
- */
-uint8_t VoltMon_DeInit_u8(void);
-
-/**
- * @brief Set the VoltMon operating mode.
- *
- * @details
- * **Goal of the function**
- *
- * Switch the module behavior according to the requested mode:
- * - IDLE: no threshold evaluation (still stores last voltage).
- * - RUN: evaluate thresholds and set UV/OV flags deterministically.
- * - DIAG: behaves like RUN but keeps ERR flag sticky for diagnostics.
- *
- * Invalid mode requests are rejected and the ERR flag is set.
- *
- * @par Activity diagram
- * @code
- * start
- * if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0) then (not init)
- *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
- *   :return 1;
- * elseif ((mode != VoltMon_modeIdle_e) && (mode != VoltMon_modeRun_e) && (mode != VoltMon_modeDiag_e)) then (invalid mode)
- *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
- *   :return 2;
- * else (accepted)
- *   :Mode_e = mode;
- *   :StatusFlg_u32 &= ~VOLTMON_STATUS_INVAL_U32;
- *   :return 0;
- * endif
- * stop
- * @endcode
- *
- * @par Interface summary
- *
- * | Interface              | In | Out | Type / Signature                          | Param | Factor | Offset | Size | Range | Unit |
- * |-----------------------|----|-----|-------------------------------------------|-------|--------|--------|------|-------|------|
- * | VoltMon_SetMode_u8    | X  |  X  | uint8_t (VoltMon_mode_e mode)             | mode  |   1    |   0    |  1   | [0,UINT8_MAX] | [-]  |
- * | Mode_e                |    |  X  | VoltMon_mode_e (static)                   |  -    |   1    |   0    |  1   | -     | [0,2]  |
- * | StatusFlg_u32         |    |  X  | uint32_t (static)                         |  -    |   1    |   0    |  1   | [0,UINT32_MAX] | [-]  |
- *
- * @param mode Requested mode.
- * @return uint8_t
- * @retval 0 Mode accepted.
- * @retval 1 Not initialized.
- * @retval 2 Invalid mode.
- */
-uint8_t VoltMon_SetMode_u8(VoltMon_mode_e mode);
-
-/**
- * @brief Run one deterministic processing step of the VoltMon module.
- *
- * @details
- * **Goal of the function**
- *
- * Execute a bounded amount of work per call:
- * - Maintain a function-static cycle counter (for deterministic internal pacing).
- * - When in RUN/DIAG mode, evaluate the last computed voltage against thresholds:
- *   - Set/clear UV/OV flags.
- *   - In DIAG mode keep ERR flag sticky once asserted.
- * - Always execute a bounded loop to keep deterministic timing.
- *
- * @par Activity diagram
- * @code
- * start
- * :l_CycleCnt_u32++;
- * :l_cfg_pcs = VoltMon_CfgGet_pcfg();
- * :l_errSticky_b = (Mode_e == VoltMon_modeDiag_e);
- * repeat (8 iterations)
- *   if (((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) != 0) && ((Mode_e == VoltMon_modeRun_e) || (Mode_e == VoltMon_modeDiag_e))) then (evaluate)
- *     :l_evalRet_u8 = CheckThresholds_u8(LastVoltage_mV_u16, l_cfg_pcs, &UvActive_b, &OvActive_b);
- *     if (l_evalRet_u8 != 0) then (error)
- *       :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
- *     endif
- *     :UpdateStatusFlags_v(UvActive_b, OvActive_b, l_errSticky_b);
- *     if ((l_CycleCnt_u32 & 0x1) == 0) then (even)
- *       :no-op;
- *     else (odd)
- *       :no-op;
- *     endif
- *   else (idle / not init)
- *     :no-op;
- *   endif
- * repeat while (iteration < 8)
- * stop
- * @endcode
- *
- * @par Interface summary
- *
- * | Interface            | In | Out | Type / Signature              | Param | Factor | Offset | Size | Range | Unit |
- * |---------------------|----|-----|-------------------------------|-------|--------|--------|------|-------|------|
- * | VoltMon_Process     |    |  X  | void (void)                   |  -    |   1    |   0    |  -   | -     | [-]  |
- * | Mode_e              | X  |     | VoltMon_mode_e (static)       |  -    |   1    |   0    |  1   | -     | 0,2]  |
- * | LastVoltage_mV_u16  | X  |     | uint16_t (static)             |  -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
- * | StatusFlg_u32       | X  |  X  | uint32_t (static)             |  -    |   1    |   0    |  4   | [0,UINT32_MAX] | [-]  |
- * | l_CycleCnt_u32      | X  |  X  | uint32_t (static local)       |  -    |   1    |   0    |  4   | [0,UINT32_MAX] | [-]  |
- *
- * @return void
- */
-void VoltMon_Process(void);
-
-/**
- * @brief Read the last computed voltage in millivolts.
- *
- * @details
- * **Goal of the function**
- *
- * Provide the last stored voltage value (mV) computed from the last ADC input.
- * If the module is not initialized, 0 mV is returned and ERR flag is set.
- *
- * @par Activity diagram
- * @code
- * start
- * if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0) then (not init)
- *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
- *   :return 0;
- * else (init)
- *   :return LastVoltage_mV_u16;
- * endif
- * stop
- * @endcode
- *
- * @par Interface summary
- *
- * | Interface                   | In | Out | Type / Signature              | Param | Factor | Offset | Size | Range | Unit |
- * |----------------------------|----|-----|-------------------------------|-------|--------|--------|------|-------|------|
- * | VoltMon_GetVoltage_mV_u16  |    |  X  | uint16_t (void)               |  -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
- * | LastVoltage_mV_u16         | X  |     | uint16_t (static)             |  -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
- *
- * @return uint16_t Last computed voltage [mV], or 0 if not initialized.
- */
-uint16_t VoltMon_GetVoltage_mV_u16(void);
-
-/**
- * @brief Get the current module status flags.
- *
- * @details
- * **Goal of the function**
- *
- * Return the current status bitmask (INIT/ERR/UV/OV/INVAL).
- * No side effects are performed.
- *
- * @par Activity diagram
- * @code
- * start
- * :return StatusFlg_u32;
- * stop
- * @endcode
- *
- * @par Interface summary
- *
- * | Interface                | In | Out | Type / Signature        | Param | Factor | Offset | Size | Range | Unit |
- * |-------------------------|----|-----|-------------------------|-------|--------|--------|------|-------|------|
- * | VoltMon_GetStatus_u32   |    |  X  | uint32_t (void)         |  -    |   1    |   0    |  4   | [0,UINT32_MAX] | [-]  |
- * | StatusFlg_u32           | X  |     | uint32_t (static)       |  -    |   1    |   0    |  4   | [0,UINT32_MAX] | [-]  |
- *
- * @return uint32_t Status flags bitmask.
- */
-uint32_t VoltMon_GetStatus_u32(void);
-
-
-
-
-
-/** @} */ /* end of defgroup VoltMon */
-
-# 14 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 1
-
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon.h" 1
-/*==================[VoltMon.h]==============================================*/
-/**
- * @file    VoltMon.h
- * @brief   Public interface for the VoltMon (Voltage Monitoring) module.
- * @author  -
- * @date    2026-01-30
- *
- * @defgroup VoltMon Voltage Monitoring Module
- * @{
- *
- * @details
- * The VoltMon module monitors an input voltage value provided by the platform
- * (e.g., ADC raw counts) and evaluates it against configurable thresholds.
- * The module is split into:
- * - Platform/logic: VoltMon.c/.h (stand-alone)
- * - Configuration: VoltMon_cfg.c/.h (project-dependent)
- */
-
-# 3 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 2
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h" 1
-/*==================[VoltMon_cfg.h]==========================================*/
-/**
- * @file    VoltMon_cfg.h
- * @brief   Configuration interface for the VoltMon module.
- * @author  -
- * @date    2026-01-30
- *
- * @defgroup VoltMonCfg VoltMon Configuration
- * @{
- *
- * @details
- * This file contains the configuration types and the configuration getter.
- * The actual configuration instance is defined in VoltMon_cfg.c.
- */
-
-
-#define VOLTMON_CFG_H 
-
-
-
-
-
-
-
-/*==================[types]==================================================*/
-
-/**
- * @brief VoltMon configuration structure.
- *
- * @details
- * - rawMax_u16: maximum allowed ADC raw count (input validation)
- * - factor_u16: scaling factor for mV conversion (mV = raw * factor + offset)
- * - offset_s16: offset for mV conversion (signed)
- * - uvTh_mV_u16: undervoltage threshold [mV]
- * - ovTh_mV_u16: overvoltage threshold [mV]
- * - hyst_mV_u16: hysteresis [mV] applied to clear UV/OV flags
- */
-typedef struct {
-  uint16_t rawMax_u16;
-  uint16_t factor_u16;
-  int16_t offset_s16;
-  uint16_t uvTh_mV_u16;
-  uint16_t ovTh_mV_u16;
-  uint16_t hyst_mV_u16;
-} VoltMon_cfg_s;
-
-/*==================[configuration access]===================================*/
-
-/**
- * @brief Get the active VoltMon configuration pointer.
- *
- * @details
- * **Goal of the function**
- *
- * Provide read-only access to the configuration stored in VoltMon_cfg.c.
- * This indirection allows:
- * - project-specific configuration without modifying platform code
- * - a single consistent access point for VoltMon.c
- *
- * @par Interface summary
- *
- * | Interface             | In | Out | Type / Signature                      | Param | Factor | Offset | Size | Range | Unit |
- * |-----------------------|----|-----|---------------------------------------|-------|--------|--------|------|-------|------|
- * | VoltMon_CfgGet_pcfg   |    |  X  | const VoltMon_cfg_s * (void)          |  -    |   1    |   0    |  4   | -     | [-]  |
- *
- * @return const VoltMon_cfg_s* Pointer to the configuration (never NULL).
- */
-const VoltMon_cfg_s *VoltMon_CfgGet_pcfg(void);
-
-
-
-
-
-/** @} */ /* end of defgroup VoltMonCfg */
-
-# 4 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 2
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 1
-/*==================[VoltMon_priv.h]=========================================*/
-/**
- * @file    VoltMon_priv.h
- * @brief   Private declarations for VoltMon (static functions in VoltMon.c).
- * @author  -
- * @date    2026-01-30
- *
- * @defgroup VoltMonPriv VoltMon Private Interface
- * @{
- *
- * @details
- * This header declares the internal (cfile-static) functions implemented in
- * VoltMon.c. It is included only by VoltMon.c.
- */
-
-
-#define VOLTMON_PRIV_H 
-
-
-
-
-
-
-
-
-
-/**
- * @brief Compute voltage in mV from ADC raw sample.
- *
- * @details
- * **Goal of the function**
- *
- * Convert the raw ADC value into millivolts using configuration parameters:
- * - mV = raw * factor + offset
- * - clamp to [0..65535] to avoid wrap
- *
- * @par Interface summary
- *
- * | Interface             | In | Out | Type / Signature                    | Param | Factor | Offset | Size | Range | Unit |
- * |----------------------|----|-----|-------------------------------------|-------|--------|--------|------|-------|------|
- * | ComputeVoltage_u16   | X  |  X  | uint16_t (uint16_t raw, cfg*)       | raw   |   1    |   0    |  2   | -     | [-]  |
- * |                      | X  |     | const VoltMon_cfg_s * cfg           | cfg   |   1    |   0    |  4   | -     | [-]  |
- *
- * @param rawAdc_u16 Raw ADC counts.
- * @param cfg_pcs Pointer to configuration.
- * @return uint16_t Voltage [mV] clamped to uint16_t.
- */
-uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s *cfg_pcs);
-
-/**
- * @brief Check thresholds and compute new UV/OV state.
- *
- * @details
- * **Goal of the function**
- *
- * Evaluate voltage with hysteresis:
- * - UV set if V <= uvTh
- * - UV cleared if V >= uvTh + hyst
- * - OV set if V >= ovTh
- * - OV cleared if V <= ovTh - hyst
- *
- * @par Interface summary
- *
- * | Interface              | In | Out | Type / Signature                              | Param | Factor | Offset | Size | Range | Unit |
- * |-----------------------|----|-----|-----------------------------------------------|-------|--------|--------|------|-------|------|
- * | CheckThresholds_u8    | X  |  X  | uint8_t (uint16_t v, cfg*, bool*, bool*)      | v     |   1    |   0    |  2   | -     | [mV] |
- *
- * @param voltage_mV_u16 Voltage [mV].
- * @param cfg_pcs Pointer to configuration.
- * @param uvActive_pb Pointer to UV state (in/out).
- * @param ovActive_pb Pointer to OV state (in/out).
- * @return uint8_t 0 on success, 1 if cfg invalid.
- */
-uint8_t CheckThresholds_u8(uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs, bool *uvActive_pb, bool *ovActive_pb);
-
-/**
- * @brief Update status flags coherently from internal states.
- *
- * @details
- * **Goal of the function**
- *
- * Apply UV/OV bits into the status bitmask:
- * - Set or clear VOLTMON_STATUS_UV_U32
- * - Set or clear VOLTMON_STATUS_OV_U32
- * - Keep INIT as-is
- * - Keep ERR sticky if requested
- *
- * @par Interface summary
- *
- * | Interface              | In | Out | Type / Signature                | Param | Factor | Offset | Size | Range | Unit |
- * |-----------------------|----|-----|---------------------------------|-------|--------|--------|------|-------|------|
- * | UpdateStatusFlags_v   | X  |  X  | void (bool uv, bool ov, bool)   |  -    |   1    |   0    |  -   | -     | [-]  |
- *
- * @param uvActive_b Current undervoltage state.
- * @param ovActive_b Current overvoltage state.
- * @param errSticky_b If true, keep ERR flag sticky once set.
- * @return void
- */
-void UpdateStatusFlags_v(bool uvActive_b, bool ovActive_b, bool errSticky_b);
-
-
-
-
-
-/** @} */ /* end of defgroup VoltMonPriv */
-
-# 5 "utExecutionAndResults/utUnderTest/src/VoltMon_UpdateAdc_u8.h" 2
-
-/* Get/Set API for VoltMon module */
-
-uint32_t VoltMon_GetStatusFlg_u32(void);
-void VoltMon_SetStatusFlg_u32(uint32_t value);
-
-VoltMon_mode_e VoltMon_GetMode_e(void);
-void VoltMon_SetMode_e(VoltMon_mode_e mode);
-
-uint16_t VoltMon_GetLastRawAdc_u16(void);
-void VoltMon_SetLastRawAdc_u16(uint16_t value);
-
-uint16_t VoltMon_GetLastVoltage_mV_u16(void);
-void VoltMon_SetLastVoltage_mV_u16(uint16_t value);
-
-bool VoltMon_GetUvActive_b(void);
-void VoltMon_SetUvActive_b(bool value);
-
-bool VoltMon_GetOvActive_b(void);
-void VoltMon_SetOvActive_b(bool value);
-
-/**
- * @brief Provide a new ADC raw sample to VoltMon.
- *
- * @details
- * **Goal of the function**
- *
- * Update the internal raw sample and compute the corresponding voltage in mV
- * using the configuration scaling:
- * - Compute mV = raw * factor + offset
- * - Store last computed voltage
- * - Validate input range (raw <= rawMax)
- *
- * The function does not directly set UV/OV flags; evaluation is done in
- * VoltMon_Process() to keep timing deterministic.
- *
- * @par Activity diagram
- * @code
- * start
- * :l_cfg_pcs = VoltMon_CfgGet_pcfg();
- * if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0) then (not init)
- *   :StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
- *   :return 1;
- * elseif ((l_cfg_pcs == 0) || (rawAdc_u16 > l_cfg_pcs->rawMax_u16)) then (invalid input)
- *   :StatusFlg_u32 |= (VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32);
- *   :return 2;
- * else (valid)
- *   :LastRawAdc_u16 = rawAdc_u16;
- *   :LastVoltage_mV_u16 = ComputeVoltage_u16(rawAdc_u16, l_cfg_pcs);
- *   :StatusFlg_u32 &= ~VOLTMON_STATUS_INVAL_U32;
- *   :return 0;
- * endif
- * stop
- * @endcode
- *
- * @par Interface summary
- *
- * | Interface                 | In | Out | Type / Signature   | Param  | Factor | Offset | Size | Range | Unit |
- * |--------------------------|----|-----|---------------------|--------|--------|--------|------|-------|------|
- * | rawAdc                   | X  |  X  | uint16_t            | rawAdc |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
- * | LastRawAdc_u16           |    |  X  | uint16_t (static)   |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
- * | LastVoltage_mV_u16       |    |  X  | uint16_t (static)   |   -    |   1    |   0    |  2   | [0,UINT16_MAX] | [mV] |
- * | returned value           | X  |  X  | uint16_t            | - |   1    |   0    |  2   | [0,UINT16_MAX] | [-]  |
- *
- * @param rawAdc_u16 ADC raw counts.
- * @return uint8_t
- * @retval 0 Updated.
- * @retval 1 Not initialized.
- * @retval 2 Input invalid/out of configured range.
- */
-uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16);
-# 15 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_cfg.h" 1
-/*==================[VoltMon_cfg.h]==========================================*/
-/**
- * @file    VoltMon_cfg.h
- * @brief   Configuration interface for the VoltMon module.
- * @author  -
- * @date    2026-01-30
- *
- * @defgroup VoltMonCfg VoltMon Configuration
- * @{
- *
- * @details
- * This file contains the configuration types and the configuration getter.
- * The actual configuration instance is defined in VoltMon_cfg.c.
- */
-
-# 16 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
-# 1 "utExecutionAndResults/utUnderTest/src/VoltMon_priv.h" 1
-/*==================[VoltMon_priv.h]=========================================*/
-/**
- * @file    VoltMon_priv.h
- * @brief   Private declarations for VoltMon (static functions in VoltMon.c).
- * @author  -
- * @date    2026-01-30
- *
- * @defgroup VoltMonPriv VoltMon Private Interface
- * @{
- *
- * @details
- * This header declares the internal (cfile-static) functions implemented in
- * VoltMon.c. It is included only by VoltMon.c.
- */
-
-# 17 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
-
-/* Mocks */
-# 1 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_UpdateAdc_u8/mock_VoltMon_cfg.h" 1
-/* AUTOGENERATED FILE. DO NOT EDIT. */
-
-#define _MOCK_VOLTMON_CFG_H 
-
-
+# 6 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_UpdateAdc_u8/mock_VoltMon_cfg.h" 2
 
 
 /* Ignore the following warnings, since we are copying code */
@@ -10866,7 +10852,7 @@ void VoltMon_CfgGet_pcfg_Stub(CMOCK_VoltMon_CfgGet_pcfg_CALLBACK Callback);
 
 
 
-# 20 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+# 6 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
 # 1 "utExecutionAndResults/utUnderTest/build/test/mocks/test_VoltMon_UpdateAdc_u8/mock_VoltMon_priv.h" 1
 /* AUTOGENERATED FILE. DO NOT EDIT. */
 
@@ -10986,194 +10972,203 @@ void UpdateStatusFlags_v_CMockIgnoreArg_errSticky_b(UNITY_LINE_TYPE cmock_line);
 
 
 
-# 21 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
+# 7 "utExecutionAndResults/utUnderTest/test/test_VoltMon_UpdateAdc_u8.c" 2
 
-/*==================[Helpers required by rules]==============================*/
 
-static void testVariablesAssert(uint32_t expStatus_u32, VoltMon_mode_e expMode_e, uint16_t expLastRaw_u16, uint16_t expLastVoltage_u16, bool expUvActive_b, bool expOvActive_b) {
-  TEST_ASSERT_EQUAL_UINT32(expStatus_u32, VoltMon_GetStatusFlg_u32());
-  TEST_ASSERT_EQUAL_INT((int)expMode_e, (int)VoltMon_GetMode_e());
-  TEST_ASSERT_EQUAL_UINT16(expLastRaw_u16, VoltMon_GetLastRawAdc_u16());
-  TEST_ASSERT_EQUAL_UINT16(expLastVoltage_u16, VoltMon_GetLastVoltage_mV_u16());
-  TEST_ASSERT_EQUAL_UINT8((uint8_t)expUvActive_b, (uint8_t)VoltMon_GetUvActive_b());
-  TEST_ASSERT_EQUAL_UINT8((uint8_t)expOvActive_b, (uint8_t)VoltMon_GetOvActive_b());
+
+
+void test_VoltMon_UpdateAdc_u8_returns_invalid_param_for_rawAdc_above_max(void) {
+  VoltMon_SetMode_e(VoltMon_modeRun_e);
+  uint16_t rawAdc = 0xFFFF; // Large value assumed above rawMax_u16 for test
+  uint8_t ret = VoltMon_UpdateAdc_u8(rawAdc);
+  TEST_ASSERT_EQUAL_UINT8(VoltMon_retInvalidParam_e, ret);
 }
 
-static void testVariablesReset(uint32_t status_u32, VoltMon_mode_e mode_e, uint16_t lastRaw_u16, uint16_t lastVoltage_u16, bool uvActive_b, bool ovActive_b) {
-  VoltMon_SetStatusFlg_u32(status_u32);
-  VoltMon_SetMode_e(mode_e);
-  VoltMon_SetLastRawAdc_u16(lastRaw_u16);
-  VoltMon_SetLastVoltage_mV_u16(lastVoltage_u16);
-  VoltMon_SetUvActive_b(uvActive_b);
-  VoltMon_SetOvActive_b(ovActive_b);
+void test_VoltMon_UpdateAdc_u8_returns_not_init_when_mode_is_idle(void) {
+  VoltMon_SetMode_e(VoltMon_modeIdle_e);
+  uint16_t rawAdc = 100;
+  uint8_t ret = VoltMon_UpdateAdc_u8(rawAdc);
+  TEST_ASSERT_EQUAL_UINT8(VoltMon_retNotInit_e, ret);
 }
 
-/*==================[Ceedling fixtures]=====================================*/
-
-void setUp(void) { testVariablesReset(0u, VoltMon_modeIdle_e, 0u, 0u, false, false); }
-
-void tearDown(void) {}
-
-/*==================[Tests]==================================================*/
-
-void test_VoltMon_UpdateAdc_u8_should_return_1_and_set_ERR_when_not_initialized(void) {
-  VoltMon_cfg_s cfg_s;
-  cfg_s.rawMax_u16 = 1000u;
-  cfg_s.factor_u16 = 1u;
-  cfg_s.offset_s16 = 0;
-  cfg_s.uvTh_mV_u16 = 0u;
-  cfg_s.ovTh_mV_u16 = 0u;
-  cfg_s.hyst_mV_u16 = 0u;
-
-  testVariablesReset(0u, VoltMon_modeIdle_e, 11u, 22u, false, false);
-
-  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
-
-  TEST_ASSERT_EQUAL_UINT8(1u, VoltMon_UpdateAdc_u8(10u));
-
-  testVariablesAssert(VOLTMON_STATUS_ERR_U32, VoltMon_modeIdle_e, 11u, 22u, false, false);
+void test_VoltMon_UpdateAdc_u8_updates_voltage_and_status_under_uv_threshold(void) {
+  VoltMon_cfg_s cfg = {.rawMax_u16 = 4095, .factor_u16 = 10, .offset_s16 = 0, .uvTh_mV_u16 = 1000, .ovTh_mV_u16 = 3000, .hyst_mV_u16 = 100};
+  VoltMon_SetMode_e(VoltMon_modeRun_e);
+  VoltMon_SetLastRawAdc_u16(0);
+  VoltMon_SetLastVoltage_mV_u16(0);
+  VoltMon_SetUvActive_b(false);
+  VoltMon_SetOvActive_b(false);
+  // Setup config getter mock
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg);
+  // ComputeVoltage expects rawAdc_u16 and cfg pointer
+  uint16_t computedVoltage = 900; // below uvTh_mV_u16 of 1000
+  ComputeVoltage_u16_ExpectAndReturn(1234, &cfg, computedVoltage);
+  bool uvActive, ovActive;
+  // CheckThresholds expects voltage, cfg, &uvActive, &ovActive pointers
+  CheckThresholds_u8_StubWithCallback([](uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs, bool *uvActive_pb, bool *ovActive_pb) -> uint8_t {
+    *uvActive_pb = true;
+    *ovActive_pb = false;
+    return 0;
+  });
+  UpdateStatusFlags_v_Expect(true, false, false);
+  uint8_t ret = VoltMon_UpdateAdc_u8(1234);
+  TEST_ASSERT_EQUAL_UINT8(VoltMon_retOk_e, ret);
+  TEST_ASSERT_EQUAL_UINT16(1234, VoltMon_GetLastRawAdc_u16());
+  TEST_ASSERT_EQUAL_UINT16(computedVoltage, VoltMon_GetLastVoltage_mV_u16());
+  TEST_ASSERT_TRUE(VoltMon_GetUvActive_b());
+  TEST_ASSERT_FALSE(VoltMon_GetOvActive_b());
 }
 
-void test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_cfg_is_NULL(void) {
-  testVariablesReset(VOLTMON_STATUS_INIT_U32, VoltMon_modeIdle_e, 7u, 8u, false, false);
-
-  VoltMon_CfgGet_pcfg_ExpectAndReturn((const VoltMon_cfg_s *)0);
-
-  TEST_ASSERT_EQUAL_UINT8(2u, VoltMon_UpdateAdc_u8(0u));
-
-  testVariablesAssert(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32, VoltMon_modeIdle_e, 7u, 8u, false, false);
+void test_VoltMon_UpdateAdc_u8_updates_voltage_and_status_under_ov_threshold(void) {
+  VoltMon_cfg_s cfg = {.rawMax_u16 = 4095, .factor_u16 = 10, .offset_s16 = 0, .uvTh_mV_u16 = 1000, .ovTh_mV_u16 = 3000, .hyst_mV_u16 = 100};
+  VoltMon_SetMode_e(VoltMon_modeRun_e);
+  VoltMon_SetUvActive_b(false);
+  VoltMon_SetOvActive_b(false);
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg);
+  uint16_t computedVoltage = 3100; // above ovTh_mV_u16 3000
+  ComputeVoltage_u16_ExpectAndReturn(2000, &cfg, computedVoltage);
+  CheckThresholds_u8_StubWithCallback([](uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs, bool *uvActive_pb, bool *ovActive_pb) -> uint8_t {
+    *uvActive_pb = false;
+    *ovActive_pb = true;
+    return 0;
+  });
+  UpdateStatusFlags_v_Expect(false, true, false);
+  uint8_t ret = VoltMon_UpdateAdc_u8(2000);
+  TEST_ASSERT_EQUAL_UINT8(VoltMon_retOk_e, ret);
+  TEST_ASSERT_FALSE(VoltMon_GetUvActive_b());
+  TEST_ASSERT_TRUE(VoltMon_GetOvActive_b());
 }
 
-/* ---- Range / boundary tests from implementation rule: valid if raw <= rawMax ---- */
-
-void test_VoltMon_UpdateAdc_u8_should_accept_raw_min_0_when_rawMax_allows_it(void) {
-  VoltMon_cfg_s cfg_s;
-  cfg_s.rawMax_u16 = 100u;
-  cfg_s.factor_u16 = 1u;
-  cfg_s.offset_s16 = 0;
-  cfg_s.uvTh_mV_u16 = 0u;
-  cfg_s.ovTh_mV_u16 = 0u;
-  cfg_s.hyst_mV_u16 = 0u;
-
-  testVariablesReset(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_INVAL_U32, VoltMon_modeIdle_e, 9u, 99u, false, false);
-
-  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
-
-  ComputeVoltage_u16_ExpectAndReturn(0u, (const VoltMon_cfg_s *)0, 111u);
-  ComputeVoltage_u16_IgnoreArg_cfg_pcs();
-
-  TEST_ASSERT_EQUAL_UINT8(0u, VoltMon_UpdateAdc_u8(0u));
-
-  testVariablesAssert(VOLTMON_STATUS_INIT_U32, VoltMon_modeIdle_e, 0u, 111u, false, false);
+void test_VoltMon_UpdateAdc_u8_updates_voltage_and_status_with_no_thresholds_active(void) {
+  VoltMon_cfg_s cfg = {.rawMax_u16 = 4095, .factor_u16 = 10, .offset_s16 = 0, .uvTh_mV_u16 = 1000, .ovTh_mV_u16 = 3000, .hyst_mV_u16 = 100};
+  VoltMon_SetMode_e(VoltMon_modeRun_e);
+  VoltMon_SetUvActive_b(true);
+  VoltMon_SetOvActive_b(true);
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg);
+  uint16_t computedVoltage = 2000; // between thresholds
+  ComputeVoltage_u16_ExpectAndReturn(1500, &cfg, computedVoltage);
+  CheckThresholds_u8_StubWithCallback([](uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs, bool *uvActive_pb, bool *ovActive_pb) -> uint8_t {
+    *uvActive_pb = false;
+    *ovActive_pb = false;
+    return 0;
+  });
+  UpdateStatusFlags_v_Expect(false, false, false);
+  uint8_t ret = VoltMon_UpdateAdc_u8(1500);
+  TEST_ASSERT_EQUAL_UINT8(VoltMon_retOk_e, ret);
+  TEST_ASSERT_FALSE(VoltMon_GetUvActive_b());
+  TEST_ASSERT_FALSE(VoltMon_GetOvActive_b());
 }
 
-void test_VoltMon_UpdateAdc_u8_should_accept_raw_equal_to_rawMax_as_valid_boundary(void) {
-  VoltMon_cfg_s cfg_s;
-  cfg_s.rawMax_u16 = 100u;
-  cfg_s.factor_u16 = 1u;
-  cfg_s.offset_s16 = 0;
-  cfg_s.uvTh_mV_u16 = 0u;
-  cfg_s.ovTh_mV_u16 = 0u;
-  cfg_s.hyst_mV_u16 = 0u;
-
-  testVariablesReset(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_INVAL_U32, VoltMon_modeIdle_e, 9u, 99u, false, false);
-
-  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
-
-  ComputeVoltage_u16_ExpectAndReturn(100u, (const VoltMon_cfg_s *)0, 4321u);
-  ComputeVoltage_u16_IgnoreArg_cfg_pcs();
-
-  TEST_ASSERT_EQUAL_UINT8(0u, VoltMon_UpdateAdc_u8(100u));
-
-  testVariablesAssert(VOLTMON_STATUS_INIT_U32, VoltMon_modeIdle_e, 100u, 4321u, false, false);
+void test_VoltMon_UpdateAdc_u8_returns_busy_when_mode_diag(void) {
+  VoltMon_SetMode_e(VoltMon_modeDiag_e);
+  uint16_t rawAdc = 100;
+  uint8_t ret = VoltMon_UpdateAdc_u8(rawAdc);
+  TEST_ASSERT_EQUAL_UINT8(VoltMon_retBusyOrRejected_e, ret);
 }
 
-void test_VoltMon_UpdateAdc_u8_should_return_2_and_set_ERR_INVAL_when_raw_is_rawMax_plus_1(void) {
-  VoltMon_cfg_s cfg_s;
-  cfg_s.rawMax_u16 = 100u;
-  cfg_s.factor_u16 = 2u;
-  cfg_s.offset_s16 = 0;
-  cfg_s.uvTh_mV_u16 = 0u;
-  cfg_s.ovTh_mV_u16 = 0u;
-  cfg_s.hyst_mV_u16 = 0u;
-
-  testVariablesReset(VOLTMON_STATUS_INIT_U32, VoltMon_modeIdle_e, 55u, 66u, false, false);
-
-  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
-
-  TEST_ASSERT_EQUAL_UINT8(2u, VoltMon_UpdateAdc_u8((uint16_t)(cfg_s.rawMax_u16 + 1u)));
-
-  testVariablesAssert(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32, VoltMon_modeIdle_e, 55u, 66u, false, false);
+void test_VoltMon_UpdateAdc_u8_voltage_exactly_at_uv_threshold_sets_uv_active(void) {
+  VoltMon_cfg_s cfg = {.rawMax_u16 = 4095, .factor_u16 = 1, .offset_s16 = 0, .uvTh_mV_u16 = 1000, .ovTh_mV_u16 = 3000, .hyst_mV_u16 = 100};
+  VoltMon_SetMode_e(VoltMon_modeRun_e);
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg);
+  uint16_t voltage = 1000; // exactly at UV threshold
+  ComputeVoltage_u16_ExpectAndReturn(500, &cfg, voltage);
+  CheckThresholds_u8_StubWithCallback([](uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs, bool *uvActive_pb, bool *ovActive_pb) -> uint8_t {
+    *uvActive_pb = true;
+    *ovActive_pb = false;
+    return 0;
+  });
+  UpdateStatusFlags_v_Expect(true, false, false);
+  uint8_t ret = VoltMon_UpdateAdc_u8(500);
+  TEST_ASSERT_EQUAL_UINT8(VoltMon_retOk_e, ret);
+  TEST_ASSERT_TRUE(VoltMon_GetUvActive_b());
 }
 
-void test_VoltMon_UpdateAdc_u8_should_handle_corner_case_rawMax_0_only_raw_0_valid(void) {
-  VoltMon_cfg_s cfg_s;
-  cfg_s.rawMax_u16 = 0u;
-  cfg_s.factor_u16 = 1u;
-  cfg_s.offset_s16 = 0;
-  cfg_s.uvTh_mV_u16 = 0u;
-  cfg_s.ovTh_mV_u16 = 0u;
-  cfg_s.hyst_mV_u16 = 0u;
-
-  /* raw=0 valid */
-  testVariablesReset(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_INVAL_U32, VoltMon_modeIdle_e, 77u, 88u, false, false);
-
-  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
-  ComputeVoltage_u16_ExpectAndReturn(0u, (const VoltMon_cfg_s *)0, 5u);
-  ComputeVoltage_u16_IgnoreArg_cfg_pcs();
-
-  TEST_ASSERT_EQUAL_UINT8(0u, VoltMon_UpdateAdc_u8(0u));
-
-  testVariablesAssert(VOLTMON_STATUS_INIT_U32, VoltMon_modeIdle_e, 0u, 5u, false, false);
-
-  /* raw=1 invalid */
-  testVariablesReset(VOLTMON_STATUS_INIT_U32, VoltMon_modeIdle_e, 10u, 20u, false, false);
-
-  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
-
-  TEST_ASSERT_EQUAL_UINT8(2u, VoltMon_UpdateAdc_u8(1u));
-
-  testVariablesAssert(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32, VoltMon_modeIdle_e, 10u, 20u, false, false);
+void test_VoltMon_UpdateAdc_u8_voltage_just_below_uv_threshold_clears_uv_active(void) {
+  VoltMon_cfg_s cfg = {.rawMax_u16 = 4095, .factor_u16 = 1, .offset_s16 = 0, .uvTh_mV_u16 = 1000, .ovTh_mV_u16 = 3000, .hyst_mV_u16 = 100};
+  VoltMon_SetMode_e(VoltMon_modeRun_e);
+  VoltMon_SetUvActive_b(true);
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg);
+  uint16_t voltage = 999; // just below UV threshold
+  ComputeVoltage_u16_ExpectAndReturn(499, &cfg, voltage);
+  CheckThresholds_u8_StubWithCallback([](uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs, bool *uvActive_pb, bool *ovActive_pb) -> uint8_t {
+    *uvActive_pb = false;
+    *ovActive_pb = false;
+    return 0;
+  });
+  UpdateStatusFlags_v_Expect(false, false, false);
+  uint8_t ret = VoltMon_UpdateAdc_u8(499);
+  TEST_ASSERT_EQUAL_UINT8(VoltMon_retOk_e, ret);
+  TEST_ASSERT_FALSE(VoltMon_GetUvActive_b());
 }
 
-void test_VoltMon_UpdateAdc_u8_should_accept_raw_uint16_max_when_rawMax_uint16_max(void) {
-  VoltMon_cfg_s cfg_s;
-  cfg_s.rawMax_u16 = 65535u;
-  cfg_s.factor_u16 = 1u;
-  cfg_s.offset_s16 = 0;
-  cfg_s.uvTh_mV_u16 = 0u;
-  cfg_s.ovTh_mV_u16 = 0u;
-  cfg_s.hyst_mV_u16 = 0u;
-
-  testVariablesReset(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_INVAL_U32, VoltMon_modeIdle_e, 1u, 2u, false, false);
-
-  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
-
-  ComputeVoltage_u16_ExpectAndReturn(65535u, (const VoltMon_cfg_s *)0, 60000u);
-  ComputeVoltage_u16_IgnoreArg_cfg_pcs();
-
-  TEST_ASSERT_EQUAL_UINT8(0u, VoltMon_UpdateAdc_u8(65535u));
-
-  testVariablesAssert(VOLTMON_STATUS_INIT_U32, VoltMon_modeIdle_e, 65535u, 60000u, false, false);
+void test_VoltMon_UpdateAdc_u8_voltage_just_above_uv_threshold_sets_uv_active(void) {
+  VoltMon_cfg_s cfg = {.rawMax_u16 = 4095, .factor_u16 = 1, .offset_s16 = 0, .uvTh_mV_u16 = 1000, .ovTh_mV_u16 = 3000, .hyst_mV_u16 = 100};
+  VoltMon_SetMode_e(VoltMon_modeRun_e);
+  VoltMon_SetUvActive_b(false);
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg);
+  uint16_t voltage = 1001; // just above UV threshold
+  ComputeVoltage_u16_ExpectAndReturn(501, &cfg, voltage);
+  CheckThresholds_u8_StubWithCallback([](uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs, bool *uvActive_pb, bool *ovActive_pb) -> uint8_t {
+    *uvActive_pb = true;
+    *ovActive_pb = false;
+    return 0;
+  });
+  UpdateStatusFlags_v_Expect(true, false, false);
+  uint8_t ret = VoltMon_UpdateAdc_u8(501);
+  TEST_ASSERT_EQUAL_UINT8(VoltMon_retOk_e, ret);
+  TEST_ASSERT_TRUE(VoltMon_GetUvActive_b());
 }
 
-void test_VoltMon_UpdateAdc_u8_should_update_last_values_clear_INVAL_and_keep_ERR_if_it_was_already_set(void) {
-  VoltMon_cfg_s cfg_s;
-  cfg_s.rawMax_u16 = 500u;
-  cfg_s.factor_u16 = 3u;
-  cfg_s.offset_s16 = 0;
-  cfg_s.uvTh_mV_u16 = 0u;
-  cfg_s.ovTh_mV_u16 = 0u;
-  cfg_s.hyst_mV_u16 = 0u;
+void test_VoltMon_UpdateAdc_u8_voltage_exactly_at_ov_threshold_sets_ov_active(void) {
+  VoltMon_cfg_s cfg = {.rawMax_u16 = 4095, .factor_u16 = 1, .offset_s16 = 0, .uvTh_mV_u16 = 1000, .ovTh_mV_u16 = 3000, .hyst_mV_u16 = 100};
+  VoltMon_SetMode_e(VoltMon_modeRun_e);
+  VoltMon_SetOvActive_b(false);
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg);
+  uint16_t voltage = 3000; // exactly at OV threshold
+  ComputeVoltage_u16_ExpectAndReturn(1500, &cfg, voltage);
+  CheckThresholds_u8_StubWithCallback([](uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs, bool *uvActive_pb, bool *ovActive_pb) -> uint8_t {
+    *uvActive_pb = false;
+    *ovActive_pb = true;
+    return 0;
+  });
+  UpdateStatusFlags_v_Expect(false, true, false);
+  uint8_t ret = VoltMon_UpdateAdc_u8(1500);
+  TEST_ASSERT_EQUAL_UINT8(VoltMon_retOk_e, ret);
+  TEST_ASSERT_TRUE(VoltMon_GetOvActive_b());
+}
 
-  testVariablesReset(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32, VoltMon_modeIdle_e, 1u, 2u, false, false);
+void test_VoltMon_UpdateAdc_u8_voltage_just_below_ov_threshold_clears_ov_active(void) {
+  VoltMon_cfg_s cfg = {.rawMax_u16 = 4095, .factor_u16 = 1, .offset_s16 = 0, .uvTh_mV_u16 = 1000, .ovTh_mV_u16 = 3000, .hyst_mV_u16 = 100};
+  VoltMon_SetMode_e(VoltMon_modeRun_e);
+  VoltMon_SetOvActive_b(true);
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg);
+  uint16_t voltage = 2999; // just below OV threshold
+  ComputeVoltage_u16_ExpectAndReturn(1499, &cfg, voltage);
+  CheckThresholds_u8_StubWithCallback([](uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs, bool *uvActive_pb, bool *ovActive_pb) -> uint8_t {
+    *uvActive_pb = false;
+    *ovActive_pb = false;
+    return 0;
+  });
+  UpdateStatusFlags_v_Expect(false, false, false);
+  uint8_t ret = VoltMon_UpdateAdc_u8(1499);
+  TEST_ASSERT_EQUAL_UINT8(VoltMon_retOk_e, ret);
+  TEST_ASSERT_FALSE(VoltMon_GetOvActive_b());
+}
 
-  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
-
-  ComputeVoltage_u16_ExpectAndReturn(50u, (const VoltMon_cfg_s *)0, 1234u);
-  ComputeVoltage_u16_IgnoreArg_cfg_pcs();
-
-  TEST_ASSERT_EQUAL_UINT8(0u, VoltMon_UpdateAdc_u8(50u));
-
-  testVariablesAssert(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32, VoltMon_modeIdle_e, 50u, 1234u, false, false);
+void test_VoltMon_UpdateAdc_u8_voltage_just_above_ov_threshold_sets_ov_active(void) {
+  VoltMon_cfg_s cfg = {.rawMax_u16 = 4095, .factor_u16 = 1, .offset_s16 = 0, .uvTh_mV_u16 = 1000, .ovTh_mV_u16 = 3000, .hyst_mV_u16 = 100};
+  VoltMon_SetMode_e(VoltMon_modeRun_e);
+  VoltMon_SetOvActive_b(false);
+  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg);
+  uint16_t voltage = 3001; // just above OV threshold
+  ComputeVoltage_u16_ExpectAndReturn(1501, &cfg, voltage);
+  CheckThresholds_u8_StubWithCallback([](uint16_t voltage_mV_u16, const VoltMon_cfg_s *cfg_pcs, bool *uvActive_pb, bool *ovActive_pb) -> uint8_t {
+    *uvActive_pb = false;
+    *ovActive_pb = true;
+    return 0;
+  });
+  UpdateStatusFlags_v_Expect(false, true, false);
+  uint8_t ret = VoltMon_UpdateAdc_u8(1501);
+  TEST_ASSERT_EQUAL_UINT8(VoltMon_retOk_e, ret);
+  TEST_ASSERT_TRUE(VoltMon_GetOvActive_b());
 }
