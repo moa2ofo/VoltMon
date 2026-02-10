@@ -41,26 +41,18 @@ void VoltMon_SetOvActive_b(bool value) { OvActive_b = value; }
 
 
 uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16) {
-  uint8_t l_ret_u8;
-  const VoltMon_cfg_s *l_cfg_pcs;
+  const VoltMon_Cfg_t *const l_cfg_pcs = VoltMon_CfgGet_pcfg();
 
-  l_ret_u8 = 0u;
-  l_cfg_pcs = VoltMon_CfgGet_pcfg();
-
-  if((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0u) {
+  if((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0U) {
     StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
-    l_ret_u8 = 1u;
-  } else if((l_cfg_pcs == (const VoltMon_cfg_s *)0) || (rawAdc_u16 > l_cfg_pcs->rawMax_u16)) {
+    return 1U;
+  } else if((l_cfg_pcs == NULL) || (rawAdc_u16 > l_cfg_pcs->rawMax_u16)) {
     StatusFlg_u32 |= (VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32);
-    l_ret_u8 = 2u;
+    return 2U;
   } else {
     LastRawAdc_u16 = rawAdc_u16;
     LastVoltage_mV_u16 = ComputeVoltage_u16(rawAdc_u16, l_cfg_pcs);
-
-    /* Valid sample: clear INVAL but keep ERR depending on mode/previous state. */
     StatusFlg_u32 &= ~VOLTMON_STATUS_INVAL_U32;
-    l_ret_u8 = 0u;
+    return 0U;
   }
-
-  return l_ret_u8;
 }

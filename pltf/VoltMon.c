@@ -99,27 +99,21 @@ uint8_t VoltMon_SetMode_u8(VoltMon_mode_e mode) {
   return l_ret_u8;
 }
 
-uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16)
-{
-    const VoltMon_Cfg_t * const l_cfg_pcs = VoltMon_CfgGet_pcfg();
+uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16) {
+  const VoltMon_Cfg_t *const l_cfg_pcs = VoltMon_CfgGet_pcfg();
 
-    if ((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0U)
-    {
-        StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
-        return 1U;
-    }
-    else if ((l_cfg_pcs == NULL) || (rawAdc_u16 > l_cfg_pcs->rawMax_u16))
-    {
-        StatusFlg_u32 |= (VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32);
-        return 2U;
-    }
-    else
-    {
-        LastRawAdc_u16 = rawAdc_u16;
-        LastVoltage_mV_u16 = ComputeVoltage_u16(rawAdc_u16, l_cfg_pcs);
-        StatusFlg_u32 &= ~VOLTMON_STATUS_INVAL_U32;
-        return 0U;
-    }
+  if((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0U) {
+    StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+    return 1U;
+  } else if((l_cfg_pcs == NULL) || (rawAdc_u16 > l_cfg_pcs->rawMax_u16)) {
+    StatusFlg_u32 |= (VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32);
+    return 2U;
+  } else {
+    LastRawAdc_u16 = rawAdc_u16;
+    LastVoltage_mV_u16 = ComputeVoltage_u16(rawAdc_u16, l_cfg_pcs);
+    StatusFlg_u32 &= ~VOLTMON_STATUS_INVAL_U32;
+    return 0U;
+  }
 }
 void VoltMon_Process(void) {
   static uint32_t l_CycleCnt_u32 = 0U;

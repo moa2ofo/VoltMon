@@ -1,6 +1,6 @@
-GIT ACTION PERFORMED
-Run: https://github.com/moa2ofo/VoltMon/actions/runs/21856407930
+GIT ACTION FAILED
+Run: https://github.com/moa2ofo/VoltMon/actions/runs/21856502895
 docker info: performed
-swCmpBuildCheck: performed
+swCmpBuildCheck: failed
 unit tests: performed
-Timestamp (UTC): 2026-02-10T07:57:07Z
+Timestamp (UTC): 2026-02-10T08:00:50Z
