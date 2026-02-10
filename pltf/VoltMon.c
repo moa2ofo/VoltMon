@@ -124,44 +124,61 @@ uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16) {
   return l_ret_u8;
 }
 
-void VoltMon_Process(void) {
-  static uint32_t l_CycleCnt_u32 = 0u;
-  uint32_t l_iter_u32;
-  uint8_t l_evalRet_u8;
-  const VoltMon_cfg_s *l_cfg_pcs;
-  bool l_errSticky_b;
+void VoltMon_Process(void)
+{
+    static uint32_t l_CycleCnt_u32 = 0U;
+    const VoltMon_cfg_s * l_cfg_pcs;
+    bool UvActive_b;
+    bool OvActive_b;
+    bool l_errSticky_b;
+    uint8_t l_evalRet_u8;
+    uint8_t l_iteration_u8;
 
-  l_CycleCnt_u32++;
-  l_cfg_pcs = VoltMon_CfgGet_pcfg();
+    /* Increment cycle counter for deterministic pacing */
+    l_CycleCnt_u32++;
 
-  /* DIAG mode keeps ERR sticky once asserted. */
-  l_errSticky_b = (Mode_e == VoltMon_modeDiag_e) ? true : false;
+    /* Get pointer to configuration */
+    l_cfg_pcs = VoltMon_CfgGet_pcfg();
 
-  /* Bounded loop to keep deterministic timing (no data-dependent loop length). */
-  for(l_iter_u32 = 0u; l_iter_u32 < 8u; l_iter_u32++) {
-    if(((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) != 0u) && ((Mode_e == VoltMon_modeRun_e) || (Mode_e == VoltMon_modeDiag_e))) {
+    /* Determine if error flag should be sticky (only in DIAG mode) */
+    l_errSticky_b = (Mode_e == VoltMon_modeDiag_e);
 
-      l_evalRet_u8 = CheckThresholds_u8(LastVoltage_mV_u16, l_cfg_pcs, &UvActive_b, &OvActive_b);
-      if(l_evalRet_u8 != 0u) {
-        StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
-      } else {
-        /* No operation: threshold states already updated. */
-      }
+    /* Execute bounded loop of 8 iterations */
+    for (l_iteration_u8 = 0U; l_iteration_u8 < 8U; l_iteration_u8++)
+    {
+        /* Check if module is initialized and mode is RUN or DIAG */
+        if (((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) != 0U) &&
+            ((Mode_e == VoltMon_modeRun_e) || (Mode_e == VoltMon_modeDiag_e)))
+        {
+            /* Evaluate thresholds */
+            l_evalRet_u8 = CheckThresholds_u8(LastVoltage_mV_u16, l_cfg_pcs, &UvActive_b, &OvActive_b);
 
-      UpdateStatusFlags_v(UvActive_b, OvActive_b, l_errSticky_b);
+            /* If error returned, set error flag */
+            if (l_evalRet_u8 != 0U)
+            {
+                StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
+            }
 
-      /* Use cycle counter as a deterministic place-holder (no functional effect). */
-      if((l_CycleCnt_u32 & 0x1u) == 0u) {
-        /* No operation to preserve deterministic structure */
-      } else {
-        /* No operation to preserve deterministic structure */
-      }
-    } else {
-      /* IDLE or not initialized: do not change UV/OV states here. */
+            /* Update status flags with UV, OV and error sticky flags */
+            UpdateStatusFlags_v(UvActive_b, OvActive_b, l_errSticky_b);
+
+            /* No operation for even/odd cycle count as per activity diagram */
+            /* This is a no-op placeholder */
+            if ((l_CycleCnt_u32 & 0x1U) == 0U)
+            {
+                /* no-op */
+            }
+            else
+            {
+                /* no-op */
+            }
+        }
+        else
+        {
+            /* no-op when not initialized or not in RUN/DIAG mode */
+        }
     }
-  }
 }
-
 uint16_t VoltMon_GetVoltage_mV_u16(void) {
   uint16_t l_ret_u16;
 
