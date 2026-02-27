@@ -1,0 +1,19 @@
+---
+:source:
+  :file: utExecutionAndResults/utUnderTest/test/test_init_twice_returns_zero_both_times.c
+  :dirname: utExecutionAndResults/utUnderTest/test
+  :basename: test_init_twice_returns_zero_both_times.c
+:successes: []
+:failures:
+- :test: test_init_twice_returns_zero_both_times
+  :line: 50
+  :message: Expected 0 Was 1
+  :unity_test_time: 0
+:ignores: []
+:counts:
+  :total: 1
+  :passed: 0
+  :failed: 1
+  :ignored: 0
+:stdout: []
+:time: 0.0032234770000059143

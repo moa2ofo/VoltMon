@@ -1,5 +1,20 @@
-| function_name   | test_name                                                  | total  | passed | failed | ignored | linesCvrg | branchesCvrg | Date and time  |
-|-----------------|------------------------------------------------------------|--------|--------|--------|---------|-----------|--------------|----------------|
-| VoltMon_Init_u8 | should_return_1_and_set_ERR_when_cfg_is_NULL               | PASSED | PASSED | -      | -       | 100.0%    | 100.0%       | 27/02/26 14:36 |
-| VoltMon_Init_u8 | should_return_1_and_set_ERR_when_rawMax_is_0               | PASSED | PASSED | -      | -       | 100.0%    | 100.0%       | 27/02/26 14:36 |
-| VoltMon_Init_u8 | should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid | PASSED | PASSED | -      | -       | 100.0%    | 100.0%       | 27/02/26 14:36 |
+| function_name   | test_name                           | total  | passed | failed | ignored | linesCvrg | branchesCvrg | Date and time  |
+|-----------------|-------------------------------------|--------|--------|--------|---------|-----------|--------------|----------------|
+| VoltMon_Init_u8 | init_valid_cfg_clears_ov_active     | PASSED | PASSED | -      | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_clears_preexisting_raw_adc     | PASSED | PASSED | -      | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_valid_cfg_clears_uv_active     | PASSED | PASSED | -      | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_clears_preexisting_voltage     | PASSED | PASSED | -      | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_missing_cfg_returns_one        | PASSED | PASSED | -      | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_valid_cfg_clears_last_voltage  | PASSED | PASSED | -      | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_success_boundary_exactly_zero  | PASSED | PASSED | -      | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_resets_preexisting_mode        | PASSED | PASSED | -      | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_valid_cfg_returns_zero         | PASSED | PASSED | -      | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_clears_preexisting_uv_active   | PASSED | PASSED | -      | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_clears_preexisting_ov_active   | PASSED | PASSED | -      | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_invalid_cfg_returns_one        | PASSED | PASSED | -      | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_valid_cfg_clears_last_raw_adc  | PASSED | PASSED | -      | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_fail_boundary_exactly_one      | PASSED | PASSED | -      | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_valid_cfg_sets_mode_idle       | PASSED | PASSED | -      | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_twice_returns_zero_both_times  | FAILED | FAILED | FAILED | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_valid_cfg_clears_status_flag   | FAILED | FAILED | FAILED | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |
+| VoltMon_Init_u8 | init_clears_preexisting_status_flag | FAILED | FAILED | FAILED | -       | 100.0%    | 75.0%        | 27/02/26 14:43 |

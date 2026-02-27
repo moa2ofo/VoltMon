@@ -1,0 +1,19 @@
+---
+:source:
+  :file: utExecutionAndResults/utUnderTest/test/test_init_success_boundary_exactly_zero.c
+  :dirname: utExecutionAndResults/utUnderTest/test
+  :basename: test_init_success_boundary_exactly_zero.c
+:successes:
+- :test: test_init_success_boundary_exactly_zero
+  :line: 41
+  :message: ''
+  :unity_test_time: 0
+:failures: []
+:ignores: []
+:counts:
+  :total: 1
+  :passed: 1
+  :failed: 0
+  :ignored: 0
+:stdout: []
+:time: 0.005116923999992196
