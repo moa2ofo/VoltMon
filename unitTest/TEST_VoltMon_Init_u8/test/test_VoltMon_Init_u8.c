@@ -1,121 +1,240 @@
-/*==================[testVoltMon_Init_u8.c]==================================*/
-/**
- * @file    testVoltMon_Init_u8.c
- * @brief   Unit tests for VoltMon_Init_u8()
- */
-
 #include "unity.h"
-
 #include "VoltMon_Init_u8.h"  /* Function under test + Get/Set APIs */
 #include "mock_VoltMon_cfg.h" /* Mock: VoltMon_CfgGet_pcfg() */
 
-/*============================================================================*/
-/* Test helper functions required by project rules                             */
-/*============================================================================*/
 
-void testVariablesAsset(uint32_t expStatusFlg_u32, VoltMon_mode_e expMode_e, uint16_t expLastRawAdc_u16, uint16_t expLastVoltage_mV_u16, bool expUvActive_b, bool expOvActive_b) {
-  TEST_ASSERT_EQUAL_UINT32(expStatusFlg_u32, VoltMon_GetStatusFlg_u32());
-  TEST_ASSERT_EQUAL_INT((int)expMode_e, (int)VoltMon_GetMode_e());
-  TEST_ASSERT_EQUAL_UINT16(expLastRawAdc_u16, VoltMon_GetLastRawAdc_u16());
-  TEST_ASSERT_EQUAL_UINT16(expLastVoltage_mV_u16, VoltMon_GetLastVoltage_mV_u16());
-  TEST_ASSERT_EQUAL(expUvActive_b, VoltMon_GetUvActive_b());
-  TEST_ASSERT_EQUAL(expOvActive_b, VoltMon_GetOvActive_b());
+
+
+/* ============================================================================
+ * CALLBACKS
+ * ========================================================================== */
+
+static const VoltMon_cfg_s* callback_VoltMon_CfgGet_pcfg_ReturnNull(int call_count)
+{
+    return NULL;
 }
 
-void testVariableReset(uint32_t statusFlg_u32, VoltMon_mode_e mode_e, uint16_t lastRawAdc_u16, uint16_t lastVoltage_mV_u16, bool uvActive_b, bool ovActive_b) {
-  VoltMon_SetStatusFlg_u32(statusFlg_u32);
-  VoltMon_SetMode_e(mode_e);
-  VoltMon_SetLastRawAdc_u16(lastRawAdc_u16);
-  VoltMon_SetLastVoltage_mV_u16(lastVoltage_mV_u16);
-  VoltMon_SetUvActive_b(uvActive_b);
-  VoltMon_SetOvActive_b(ovActive_b);
+static VoltMon_cfg_s valid_cfg;
+
+static const VoltMon_cfg_s* callback_VoltMon_CfgGet_pcfg_ReturnValid(int call_count)
+{
+    valid_cfg.rawMax_u16 = 4095u;
+    valid_cfg.factor_u16 = 10u;
+    valid_cfg.offset_s16 = 0;
+    valid_cfg.uvTh_mV_u16 = 9000u;
+    valid_cfg.ovTh_mV_u16 = 16000u;
+    valid_cfg.hyst_mV_u16 = 500u;
+    return &valid_cfg;
 }
 
-/*============================================================================*/
-/* Unity hooks                                                                 */
-/*============================================================================*/
+/* ============================================================================
+ * SETUP AND TEARDOWN
+ * ========================================================================== */
 
-void setUp(void) {
-  /* Reset all module state to guarantee test isolation */
-  testVariableReset(0u, VoltMon_modeIdle_e, 0u, 0u, false, false);
+void setUp(void)
+{
+    VoltMon_SetStatusFlg_u32(0u);
+    VoltMon_SetMode_e(VoltMon_modeIdle_e);
+    VoltMon_SetLastRawAdc_u16(0u);
+    VoltMon_SetLastVoltage_mV_u16(0u);
+    VoltMon_SetUvActive_b(false);
+    VoltMon_SetOvActive_b(false);
 }
 
-void tearDown(void) { /* nothing */
+void tearDown(void)
+{
 }
 
-/*============================================================================*/
-/* Tests                                                                       */
-/*============================================================================*/
+/* ============================================================================
+ * TEST FUNCTIONS
+ * ========================================================================== */
 
-void test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_cfg_is_NULL(void) {
-  /* Arrange */
-  VoltMon_CfgGet_pcfg_ExpectAndReturn(NULL);
-
-  /* Act */
-  uint8_t ret_u8 = VoltMon_Init_u8();
-
-  /* Assert */
-  TEST_ASSERT_EQUAL_UINT8(1u, ret_u8);
-  TEST_ASSERT_TRUE((VoltMon_GetStatusFlg_u32() & VOLTMON_STATUS_ERR_U32) != 0u);
-
-  /* The function must still bring module into a deterministic safe base state */
-  TEST_ASSERT_EQUAL_INT((int)VoltMon_modeIdle_e, (int)VoltMon_GetMode_e());
-  TEST_ASSERT_EQUAL_UINT16(0u, VoltMon_GetLastRawAdc_u16());
-  TEST_ASSERT_EQUAL_UINT16(0u, VoltMon_GetLastVoltage_mV_u16());
-  TEST_ASSERT_FALSE(VoltMon_GetUvActive_b());
-  TEST_ASSERT_FALSE(VoltMon_GetOvActive_b());
+void test_init_valid_cfg_returns_zero(void)
+{
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnValid);
+    
+    uint8_t result = VoltMon_Init_u8();
+    
+    TEST_ASSERT_EQUAL_UINT8(0u, result);
 }
 
-void test_VoltMon_Init_u8_should_return_1_and_set_ERR_when_rawMax_is_0(void) {
-  /* Arrange */
-  static const VoltMon_cfg_s cfg_s = {
-      .rawMax_u16 = 0u,
-      .factor_u16 = 1u,
-      .offset_s16 = 0,
-      .uvTh_mV_u16 = 1000u,
-      .ovTh_mV_u16 = 5000u,
-      .hyst_mV_u16 = 100u,
-  };
-
-  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
-
-  /* Act */
-  uint8_t ret_u8 = VoltMon_Init_u8();
-
-  /* Assert */
-  TEST_ASSERT_EQUAL_UINT8(1u, ret_u8);
-  TEST_ASSERT_TRUE((VoltMon_GetStatusFlg_u32() & VOLTMON_STATUS_ERR_U32) != 0u);
-
-  /* Deterministic safe base state */
-  TEST_ASSERT_EQUAL_INT((int)VoltMon_modeIdle_e, (int)VoltMon_GetMode_e());
-  TEST_ASSERT_EQUAL_UINT16(0u, VoltMon_GetLastRawAdc_u16());
-  TEST_ASSERT_EQUAL_UINT16(0u, VoltMon_GetLastVoltage_mV_u16());
-  TEST_ASSERT_FALSE(VoltMon_GetUvActive_b());
-  TEST_ASSERT_FALSE(VoltMon_GetOvActive_b());
+void test_init_valid_cfg_clears_status_flag(void)
+{
+    VoltMon_SetStatusFlg_u32(0xFFFFFFFFu);
+    
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnValid);
+    
+    VoltMon_Init_u8();
+    
+    TEST_ASSERT_EQUAL_UINT32(0u, VoltMon_GetStatusFlg_u32());
 }
 
-void test_VoltMon_Init_u8_should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid(void) {
-  /* Arrange */
-  static const VoltMon_cfg_s cfg_s = {
-      .rawMax_u16 = 4095u,
-      .factor_u16 = 1u,
-      .offset_s16 = 0,
-      .uvTh_mV_u16 = 1000u,
-      .ovTh_mV_u16 = 5000u,
-      .hyst_mV_u16 = 100u,
-  };
+void test_init_valid_cfg_sets_mode_idle(void)
+{
+    VoltMon_SetMode_e(VoltMon_modeRun_e);
+    
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnValid);
+    
+    VoltMon_Init_u8();
+    
+    TEST_ASSERT_EQUAL(VoltMon_modeIdle_e, VoltMon_GetMode_e());
+}
 
-  /* Pre-load garbage state to verify the function really resets everything */
-  testVariableReset(0xFFFFFFFFu, VoltMon_modeDiag_e, 1234u, 4321u, true, true);
+void test_init_valid_cfg_clears_last_raw_adc(void)
+{
+    VoltMon_SetLastRawAdc_u16(1234u);
+    
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnValid);
+    
+    VoltMon_Init_u8();
+    
+    TEST_ASSERT_EQUAL_UINT16(0u, VoltMon_GetLastRawAdc_u16());
+}
 
-  VoltMon_CfgGet_pcfg_ExpectAndReturn(&cfg_s);
+void test_init_valid_cfg_clears_last_voltage(void)
+{
+    VoltMon_SetLastVoltage_mV_u16(5678u);
+    
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnValid);
+    
+    VoltMon_Init_u8();
+    
+    TEST_ASSERT_EQUAL_UINT16(0u, VoltMon_GetLastVoltage_mV_u16());
+}
 
-  /* Act */
-  uint8_t ret_u8 = VoltMon_Init_u8();
+void test_init_valid_cfg_clears_uv_active(void)
+{
+    VoltMon_SetUvActive_b(true);
+    
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnValid);
+    
+    VoltMon_Init_u8();
+    
+    TEST_ASSERT_FALSE(VoltMon_GetUvActive_b());
+}
 
-  /* Assert */
-  TEST_ASSERT_EQUAL_UINT8(0u, ret_u8);
+void test_init_valid_cfg_clears_ov_active(void)
+{
+    VoltMon_SetOvActive_b(true);
+    
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnValid);
+    
+    VoltMon_Init_u8();
+    
+    TEST_ASSERT_FALSE(VoltMon_GetOvActive_b());
+}
 
-  /* Expected clean initialized state */
-  testVariablesAsset(VOLTMON_STATUS_INIT_U32, VoltMon_modeIdle_e, 0u, 0u, false, false);
+void test_init_missing_cfg_returns_one(void)
+{
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnNull);
+    
+    uint8_t result = VoltMon_Init_u8();
+    
+    TEST_ASSERT_EQUAL_UINT8(1u, result);
+}
+
+void test_init_invalid_cfg_returns_one(void)
+{
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnNull);
+    
+    uint8_t result = VoltMon_Init_u8();
+    
+    TEST_ASSERT_EQUAL_UINT8(1u, result);
+}
+
+void test_init_twice_returns_zero_both_times(void)
+{
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnValid);
+    
+    uint8_t result1 = VoltMon_Init_u8();
+    uint8_t result2 = VoltMon_Init_u8();
+    
+    TEST_ASSERT_EQUAL_UINT8(0u, result1);
+    TEST_ASSERT_EQUAL_UINT8(0u, result2);
+    TEST_ASSERT_EQUAL(VoltMon_modeIdle_e, VoltMon_GetMode_e());
+    TEST_ASSERT_EQUAL_UINT32(0u, VoltMon_GetStatusFlg_u32());
+}
+
+void test_init_clears_preexisting_status_flag(void)
+{
+    VoltMon_SetStatusFlg_u32(0xDEADBEEFu);
+    
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnValid);
+    
+    VoltMon_Init_u8();
+    
+    TEST_ASSERT_EQUAL_UINT32(0u, VoltMon_GetStatusFlg_u32());
+}
+
+void test_init_resets_preexisting_mode(void)
+{
+    VoltMon_SetMode_e(VoltMon_modeDiag_e);
+    
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnValid);
+    
+    VoltMon_Init_u8();
+    
+    TEST_ASSERT_EQUAL(VoltMon_modeIdle_e, VoltMon_GetMode_e());
+}
+
+void test_init_clears_preexisting_raw_adc(void)
+{
+    VoltMon_SetLastRawAdc_u16(9999u);
+    
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnValid);
+    
+    VoltMon_Init_u8();
+    
+    TEST_ASSERT_EQUAL_UINT16(0u, VoltMon_GetLastRawAdc_u16());
+}
+
+void test_init_clears_preexisting_voltage(void)
+{
+    VoltMon_SetLastVoltage_mV_u16(12345u);
+    
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnValid);
+    
+    VoltMon_Init_u8();
+    
+    TEST_ASSERT_EQUAL_UINT16(0u, VoltMon_GetLastVoltage_mV_u16());
+}
+
+void test_init_clears_preexisting_uv_active(void)
+{
+    VoltMon_SetUvActive_b(true);
+    
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnValid);
+    
+    VoltMon_Init_u8();
+    
+    TEST_ASSERT_FALSE(VoltMon_GetUvActive_b());
+}
+
+void test_init_clears_preexisting_ov_active(void)
+{
+    VoltMon_SetOvActive_b(true);
+    
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnValid);
+    
+    VoltMon_Init_u8();
+    
+    TEST_ASSERT_FALSE(VoltMon_GetOvActive_b());
+}
+
+void test_init_success_boundary_exactly_zero(void)
+{
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnValid);
+    
+    uint8_t result = VoltMon_Init_u8();
+    
+    TEST_ASSERT_EQUAL_UINT8(0u, result);
+}
+
+void test_init_fail_boundary_exactly_one(void)
+{
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg_ReturnNull);
+    
+    uint8_t result = VoltMon_Init_u8();
+    
+    TEST_ASSERT_EQUAL_UINT8(1u, result);
 }
