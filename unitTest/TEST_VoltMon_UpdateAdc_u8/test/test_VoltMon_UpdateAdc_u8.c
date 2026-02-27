@@ -8,295 +8,454 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+
+
+
 /* ============================================================================
  * CALLBACKS
  * ========================================================================== */
 
-static const VoltMoncfgs *callbackcfgptr = NULL;
-static uint16t callbackcomputed_voltage = 0;
+static const VoltMon_cfg_s* callback_VoltMon_CfgGet_pcfg_ReturnValue;
 
-static const VoltMoncfgs *VoltMonCfgGetpcfgCallback(int callcount) {
-  (void)call_count;
-  return callbackcfgptr;
+static const VoltMon_cfg_s* callback_VoltMon_CfgGet_pcfg(int call_count)
+{
+    return callback_VoltMon_CfgGet_pcfg_ReturnValue;
 }
 
-static uint16t ComputeVoltageu16Callback(uint16t rawAdcu16, const VoltMoncfgs *cfgpcs, int call_count) {
-  (void)call_count;
-  (void)rawAdc_u16;
-  (void)cfg_pcs;
-  return callbackcomputedvoltage;
+static uint16_t callback_ComputeVoltage_u16_ReturnValue;
+
+static uint16_t callback_ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s* cfg_pcs, int call_count)
+{
+    return callback_ComputeVoltage_u16_ReturnValue;
 }
 
 /* ============================================================================
  * SETUP AND TEARDOWN
  * ========================================================================== */
 
-void setUp(void) {
-  VoltMonSetStatusFlgu32(0);
-  VoltMonSetModee(VoltMonmodeIdlee);
-  VoltMonSetLastRawAdcu16(0);
-  VoltMonSetLastVoltagemV_u16(0);
-  VoltMonSetUvActiveb(false);
-  VoltMonSetOvActiveb(false);
-
-  callbackcfgptr = NULL;
-  callbackcomputedvoltage = 0;
+void setUp(void)
+{
+    VoltMon_SetStatusFlg_u32(0);
+    VoltMon_SetMode_e(VoltMon_modeIdle_e);
+    VoltMon_SetLastRawAdc_u16(0);
+    VoltMon_SetLastVoltage_mV_u16(0);
+    VoltMon_SetUvActive_b(false);
+    VoltMon_SetOvActive_b(false);
+    
+    callback_VoltMon_CfgGet_pcfg_ReturnValue = NULL;
+    callback_ComputeVoltage_u16_ReturnValue = 0;
 }
 
-void tearDown(void) {
+void tearDown(void)
+{
 }
 
 /* ============================================================================
  * TEST FUNCTIONS
  * ========================================================================== */
 
-void testnotinitreturns1setserr(void) {
-  uint8_t result;
-
-  VoltMonSetStatusFlgu32(0);
-
-  VoltMonCfgGetpcfgStub(VoltMonCfgGetpcfgCallback);
-
-  result = VoltMonUpdateAdcu8(100);
-
-  TESTASSERTEQUAL_UINT8(1, result);
-  TESTASSERTEQUALUINT32(VOLTMONSTATUSERRU32, VoltMonGetStatusFlgu32());
-  TESTASSERTEQUALUINT16(0, VoltMonGetLastRawAdc_u16());
-  TESTASSERTEQUALUINT16(0, VoltMonGetLastVoltagemVu16());
+void test_NotInit_Return1_ErrSet(void)
+{
+    uint8_t result;
+    uint32_t statusBefore;
+    uint16_t lastRawBefore;
+    uint16_t lastVoltageBefore;
+    
+    VoltMon_SetStatusFlg_u32(0x00000000u);
+    VoltMon_SetLastRawAdc_u16(999);
+    VoltMon_SetLastVoltage_mV_u16(888);
+    
+    statusBefore = VoltMon_GetStatusFlg_u32();
+    lastRawBefore = VoltMon_GetLastRawAdc_u16();
+    lastVoltageBefore = VoltMon_GetLastVoltage_mV_u16();
+    
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg);
+    
+    result = VoltMon_UpdateAdc_u8(100);
+    
+    TEST_ASSERT_EQUAL_UINT8(1, result);
+    TEST_ASSERT_EQUAL_UINT32(VOLTMON_STATUS_ERR_U32, VoltMon_GetStatusFlg_u32());
+    TEST_ASSERT_EQUAL_UINT16(lastRawBefore, VoltMon_GetLastRawAdc_u16());
+    TEST_ASSERT_EQUAL_UINT16(lastVoltageBefore, VoltMon_GetLastVoltage_mV_u16());
 }
 
-void testinitnullcfgreturns2setserrinval(void) {
-  uint8_t result;
-
-  VoltMonSetStatusFlgu32(VOLTMONSTATUSINIT_U32);
-  callbackcfgptr = NULL;
-
-  VoltMonCfgGetpcfgStub(VoltMonCfgGetpcfgCallback);
-
-  result = VoltMonUpdateAdcu8(100);
-
-  TESTASSERTEQUAL_UINT8(2, result);
-  TESTASSERTEQUALUINT32(VOLTMONSTATUSINITU32 | VOLTMONSTATUSERRU32 | VOLTMONSTATUSINVALU32, VoltMonGetStatusFlgu32());
-  TESTASSERTEQUALUINT16(0, VoltMonGetLastRawAdc_u16());
-  TESTASSERTEQUALUINT16(0, VoltMonGetLastVoltagemVu16());
+void test_Init_NullCfg_Return2_ErrInvalSet(void)
+{
+    uint8_t result;
+    uint16_t lastRawBefore;
+    uint16_t lastVoltageBefore;
+    
+    VoltMon_SetStatusFlg_u32(VOLTMON_STATUS_INIT_U32);
+    VoltMon_SetLastRawAdc_u16(777);
+    VoltMon_SetLastVoltage_mV_u16(666);
+    
+    lastRawBefore = VoltMon_GetLastRawAdc_u16();
+    lastVoltageBefore = VoltMon_GetLastVoltage_mV_u16();
+    
+    callback_VoltMon_CfgGet_pcfg_ReturnValue = NULL;
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg);
+    
+    result = VoltMon_UpdateAdc_u8(50);
+    
+    TEST_ASSERT_EQUAL_UINT8(2, result);
+    TEST_ASSERT_EQUAL_UINT32(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32, 
+                             VoltMon_GetStatusFlg_u32());
+    TEST_ASSERT_EQUAL_UINT16(lastRawBefore, VoltMon_GetLastRawAdc_u16());
+    TEST_ASSERT_EQUAL_UINT16(lastVoltageBefore, VoltMon_GetLastVoltage_mV_u16());
 }
 
-void testvalidrawzerolower_boundary(void) {
-  uint8_t result;
-  VoltMoncfgs cfg = {1000, 10, 50, 3000, 5000, 100};
-
-  VoltMonSetStatusFlgu32(VOLTMONSTATUSINIT_U32);
-  callbackcfgptr = &cfg;
-  callbackcomputedvoltage = 50;
-
-  VoltMonCfgGetpcfgStub(VoltMonCfgGetpcfgCallback);
-  ComputeVoltageu16Stub(ComputeVoltageu16Callback);
-
-  result = VoltMonUpdateAdcu8(0);
-
-  TESTASSERTEQUAL_UINT8(0, result);
-  TESTASSERTEQUALUINT16(0, VoltMonGetLastRawAdc_u16());
-  TESTASSERTEQUALUINT16(50, VoltMonGetLastVoltagemVu16());
-  TESTASSERTEQUALUINT32(VOLTMONSTATUSINITU32, VoltMonGetStatusFlgu32());
+void test_Init_ValidCfg_Raw0_Return0_Updated(void)
+{
+    uint8_t result;
+    VoltMon_cfg_s cfg;
+    
+    cfg.rawMax_u16 = 4095;
+    cfg.factor_u16 = 10;
+    cfg.offset_s16 = 0;
+    cfg.uvTh_mV_u16 = 1000;
+    cfg.ovTh_mV_u16 = 5000;
+    cfg.hyst_mV_u16 = 100;
+    
+    VoltMon_SetStatusFlg_u32(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_INVAL_U32);
+    VoltMon_SetLastRawAdc_u16(555);
+    VoltMon_SetLastVoltage_mV_u16(444);
+    
+    callback_VoltMon_CfgGet_pcfg_ReturnValue = &cfg;
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg);
+    
+    callback_ComputeVoltage_u16_ReturnValue = 0;
+    ComputeVoltage_u16_Stub(callback_ComputeVoltage_u16);
+    
+    result = VoltMon_UpdateAdc_u8(0);
+    
+    TEST_ASSERT_EQUAL_UINT8(0, result);
+    TEST_ASSERT_EQUAL_UINT16(0, VoltMon_GetLastRawAdc_u16());
+    TEST_ASSERT_EQUAL_UINT16(0, VoltMon_GetLastVoltage_mV_u16());
+    TEST_ASSERT_EQUAL_UINT32(VOLTMON_STATUS_INIT_U32, VoltMon_GetStatusFlg_u32());
 }
 
-void testvalidrawonejustinsidelower(void) {
-  uint8_t result;
-  VoltMoncfgs cfg = {1000, 10, 50, 3000, 5000, 100};
-
-  VoltMonSetStatusFlgu32(VOLTMONSTATUSINIT_U32);
-  callbackcfgptr = &cfg;
-  callbackcomputedvoltage = 60;
-
-  VoltMonCfgGetpcfgStub(VoltMonCfgGetpcfgCallback);
-  ComputeVoltageu16Stub(ComputeVoltageu16Callback);
-
-  result = VoltMonUpdateAdcu8(1);
-
-  TESTASSERTEQUAL_UINT8(0, result);
-  TESTASSERTEQUALUINT16(1, VoltMonGetLastRawAdc_u16());
-  TESTASSERTEQUALUINT16(60, VoltMonGetLastVoltagemVu16());
-  TESTASSERTEQUALUINT32(VOLTMONSTATUSINITU32, VoltMonGetStatusFlgu32());
+void test_Init_ValidCfg_Raw1_Return0_Updated(void)
+{
+    uint8_t result;
+    VoltMon_cfg_s cfg;
+    
+    cfg.rawMax_u16 = 4095;
+    cfg.factor_u16 = 10;
+    cfg.offset_s16 = 0;
+    cfg.uvTh_mV_u16 = 1000;
+    cfg.ovTh_mV_u16 = 5000;
+    cfg.hyst_mV_u16 = 100;
+    
+    VoltMon_SetStatusFlg_u32(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_INVAL_U32);
+    VoltMon_SetLastRawAdc_u16(333);
+    VoltMon_SetLastVoltage_mV_u16(222);
+    
+    callback_VoltMon_CfgGet_pcfg_ReturnValue = &cfg;
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg);
+    
+    callback_ComputeVoltage_u16_ReturnValue = 10;
+    ComputeVoltage_u16_Stub(callback_ComputeVoltage_u16);
+    
+    result = VoltMon_UpdateAdc_u8(1);
+    
+    TEST_ASSERT_EQUAL_UINT8(0, result);
+    TEST_ASSERT_EQUAL_UINT16(1, VoltMon_GetLastRawAdc_u16());
+    TEST_ASSERT_EQUAL_UINT16(10, VoltMon_GetLastVoltage_mV_u16());
+    TEST_ASSERT_EQUAL_UINT32(VOLTMON_STATUS_INIT_U32, VoltMon_GetStatusFlg_u32());
 }
 
-void testvalidrawmidrange(void) {
-  uint8_t result;
-  VoltMoncfgs cfg = {1000, 10, 50, 3000, 5000, 100};
-
-  VoltMonSetStatusFlgu32(VOLTMONSTATUSINIT_U32);
-  callbackcfgptr = &cfg;
-  callbackcomputedvoltage = 2550;
-
-  VoltMonCfgGetpcfgStub(VoltMonCfgGetpcfgCallback);
-  ComputeVoltageu16Stub(ComputeVoltageu16Callback);
-
-  result = VoltMonUpdateAdcu8(500);
-
-  TESTASSERTEQUAL_UINT8(0, result);
-  TESTASSERTEQUALUINT16(500, VoltMonGetLastRawAdc_u16());
-  TESTASSERTEQUALUINT16(2550, VoltMonGetLastVoltagemVu16());
-  TESTASSERTEQUALUINT32(VOLTMONSTATUSINITU32, VoltMonGetStatusFlgu32());
+void test_Init_ValidCfg_RawMid_Return0_Updated(void)
+{
+    uint8_t result;
+    VoltMon_cfg_s cfg;
+    
+    cfg.rawMax_u16 = 4095;
+    cfg.factor_u16 = 10;
+    cfg.offset_s16 = 100;
+    cfg.uvTh_mV_u16 = 1000;
+    cfg.ovTh_mV_u16 = 5000;
+    cfg.hyst_mV_u16 = 100;
+    
+    VoltMon_SetStatusFlg_u32(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_INVAL_U32);
+    VoltMon_SetLastRawAdc_u16(111);
+    VoltMon_SetLastVoltage_mV_u16(222);
+    
+    callback_VoltMon_CfgGet_pcfg_ReturnValue = &cfg;
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg);
+    
+    callback_ComputeVoltage_u16_ReturnValue = 20480;
+    ComputeVoltage_u16_Stub(callback_ComputeVoltage_u16);
+    
+    result = VoltMon_UpdateAdc_u8(2048);
+    
+    TEST_ASSERT_EQUAL_UINT8(0, result);
+    TEST_ASSERT_EQUAL_UINT16(2048, VoltMon_GetLastRawAdc_u16());
+    TEST_ASSERT_EQUAL_UINT16(20480, VoltMon_GetLastVoltage_mV_u16());
+    TEST_ASSERT_EQUAL_UINT32(VOLTMON_STATUS_INIT_U32, VoltMon_GetStatusFlg_u32());
 }
 
-void testvalidrawatrawMaxupperboundary(void) {
-  uint8_t result;
-  VoltMoncfgs cfg = {1000, 10, 50, 3000, 5000, 100};
-
-  VoltMonSetStatusFlgu32(VOLTMONSTATUSINIT_U32);
-  callbackcfgptr = &cfg;
-  callbackcomputedvoltage = 10050;
-
-  VoltMonCfgGetpcfgStub(VoltMonCfgGetpcfgCallback);
-  ComputeVoltageu16Stub(ComputeVoltageu16Callback);
-
-  result = VoltMonUpdateAdcu8(1000);
-
-  TESTASSERTEQUAL_UINT8(0, result);
-  TESTASSERTEQUALUINT16(1000, VoltMonGetLastRawAdc_u16());
-  TESTASSERTEQUALUINT16(10050, VoltMonGetLastVoltagemVu16());
-  TESTASSERTEQUALUINT32(VOLTMONSTATUSINITU32, VoltMonGetStatusFlgu32());
+void test_Init_ValidCfg_RawMax_Return0_Updated(void)
+{
+    uint8_t result;
+    VoltMon_cfg_s cfg;
+    
+    cfg.rawMax_u16 = 4095;
+    cfg.factor_u16 = 10;
+    cfg.offset_s16 = 0;
+    cfg.uvTh_mV_u16 = 1000;
+    cfg.ovTh_mV_u16 = 50000;
+    cfg.hyst_mV_u16 = 100;
+    
+    VoltMon_SetStatusFlg_u32(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_INVAL_U32);
+    VoltMon_SetLastRawAdc_u16(0);
+    VoltMon_SetLastVoltage_mV_u16(0);
+    
+    callback_VoltMon_CfgGet_pcfg_ReturnValue = &cfg;
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg);
+    
+    callback_ComputeVoltage_u16_ReturnValue = 40950;
+    ComputeVoltage_u16_Stub(callback_ComputeVoltage_u16);
+    
+    result = VoltMon_UpdateAdc_u8(4095);
+    
+    TEST_ASSERT_EQUAL_UINT8(0, result);
+    TEST_ASSERT_EQUAL_UINT16(4095, VoltMon_GetLastRawAdc_u16());
+    TEST_ASSERT_EQUAL_UINT16(40950, VoltMon_GetLastVoltage_mV_u16());
+    TEST_ASSERT_EQUAL_UINT32(VOLTMON_STATUS_INIT_U32, VoltMon_GetStatusFlg_u32());
 }
 
-void testinvalidrawrawMaxplus_one(void) {
-  uint8_t result;
-  VoltMoncfgs cfg = {1000, 10, 50, 3000, 5000, 100};
-
-  VoltMonSetStatusFlgu32(VOLTMONSTATUSINIT_U32);
-  VoltMonSetLastRawAdcu16(500);
-  VoltMonSetLastVoltagemV_u16(2550);
-  callbackcfgptr = &cfg;
-
-  VoltMonCfgGetpcfgStub(VoltMonCfgGetpcfgCallback);
-
-  result = VoltMonUpdateAdcu8(1001);
-
-  TESTASSERTEQUAL_UINT8(2, result);
-  TESTASSERTEQUALUINT32(VOLTMONSTATUSINITU32 | VOLTMONSTATUSERRU32 | VOLTMONSTATUSINVALU32, VoltMonGetStatusFlgu32());
-  TESTASSERTEQUALUINT16(500, VoltMonGetLastRawAdc_u16());
-  TESTASSERTEQUALUINT16(2550, VoltMonGetLastVoltagemVu16());
+void test_Init_ValidCfg_RawMaxPlus1_Return2_ErrInvalSet(void)
+{
+    uint8_t result;
+    VoltMon_cfg_s cfg;
+    uint16_t lastRawBefore;
+    uint16_t lastVoltageBefore;
+    
+    cfg.rawMax_u16 = 4095;
+    cfg.factor_u16 = 10;
+    cfg.offset_s16 = 0;
+    cfg.uvTh_mV_u16 = 1000;
+    cfg.ovTh_mV_u16 = 5000;
+    cfg.hyst_mV_u16 = 100;
+    
+    VoltMon_SetStatusFlg_u32(VOLTMON_STATUS_INIT_U32);
+    VoltMon_SetLastRawAdc_u16(1000);
+    VoltMon_SetLastVoltage_mV_u16(2000);
+    
+    lastRawBefore = VoltMon_GetLastRawAdc_u16();
+    lastVoltageBefore = VoltMon_GetLastVoltage_mV_u16();
+    
+    callback_VoltMon_CfgGet_pcfg_ReturnValue = &cfg;
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg);
+    
+    result = VoltMon_UpdateAdc_u8(4096);
+    
+    TEST_ASSERT_EQUAL_UINT8(2, result);
+    TEST_ASSERT_EQUAL_UINT32(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32, 
+                             VoltMon_GetStatusFlg_u32());
+    TEST_ASSERT_EQUAL_UINT16(lastRawBefore, VoltMon_GetLastRawAdc_u16());
+    TEST_ASSERT_EQUAL_UINT16(lastVoltageBefore, VoltMon_GetLastVoltage_mV_u16());
 }
 
-void testinvalidrawuint16max(void) {
-  uint8_t result;
-  VoltMoncfgs cfg = {1000, 10, 50, 3000, 5000, 100};
-
-  VoltMonSetStatusFlgu32(VOLTMONSTATUSINIT_U32);
-  VoltMonSetLastRawAdcu16(500);
-  VoltMonSetLastVoltagemV_u16(2550);
-  callbackcfgptr = &cfg;
-
-  VoltMonCfgGetpcfgStub(VoltMonCfgGetpcfgCallback);
-
-  result = VoltMonUpdateAdcu8(UINT16_MAX);
-
-  TESTASSERTEQUAL_UINT8(2, result);
-  TESTASSERTEQUALUINT32(VOLTMONSTATUSINITU32 | VOLTMONSTATUSERRU32 | VOLTMONSTATUSINVALU32, VoltMonGetStatusFlgu32());
-  TESTASSERTEQUALUINT16(500, VoltMonGetLastRawAdc_u16());
-  TESTASSERTEQUALUINT16(2550, VoltMonGetLastVoltagemVu16());
+void test_Init_ValidCfg_RawUINT16MAX_Return2_ErrInvalSet(void)
+{
+    uint8_t result;
+    VoltMon_cfg_s cfg;
+    uint16_t lastRawBefore;
+    uint16_t lastVoltageBefore;
+    
+    cfg.rawMax_u16 = 4095;
+    cfg.factor_u16 = 10;
+    cfg.offset_s16 = 0;
+    cfg.uvTh_mV_u16 = 1000;
+    cfg.ovTh_mV_u16 = 5000;
+    cfg.hyst_mV_u16 = 100;
+    
+    VoltMon_SetStatusFlg_u32(VOLTMON_STATUS_INIT_U32);
+    VoltMon_SetLastRawAdc_u16(500);
+    VoltMon_SetLastVoltage_mV_u16(1500);
+    
+    lastRawBefore = VoltMon_GetLastRawAdc_u16();
+    lastVoltageBefore = VoltMon_GetLastVoltage_mV_u16();
+    
+    callback_VoltMon_CfgGet_pcfg_ReturnValue = &cfg;
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg);
+    
+    result = VoltMon_UpdateAdc_u8(65535);
+    
+    TEST_ASSERT_EQUAL_UINT8(2, result);
+    TEST_ASSERT_EQUAL_UINT32(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32, 
+                             VoltMon_GetStatusFlg_u32());
+    TEST_ASSERT_EQUAL_UINT16(lastRawBefore, VoltMon_GetLastRawAdc_u16());
+    TEST_ASSERT_EQUAL_UINT16(lastVoltageBefore, VoltMon_GetLastVoltage_mV_u16());
 }
 
-void testvalidrawclearsinval_flag(void) {
-  uint8_t result;
-  VoltMoncfgs cfg = {1000, 10, 50, 3000, 5000, 100};
-
-  VoltMonSetStatusFlgu32(VOLTMONSTATUSINITU32 | VOLTMONSTATUSINVALU32);
-  callbackcfgptr = &cfg;
-  callbackcomputedvoltage = 1050;
-
-  VoltMonCfgGetpcfgStub(VoltMonCfgGetpcfgCallback);
-  ComputeVoltageu16Stub(ComputeVoltageu16Callback);
-
-  result = VoltMonUpdateAdcu8(100);
-
-  TESTASSERTEQUAL_UINT8(0, result);
-  TESTASSERTEQUALUINT16(100, VoltMonGetLastRawAdc_u16());
-  TESTASSERTEQUALUINT16(1050, VoltMonGetLastVoltagemVu16());
-  TESTASSERTEQUALUINT32(VOLTMONSTATUSINITU32, VoltMonGetStatusFlgu32());
+void test_Init_ValidCfg_ComputeVoltageCalled_ResultStored(void)
+{
+    uint8_t result;
+    VoltMon_cfg_s cfg;
+    
+    cfg.rawMax_u16 = 4095;
+    cfg.factor_u16 = 5;
+    cfg.offset_s16 = 200;
+    cfg.uvTh_mV_u16 = 1000;
+    cfg.ovTh_mV_u16 = 5000;
+    cfg.hyst_mV_u16 = 100;
+    
+    VoltMon_SetStatusFlg_u32(VOLTMON_STATUS_INIT_U32);
+    VoltMon_SetLastRawAdc_u16(0);
+    VoltMon_SetLastVoltage_mV_u16(0);
+    
+    callback_VoltMon_CfgGet_pcfg_ReturnValue = &cfg;
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg);
+    
+    callback_ComputeVoltage_u16_ReturnValue = 12345;
+    ComputeVoltage_u16_Stub(callback_ComputeVoltage_u16);
+    
+    result = VoltMon_UpdateAdc_u8(1234);
+    
+    TEST_ASSERT_EQUAL_UINT8(0, result);
+    TEST_ASSERT_EQUAL_UINT16(1234, VoltMon_GetLastRawAdc_u16());
+    TEST_ASSERT_EQUAL_UINT16(12345, VoltMon_GetLastVoltage_mV_u16());
 }
 
-void testvalidrawerrflag_unchanged(void) {
-  uint8_t result;
-  VoltMoncfgs cfg = {1000, 10, 50, 3000, 5000, 100};
-
-  VoltMonSetStatusFlgu32(VOLTMONSTATUSINITU32 | VOLTMONSTATUSERRU32);
-  callbackcfgptr = &cfg;
-  callbackcomputedvoltage = 1050;
-
-  VoltMonCfgGetpcfgStub(VoltMonCfgGetpcfgCallback);
-  ComputeVoltageu16Stub(ComputeVoltageu16Callback);
-
-  result = VoltMonUpdateAdcu8(100);
-
-  TESTASSERTEQUAL_UINT8(0, result);
-  TESTASSERTEQUALUINT16(100, VoltMonGetLastRawAdc_u16());
-  TESTASSERTEQUALUINT16(1050, VoltMonGetLastVoltagemVu16());
-  TESTASSERTEQUALUINT32(VOLTMONSTATUSINITU32 | VOLTMONSTATUSERRU32, VoltMonGetStatusFlg_u32());
+void test_Init_ValidCfg_InvalFlagSet_Return0_InvalCleared(void)
+{
+    uint8_t result;
+    VoltMon_cfg_s cfg;
+    
+    cfg.rawMax_u16 = 4095;
+    cfg.factor_u16 = 10;
+    cfg.offset_s16 = 0;
+    cfg.uvTh_mV_u16 = 1000;
+    cfg.ovTh_mV_u16 = 5000;
+    cfg.hyst_mV_u16 = 100;
+    
+    VoltMon_SetStatusFlg_u32(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_INVAL_U32);
+    VoltMon_SetLastRawAdc_u16(0);
+    VoltMon_SetLastVoltage_mV_u16(0);
+    
+    callback_VoltMon_CfgGet_pcfg_ReturnValue = &cfg;
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg);
+    
+    callback_ComputeVoltage_u16_ReturnValue = 5000;
+    ComputeVoltage_u16_Stub(callback_ComputeVoltage_u16);
+    
+    result = VoltMon_UpdateAdc_u8(500);
+    
+    TEST_ASSERT_EQUAL_UINT8(0, result);
+    TEST_ASSERT_EQUAL_UINT16(500, VoltMon_GetLastRawAdc_u16());
+    TEST_ASSERT_EQUAL_UINT16(5000, VoltMon_GetLastVoltage_mV_u16());
+    TEST_ASSERT_EQUAL_UINT32(VOLTMON_STATUS_INIT_U32, VoltMon_GetStatusFlg_u32());
 }
 
-void testcomputevoltagecalledcorrectly(void) {
-  uint8_t result;
-  VoltMoncfgs cfg = {1000, 10, 50, 3000, 5000, 100};
-
-  VoltMonSetStatusFlgu32(VOLTMONSTATUSINIT_U32);
-  callbackcfgptr = &cfg;
-  callbackcomputedvoltage = 3050;
-
-  VoltMonCfgGetpcfgStub(VoltMonCfgGetpcfgCallback);
-  ComputeVoltageu16ExpectAndReturn(300, &cfg, 3050);
-
-  result = VoltMonUpdateAdcu8(300);
-
-  TESTASSERTEQUAL_UINT8(0, result);
-  TESTASSERTEQUALUINT16(300, VoltMonGetLastRawAdc_u16());
-  TESTASSERTEQUALUINT16(3050, VoltMonGetLastVoltagemVu16());
-  TESTASSERTEQUALUINT32(VOLTMONSTATUSINITU32, VoltMonGetStatusFlgu32());
+void test_Init_ValidCfg_ErrFlagSet_Return0_ErrRemains(void)
+{
+    uint8_t result;
+    VoltMon_cfg_s cfg;
+    
+    cfg.rawMax_u16 = 4095;
+    cfg.factor_u16 = 10;
+    cfg.offset_s16 = 0;
+    cfg.uvTh_mV_u16 = 1000;
+    cfg.ovTh_mV_u16 = 5000;
+    cfg.hyst_mV_u16 = 100;
+    
+    VoltMon_SetStatusFlg_u32(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32);
+    VoltMon_SetLastRawAdc_u16(0);
+    VoltMon_SetLastVoltage_mV_u16(0);
+    
+    callback_VoltMon_CfgGet_pcfg_ReturnValue = &cfg;
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg);
+    
+    callback_ComputeVoltage_u16_ReturnValue = 3000;
+    ComputeVoltage_u16_Stub(callback_ComputeVoltage_u16);
+    
+    result = VoltMon_UpdateAdc_u8(300);
+    
+    TEST_ASSERT_EQUAL_UINT8(0, result);
+    TEST_ASSERT_EQUAL_UINT16(300, VoltMon_GetLastRawAdc_u16());
+    TEST_ASSERT_EQUAL_UINT16(3000, VoltMon_GetLastVoltage_mV_u16());
+    TEST_ASSERT_EQUAL_UINT32(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32, VoltMon_GetStatusFlg_u32());
 }
 
-void testnotinitnullcfg_precedence(void) {
-  uint8_t result;
-
-  VoltMonSetStatusFlgu32(0);
-  callbackcfgptr = NULL;
-
-  VoltMonCfgGetpcfgStub(VoltMonCfgGetpcfgCallback);
-
-  result = VoltMonUpdateAdcu8(100);
-
-  TESTASSERTEQUAL_UINT8(1, result);
-  TESTASSERTEQUALUINT32(VOLTMONSTATUSERRU32, VoltMonGetStatusFlgu32());
-  TESTASSERTEQUALUINT16(0, VoltMonGetLastRawAdc_u16());
-  TESTASSERTEQUALUINT16(0, VoltMonGetLastVoltagemVu16());
+void test_NotInit_NullCfg_Return1_ErrSet(void)
+{
+    uint8_t result;
+    uint16_t lastRawBefore;
+    uint16_t lastVoltageBefore;
+    
+    VoltMon_SetStatusFlg_u32(0x00000000u);
+    VoltMon_SetLastRawAdc_u16(123);
+    VoltMon_SetLastVoltage_mV_u16(456);
+    
+    lastRawBefore = VoltMon_GetLastRawAdc_u16();
+    lastVoltageBefore = VoltMon_GetLastVoltage_mV_u16();
+    
+    callback_VoltMon_CfgGet_pcfg_ReturnValue = NULL;
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg);
+    
+    result = VoltMon_UpdateAdc_u8(100);
+    
+    TEST_ASSERT_EQUAL_UINT8(1, result);
+    TEST_ASSERT_EQUAL_UINT32(VOLTMON_STATUS_ERR_U32, VoltMon_GetStatusFlg_u32());
+    TEST_ASSERT_EQUAL_UINT16(lastRawBefore, VoltMon_GetLastRawAdc_u16());
+    TEST_ASSERT_EQUAL_UINT16(lastVoltageBefore, VoltMon_GetLastVoltage_mV_u16());
 }
 
-void testnotinitexceedsrawMax_precedence(void) {
-  uint8_t result;
-  VoltMoncfgs cfg = {1000, 10, 50, 3000, 5000, 100};
-
-  VoltMonSetStatusFlgu32(0);
-  callbackcfgptr = &cfg;
-
-  VoltMonCfgGetpcfgStub(VoltMonCfgGetpcfgCallback);
-
-  result = VoltMonUpdateAdcu8(1001);
-
-  TESTASSERTEQUAL_UINT8(1, result);
-  TESTASSERTEQUALUINT32(VOLTMONSTATUSERRU32, VoltMonGetStatusFlgu32());
-  TESTASSERTEQUALUINT16(0, VoltMonGetLastRawAdc_u16());
-  TESTASSERTEQUALUINT16(0, VoltMonGetLastVoltagemVu16());
+void test_NotInit_RawExceedsMax_Return1_ErrSet(void)
+{
+    uint8_t result;
+    VoltMon_cfg_s cfg;
+    uint16_t lastRawBefore;
+    uint16_t lastVoltageBefore;
+    
+    cfg.rawMax_u16 = 4095;
+    cfg.factor_u16 = 10;
+    cfg.offset_s16 = 0;
+    cfg.uvTh_mV_u16 = 1000;
+    cfg.ovTh_mV_u16 = 5000;
+    cfg.hyst_mV_u16 = 100;
+    
+    VoltMon_SetStatusFlg_u32(0x00000000u);
+    VoltMon_SetLastRawAdc_u16(789);
+    VoltMon_SetLastVoltage_mV_u16(987);
+    
+    lastRawBefore = VoltMon_GetLastRawAdc_u16();
+    lastVoltageBefore = VoltMon_GetLastVoltage_mV_u16();
+    
+    callback_VoltMon_CfgGet_pcfg_ReturnValue = &cfg;
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg);
+    
+    result = VoltMon_UpdateAdc_u8(5000);
+    
+    TEST_ASSERT_EQUAL_UINT8(1, result);
+    TEST_ASSERT_EQUAL_UINT32(VOLTMON_STATUS_ERR_U32, VoltMon_GetStatusFlg_u32());
+    TEST_ASSERT_EQUAL_UINT16(lastRawBefore, VoltMon_GetLastRawAdc_u16());
+    TEST_ASSERT_EQUAL_UINT16(lastVoltageBefore, VoltMon_GetLastVoltage_mV_u16());
 }
 
-void testinitnullcfgexceeds_rawMax(void) {
-  uint8_t result;
-
-  VoltMonSetStatusFlgu32(VOLTMONSTATUSINIT_U32);
-  callbackcfgptr = NULL;
-
-  VoltMonCfgGetpcfgStub(VoltMonCfgGetpcfgCallback);
-
-  result = VoltMonUpdateAdcu8(2000);
-
-  TESTASSERTEQUAL_UINT8(2, result);
-  TESTASSERTEQUALUINT32(VOLTMONSTATUSINITU32 | VOLTMONSTATUSERRU32 | VOLTMONSTATUSINVALU32, VoltMonGetStatusFlgu32());
-  TESTASSERTEQUALUINT16(0, VoltMonGetLastRawAdc_u16());
-  TESTASSERTEQUALUINT16(0, VoltMonGetLastVoltagemVu16());
+void test_Init_NullCfg_RawExceedsMax_Return2_ErrInvalSet(void)
+{
+    uint8_t result;
+    uint16_t lastRawBefore;
+    uint16_t lastVoltageBefore;
+    
+    VoltMon_SetStatusFlg_u32(VOLTMON_STATUS_INIT_U32);
+    VoltMon_SetLastRawAdc_u16(321);
+    VoltMon_SetLastVoltage_mV_u16(654);
+    
+    lastRawBefore = VoltMon_GetLastRawAdc_u16();
+    lastVoltageBefore = VoltMon_GetLastVoltage_mV_u16();
+    
+    callback_VoltMon_CfgGet_pcfg_ReturnValue = NULL;
+    VoltMon_CfgGet_pcfg_Stub(callback_VoltMon_CfgGet_pcfg);
+    
+    result = VoltMon_UpdateAdc_u8(10000);
+    
+    TEST_ASSERT_EQUAL_UINT8(2, result);
+    TEST_ASSERT_EQUAL_UINT32(VOLTMON_STATUS_INIT_U32 | VOLTMON_STATUS_ERR_U32 | VOLTMON_STATUS_INVAL_U32, 
+                             VoltMon_GetStatusFlg_u32());
+    TEST_ASSERT_EQUAL_UINT16(lastRawBefore, VoltMon_GetLastRawAdc_u16());
+    TEST_ASSERT_EQUAL_UINT16(lastVoltageBefore, VoltMon_GetLastVoltage_mV_u16());
 }
