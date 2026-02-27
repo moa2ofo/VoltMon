@@ -1,5 +1,5 @@
 | function_name   | test_name                                                  | total  | passed | failed | ignored | linesCvrg | branchesCvrg | Date and time  |
 |-----------------|------------------------------------------------------------|--------|--------|--------|---------|-----------|--------------|----------------|
-| VoltMon_Init_u8 | should_return_1_and_set_ERR_when_cfg_is_NULL               | PASSED | PASSED | -      | -       | 100.0%    | 100.0%       | 27/02/26 14:22 |
-| VoltMon_Init_u8 | should_return_1_and_set_ERR_when_rawMax_is_0               | PASSED | PASSED | -      | -       | 100.0%    | 100.0%       | 27/02/26 14:22 |
-| VoltMon_Init_u8 | should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid | PASSED | PASSED | -      | -       | 100.0%    | 100.0%       | 27/02/26 14:22 |
+| VoltMon_Init_u8 | should_return_1_and_set_ERR_when_cfg_is_NULL               | PASSED | PASSED | -      | -       | 100.0%    | 100.0%       | 27/02/26 14:36 |
+| VoltMon_Init_u8 | should_return_1_and_set_ERR_when_rawMax_is_0               | PASSED | PASSED | -      | -       | 100.0%    | 100.0%       | 27/02/26 14:36 |
+| VoltMon_Init_u8 | should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid | PASSED | PASSED | -      | -       | 100.0%    | 100.0%       | 27/02/26 14:36 |
