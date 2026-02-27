@@ -1,0 +1,27 @@
+---
+:source:
+  :file: utExecutionAndResults/utUnderTest/test/test_should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid.c
+  :dirname: utExecutionAndResults/utUnderTest/test
+  :basename: test_should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid.c
+:successes:
+- :test: testVariablesAsset
+  :line: 16
+  :message: ''
+  :unity_test_time: 0
+- :test: testVariableReset
+  :line: 25
+  :message: ''
+  :unity_test_time: 0
+- :test: test_VoltMon_Init_u8_should_return_0_set_INIT_and_clear_flags_when_cfg_is_valid
+  :line: 46
+  :message: ''
+  :unity_test_time: 0
+:failures: []
+:ignores: []
+:counts:
+  :total: 3
+  :passed: 3
+  :failed: 0
+  :ignored: 0
+:stdout: []
+:time: 0.0017224710000505183

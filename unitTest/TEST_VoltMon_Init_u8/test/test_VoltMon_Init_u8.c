@@ -40,7 +40,8 @@ void setUp(void) {
   testVariableReset(0u, VoltMon_modeIdle_e, 0u, 0u, false, false);
 }
 
-void tearDown(void) { /* nothing */ }
+void tearDown(void) { /* nothing */
+}
 
 /*============================================================================*/
 /* Tests                                                                       */

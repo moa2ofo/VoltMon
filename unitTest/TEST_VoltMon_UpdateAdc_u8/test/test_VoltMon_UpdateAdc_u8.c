@@ -17,7 +17,9 @@ static void reset_all(void) {
   VoltMon_SetOvActive_b(false);
 }
 
-void setUp(void) { reset_all(); }
+void setUp(void) {
+  reset_all();
+}
 
 void test_VoltMon_UpdateAdc_u8_returns_error_and_sets_err_flag_if_not_initialized(void) {
   const VoltMon_cfg_s *dummyCfg = (const VoltMon_cfg_s *)0x1;

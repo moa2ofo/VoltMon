@@ -175,7 +175,9 @@ uint16_t VoltMon_GetVoltage_mV_u16(void) {
   return l_ret_u16;
 }
 
-uint32_t VoltMon_GetStatus_u32(void) { return StatusFlg_u32; }
+uint32_t VoltMon_GetStatus_u32(void) {
+  return StatusFlg_u32;
+}
 
 /*==================[static functions]=======================================*/
 static uint16_t ComputeVoltage_u16(uint16_t rawAdc_u16, const VoltMon_cfg_s *cfg_pcs) {
