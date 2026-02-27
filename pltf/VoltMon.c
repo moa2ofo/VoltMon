@@ -100,7 +100,7 @@ uint8_t VoltMon_SetMode_u8(VoltMon_mode_e mode) {
 }
 
 uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16) {
-  const VoltMon_Cfg_t *const l_cfg_pcs = VoltMon_CfgGet_pcfg();
+  const VoltMon_Cfg_s *const l_cfg_pcs = VoltMon_CfgGet_pcfg();
 
   if((StatusFlg_u32 & VOLTMON_STATUS_INIT_U32) == 0U) {
     StatusFlg_u32 |= VOLTMON_STATUS_ERR_U32;
