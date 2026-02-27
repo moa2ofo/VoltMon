@@ -255,6 +255,7 @@ uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16);
  * @par Activity diagram
  * @code
  * start
+ * :static uint32 l_CycleCnt_u32;
  * :l_CycleCnt_u32++;
  * :l_cfg_pcs = VoltMon_CfgGet_pcfg();
  * :l_errSticky_b = (Mode_e == VoltMon_modeDiag_e);
@@ -285,7 +286,6 @@ uint8_t VoltMon_UpdateAdc_u8(uint16_t rawAdc_u16);
 | Mode_e                 | X  |     | VoltMon_mode_e (static)                                             |  -    |   1    |   0    |  1   | [0,2]               | [-]  |
 | LastVoltage_mV_u16     | X  |     | uint16_t (static)                                                   |  -    |   1    |   0    |  2   | [0, UINT16_MAX]     | [mV] |
 | StatusFlg_u32          | X  |  X  | uint32_t (static)                                                   |  -    |   1    |   0    |  4   | [0, UINT32_MAX]     | [-]  |
-| l_CycleCnt_u32         | X  |  X  | uint32_t (static local)                                             |  -    |   1    |   0    |  4   | [0, UINT32_MAX]     | [-]  |
 | CheckThresholds_u8     | X  |  X  | uint8_t (uint16_t, const VoltMon_cfg_s*, bool*, bool*)              |  -    |   1    |   0    |  -   | [0, UINT8_MAX]     | [-]  |
 | UpdateStatusFlags_v    | X  |     | void (bool uvActive_b, bool ovActive_b, bool errSticky_b)           |  -    |   1    |   0    |  -   | -                   | [-]  |
  *
